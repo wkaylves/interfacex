@@ -1,0 +1,45 @@
+*.class
+*.class
+# gradle ignore
+../spring-asciidoctor-guangdongdx-hbxx-tm/.gradle/
+../../common/hbfintech-frame-final/gradle/
+build/
+.gradle
+.vscode
+# maven ignore
+target/
+out/
+*.jar
+*.war
+*.zip
+*.tar
+*.tar.gz
+
+# eclipse ignore
+.externalToolBuilders
+.springBeans
+
+# idea ignore
+.idea/
+*.ipr
+*.iml
+*.iws
+
+# temp ignore
+*.log
+*.cache
+*.diff
+*.patch
+*.tmp
+
+# system ignore
+.DS_Store
+Thumbs.db
+
+# custom lib
+!custom_lib/*
+/bin
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+/.factorypath

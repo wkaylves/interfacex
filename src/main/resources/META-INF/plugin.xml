@@ -1,0 +1,92 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
+    <id>com.kaylves.interfacex</id>
+
+    <!-- Public plugin name should be written in Title Case.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
+    <name>InterfaceX</name>
+
+    <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
+    <vendor email="394357397@qq.com" url="https://gitee.com/kaylves">Kaylves</vendor>
+
+    <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
+         Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
+
+    <description>A simple and easy-to-use component interface viewer for IntelliJ IDEA. Supports viewing entry points of HTTP, OpenFeign, RabbitMQ consumers, RocketMQ consumers, and XXL-JOB scheduled tasks. When projects grow large, code navigation becomes difficult — this plugin helps you quickly locate all interface entry points. Also supports exporting RabbitMQ interfaces and adding RabbitMQ producers.
+        一个在 IntelliJ IDEA 平台上简单易用的组件接口查看工具，支持查看 HTTP、OpenFeign、RabbitMQ 消费者、RocketMQ 消费者、XXL-JOB 定时任务等接口方法入口。当项目规模变大时，代码查找困难，本插件助你快速定位所有接口入口，同时支持导出 RabbitMQ 接口和添加 RabbitMQ 生产者。
+    </description>
+    <!-- Product and plugin compatibility requirements.
+         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.lang</depends>
+    <depends>com.intellij.modules.java</depends>
+
+    <projectListeners>
+        <listener
+                class="com.kaylves.interfacex.listener.InterfaceXToolWindowListener"
+                topic="com.intellij.openapi.wm.ex.ToolWindowManagerListener"/>
+
+    </projectListeners>
+
+    <actions>
+        <action id="com.kaylves.interfacex.action.toolbar.NavigatorInterfaceExportAction"
+                class="com.kaylves.interfacex.action.toolbar.NavigatorInterfaceExportAction"
+                description="NavigatorExportAction"
+                text="导出Excel文件"
+                icon="AllIcons.Actions.Download">
+        </action>
+
+        <action id="com.kaylves.interfacex.action.toolbar.RefreshProjectAction"
+                class="com.kaylves.interfacex.action.toolbar.RefreshProjectAction"
+                description="RefreshProjectAction"
+                text="刷新"
+                icon="AllIcons.Actions.Refresh">
+        </action>
+
+        <!-- url navigation -->
+        <action id="Toolkit.GotoService" class="com.kaylves.interfacex.action.GotoRequestMappingAction"
+                text="_Service" description="Go to Service"
+                icon="AllIcons.Actions.Search">
+            <add-to-group group-id="GoToTargetEx" anchor="first"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl BACK_SLASH"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt B"/>
+        </action>
+
+        <action id="com.kaylves.interfacex.action.toolbar.ProjectInternationalizationExportAction"
+                class="com.kaylves.interfacex.action.toolbar.ProjectInternationalizationExportAction"
+                description="导出国际化文件"
+                text="导出国际化文件"
+                icon="AllIcons.Actions.Download">
+        </action>
+
+        <action id="com.kaylves.interfacex.action.toolbar.RocketMQProducerExportAction"
+                class="com.kaylves.interfacex.action.toolbar.RocketMQProducerExportAction"
+                description="导出MQ生产者"
+                text="导出MQ生产者"
+                icon="AllIcons.Actions.Download">
+        </action>
+
+        <!-- 注册action group -->
+        <group id="Toolkit.NavigatorActionsToolbar.InterfaceX">
+            <reference id="com.kaylves.interfacex.action.toolbar.RefreshProjectAction"/>
+            <reference id="Toolkit.GotoService"/>
+            <reference id="com.kaylves.interfacex.action.toolbar.NavigatorInterfaceExportAction"/>
+            <reference id="com.kaylves.interfacex.action.toolbar.ProjectInternationalizationExportAction"/>
+            <reference id="com.kaylves.interfacex.action.toolbar.RocketMQProducerExportAction"/>
+        </group>
+
+    </actions>
+
+    <extensions defaultExtensionNs="com.intellij">
+
+        <notificationGroup id="com.kaylves.plugin.interfacex.notification"      displayType="BALLOON"/>
+
+        <!-- Project启动初始化ToolWindow -->
+        <postStartupActivity implementation="com.kaylves.interfacex.activity.MyStartupActivity"/>
+
+    </extensions>
+
+</idea-plugin>

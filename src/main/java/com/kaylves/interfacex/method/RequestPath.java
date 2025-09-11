@@ -1,0 +1,56 @@
+package com.kaylves.interfacex.method;
+
+public class RequestPath {
+
+    String path;
+
+    String method;
+
+    public RequestPath(String path, String method) {
+        this.path = path;
+        this.method = method;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public void setMethod(String method) {
+        this.method = method;
+    }
+
+    public void concat(RequestPath classRequestPath) {
+        String classUri = classRequestPath.getPath();
+        String methodUri = this.path;
+
+        if (!classUri.startsWith("/")) {
+            classUri = "/".concat(classUri);
+        }
+
+        if (!classUri.endsWith("/")) {
+            classUri = classUri.concat("/");
+        }
+
+        if (this.path.startsWith("/")) {
+            methodUri = this.path.substring(1);
+        }
+
+        this.path = classUri.concat(methodUri);
+    }
+
+    @Override
+    public String toString() {
+        return "RequestPath{" +
+                "path='" + path + '\'' +
+                ", method='" + method + '\'' +
+                '}';
+    }
+}
