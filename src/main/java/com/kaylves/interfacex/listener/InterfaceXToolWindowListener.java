@@ -8,6 +8,7 @@ import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
 
 
 /**
+ *
  * @author kaylves
  * @since 1.0.0
  */
