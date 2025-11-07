@@ -12,7 +12,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.impl.java.stubs.index.JavaAnnotationIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.searches.ReferencesSearch;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,42 +65,49 @@ public class RocketProducerServiceStrategy implements ServiceStrategy<RocketMQPr
 
             for (PsiMethod psiMethod : psiMethods) {
 
-                PsiAnnotation psiMethodAnnotation = psiMethod.getAnnotation(RocketMQProducerAnnotation.PATH.getQualifiedName());
 
-                if (psiMethodAnnotation == null) {
-                    continue;
-                }
+                RocketMQProducerAnnotation[] pathArray = RocketMQProducerAnnotation.getPathArray();
+                for (RocketMQProducerAnnotation pathAnnotation : pathArray) {
+                    PsiAnnotation psiMethodAnnotation = psiMethod.getAnnotation(pathAnnotation.getQualifiedName());
 
-                PsiAnnotationMemberValue nestedAnnotationValue = psiMethodAnnotation.findAttributeValue("rocketmqAttrbute");
-
-                if (nestedAnnotationValue instanceof PsiAnnotation nestedAnnotation) {
-
-                    String topic = StringUtils.trimToEmpty(PsiAnnotationHelper.getAnnotationAttributeValue(
-                            nestedAnnotation,
-                            "topic"));
-                    String tags = StringUtils.trimToEmpty(PsiAnnotationHelper.getAnnotationAttributeValue(
-                            nestedAnnotation,
-                            "tag"));
-
-                    Boolean result = ReferencesSearch.search(psiMethod,globalSearchScope).findFirst()!=null;
-
-
-                    if (StringUtils.isNotBlank(topic)) {
-
-                        serviceExportBeans.add(RocketMQProducerExportBean.builder()
-                                .modelName(module.getName())
-                                .interfaceType("RocketMQProducer")
-                                .topic(topic)
-                                .auth(IdeaPluginUtils.obtainAuth(psiClass.getDocComment()))
-                                .tag(tags)
-                                .desc(IdeaPluginUtils.obtainDocAsString(psiMethod))
-                                .simpleClassName(psiClass.getName())
-                                .usedAble(result)
-                                .fullClassName(psiClass.getQualifiedName())
-                                .build());
+                    if (psiMethodAnnotation == null) {
+                        continue;
                     }
 
+                    PsiAnnotationMemberValue nestedAnnotationValue = psiMethodAnnotation.findAttributeValue("rocketmqAttrbute");
+
+                    if (nestedAnnotationValue instanceof PsiAnnotation nestedAnnotation) {
+
+                        String topic = StringUtils.trimToEmpty(PsiAnnotationHelper.getAnnotationAttributeValue(
+                                nestedAnnotation,
+                                "topic"));
+                        String tags = StringUtils.trimToEmpty(PsiAnnotationHelper.getAnnotationAttributeValue(
+                                nestedAnnotation,
+                                "tag"));
+
+                        Boolean result = ReferencesSearch.search(psiMethod,globalSearchScope).findFirst()!=null;
+
+
+                        if (StringUtils.isNotBlank(topic)) {
+
+                            serviceExportBeans.add(RocketMQProducerExportBean.builder()
+                                    .modelName(module.getName())
+                                    .interfaceType("RocketMQProducer")
+                                    .topic(topic)
+                                    .auth(IdeaPluginUtils.obtainAuth(psiClass.getDocComment()))
+                                    .tag(tags)
+                                    .desc(IdeaPluginUtils.obtainDocAsString(psiMethod))
+                                    .simpleClassName(psiClass.getName())
+                                    .usedAble(result)
+                                    .fullClassName(psiClass.getQualifiedName())
+                                    .build());
+                        }
+
+                    }
                 }
+
+
+
 
             }
         }

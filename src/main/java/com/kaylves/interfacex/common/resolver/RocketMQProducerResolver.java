@@ -10,7 +10,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.impl.java.stubs.index.JavaAnnotationIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -29,6 +29,8 @@ public class RocketMQProducerResolver extends BaseServiceResolver {
         List<RestServiceItem> itemList = new ArrayList<>();
         Collection<PsiAnnotation> psiAnnotations = JavaAnnotationIndex.getInstance().get(RocketMQProducerAnnotation.ClassAnnotation.getShortName(), project, globalSearchScope);
 
+        RocketMQProducerAnnotation[] pathArray = RocketMQProducerAnnotation.getPathArray();
+
         for (PsiAnnotation psiAnnotation : psiAnnotations) {
             PsiModifierList psiModifierList = (PsiModifierList) psiAnnotation.getParent();
             PsiElement psiElement = psiModifierList.getParent();
@@ -43,41 +45,46 @@ public class RocketMQProducerResolver extends BaseServiceResolver {
 
             for (PsiMethod psiMethod : psiMethods) {
 
+                for (RocketMQProducerAnnotation pathAnnotation : pathArray) {
 
-                PsiAnnotation psiMethodAnnotation = psiMethod.getAnnotation(RocketMQProducerAnnotation.PATH.getQualifiedName());
-
-                if (psiMethodAnnotation == null) {
-                    continue;
+                    processElement(psiMethod, pathAnnotation, itemList);
                 }
-
-                PsiAnnotationMemberValue nestedAnnotationValue = psiMethodAnnotation.findAttributeValue("rocketmqAttrbute");
-
-                if (nestedAnnotationValue instanceof PsiAnnotation nestedAnnotation) {
-
-                    String topic = StringUtils.trimToEmpty(PsiAnnotationHelper.getAnnotationAttributeValue(
-                            nestedAnnotation,
-                            "topic"));
-
-                    String tags = StringUtils.trimToEmpty(PsiAnnotationHelper.getAnnotationAttributeValue(
-                            nestedAnnotation,
-                            "tag"));
-
-                    if (StringUtils.isNotBlank(topic)) {
-
-                        String requestMethod = HttpMethod.PRODUCE.name();
-
-                        String path = MessageFormat.format("{0}",tags);
-
-                        RestServiceItem item = new RestServiceItem(psiMethod, requestMethod, path, false);
-                        itemList.add(item);
-                    }
-                }
-
 
             }
         }
 
         return itemList;
+    }
+
+    private static void processElement(PsiMethod psiMethod, RocketMQProducerAnnotation pathAnnotation, List<RestServiceItem> itemList) {
+        PsiAnnotation psiMethodAnnotation = psiMethod.getAnnotation(pathAnnotation.getQualifiedName());
+
+        if (psiMethodAnnotation == null) {
+            return;
+        }
+
+        PsiAnnotationMemberValue nestedAnnotationValue = psiMethodAnnotation.findAttributeValue("rocketmqAttrbute");
+
+        if (nestedAnnotationValue instanceof PsiAnnotation nestedAnnotation) {
+
+            String topic = StringUtils.trimToEmpty(PsiAnnotationHelper.getAnnotationAttributeValue(
+                    nestedAnnotation,
+                    "topic"));
+
+            String tags = StringUtils.trimToEmpty(PsiAnnotationHelper.getAnnotationAttributeValue(
+                    nestedAnnotation,
+                    "tag"));
+
+            if (StringUtils.isNotBlank(topic)) {
+
+                String requestMethod = HttpMethod.PRODUCE.name();
+
+                String path = MessageFormat.format("{0}",tags);
+
+                RestServiceItem item = new RestServiceItem(psiMethod, requestMethod, path, false);
+                itemList.add(item);
+            }
+        }
     }
 
     @Override

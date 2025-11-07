@@ -55,6 +55,9 @@ public class ServiceHelper {
         serviceResolvers.forEach(serviceResolver -> {
             List<RestServiceItem> restServiceItemList =  serviceResolver.findServiceItemsInModule();
             if(!restServiceItemList.isEmpty()){
+
+                restServiceItemList.sort((item1, item2) -> item1.getUrl().compareTo(item2.getUrl()));
+
                 serviceItemMap.put(serviceResolver.getServiceItem(),restServiceItemList);
             }
         });

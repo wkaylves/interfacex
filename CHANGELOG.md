@@ -3,6 +3,14 @@
 
 ## [Unreleased]
 
+## [1.0.8]
+### Added
+- 增加接口名称按字母排序
+- 导出rocketmq、rabbitmq生产者excel文件
+
+## [1.0.7]
+### Added
+- 增加RestTemplate接口
 
 ## [1.0.6]
 ### Added

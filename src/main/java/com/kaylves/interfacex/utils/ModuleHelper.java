@@ -1,7 +1,7 @@
 package com.kaylves.interfacex.utils;
 
 import com.intellij.openapi.module.Module;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 //PathAndQuery  AbsolutePath AbsoluteUri Query

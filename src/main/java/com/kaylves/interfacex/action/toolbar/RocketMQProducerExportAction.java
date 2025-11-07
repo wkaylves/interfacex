@@ -3,6 +3,7 @@ package com.kaylves.interfacex.action.toolbar;
 import com.alibaba.excel.EasyExcel;
 import com.kaylves.interfacex.annotations.InterfaceXEnum;
 import com.kaylves.interfacex.bean.RabbitMQProducerExportBean;
+import com.kaylves.interfacex.bean.RocketMQProducerExportBean;
 import com.kaylves.interfacex.bean.ServiceExportBeanI;
 import com.kaylves.interfacex.utils.IdeaPluginUtils;
 import com.kaylves.interfacex.utils.IntfxUtils;
@@ -13,7 +14,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.project.Project;
-import org.apache.commons.lang.time.DateFormatUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -56,11 +57,9 @@ public class RocketMQProducerExportAction extends AnAction {
 
         try {
 
-//            List<ServiceExportBeanI> serviceExportBeans = IntfxUtils.getServiceExportBeans(project, InterfaceXEnum.RocketMQProducer,InterfaceXEnum.RocketMQDeliver,InterfaceXEnum.RocketMQListener);
+            List<ServiceExportBeanI> serviceExportBeans = IntfxUtils.getServiceExportBeans(project, InterfaceXEnum.RocketMQProducer,InterfaceXEnum.RocketMQDeliver,InterfaceXEnum.RocketMQListener);
 
-            List<ServiceExportBeanI> serviceExportBeans = IntfxUtils.getServiceExportBeans(project, InterfaceXEnum.RabbitMQProducer);
-
-            EasyExcel.write(path, RabbitMQProducerExportBean.class).sheet(project.getName()).doWrite(serviceExportBeans);
+            EasyExcel.write(path, RocketMQProducerExportBean.class).sheet(project.getName()).doWrite(serviceExportBeans);
 
             NotificationGroupManager.getInstance()
                     // plugin.xml里配置的id

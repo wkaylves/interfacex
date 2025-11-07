@@ -32,12 +32,13 @@ repositories {
 dependencies {
   implementation("com.fifesoft:rsyntaxtextarea:3.1.6")
   implementation("com.alibaba:easyexcel:4.0.2")
+  implementation("org.apache.commons:commons-lang3:3.17.0")
   implementation("org.slf4j:slf4j-api:2.0.13")
   implementation("org.slf4j:slf4j-simple:2.0.13")
 
-  annotationProcessor("org.projectlombok:lombok:1.18.28");
-  compileOnly("org.projectlombok:lombok:1.18.28")
-  testAnnotationProcessor("org.projectlombok:lombok:1.18.28");
+  annotationProcessor("org.projectlombok:lombok:1.18.40");
+  compileOnly("org.projectlombok:lombok:1.18.40")
+  testAnnotationProcessor("org.projectlombok:lombok:1.18.40");
 }
 
 // Configure Gradle IntelliJ Plugin

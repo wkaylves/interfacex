@@ -2,6 +2,7 @@ package com.kaylves.interfacex.utils;
 
 import com.kaylves.interfacex.annotations.InterfaceXEnum;
 import com.kaylves.interfacex.annotations.http.SpringHttpRequestAnnotation;
+import com.kaylves.interfacex.bean.RocketMQProducerExportBean;
 import com.kaylves.interfacex.bean.ServiceExportBean;
 import com.kaylves.interfacex.bean.ModulePropertiesExportBean;
 import com.kaylves.interfacex.bean.ServiceExportBeanI;
@@ -51,16 +52,22 @@ public class IntfxUtils {
         List<ServiceExportBeanI> serviceExportBeans = new ArrayList<>();
         serviceStrateties.forEach(serviceStratety -> serviceExportBeans.addAll(serviceStratety.obtainServiceExportBeans(project)));
 
+        serviceExportBeans.sort((o1, o2) -> {
+
+            if(o1 instanceof RocketMQProducerExportBean && o2 instanceof RocketMQProducerExportBean){
+                return ((RocketMQProducerExportBean) o1).getTag().compareTo(((RocketMQProducerExportBean) o2).getTag());
+
+            }
+
+            return 0;
+        });
+
         return serviceExportBeans;
     }
 
     public static List<ServiceExportBean> getServiceExportBeans(Project project) {
 
         List<ServiceStrategy> serviceStrategy = new ArrayList<>();
-
-        serviceStrategy.add(new RabbitMQStrategy());
-//        serviceStrategy.add(new RocketMQListenerStrategy());
-//        serviceStrategy.add(new RocketMQDeliverServiceStrategy());
 
         serviceStrategy.add(new OpenFeignStrategy());
         serviceStrategy.add(new SpringControllerStrategy());

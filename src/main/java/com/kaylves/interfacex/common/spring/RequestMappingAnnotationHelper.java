@@ -6,7 +6,7 @@ import com.kaylves.interfacex.utils.PsiAnnotationHelper;
 import com.kaylves.interfacex.utils.RestSupportedAnnotationHelper;
 import com.kaylves.interfacex.method.RequestPath;
 import com.intellij.psi.*;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
