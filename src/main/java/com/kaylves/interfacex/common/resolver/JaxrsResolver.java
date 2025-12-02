@@ -1,5 +1,6 @@
 package com.kaylves.interfacex.common.resolver;
 
+import com.kaylves.interfacex.annotations.InterfaceXEnum;
 import com.kaylves.interfacex.annotations.http.JaxrsPathAnnotation;
 import com.kaylves.interfacex.common.jaxrs.JaxrsAnnotationHelper;
 import com.kaylves.interfacex.method.RequestPath;
@@ -46,7 +47,7 @@ public class JaxrsResolver extends BaseServiceResolver {
                 RequestPath[] methodUriPaths = JaxrsAnnotationHelper.getRequestPaths(psiMethod);
 
                 for (RequestPath methodUriPath : methodUriPaths) {
-                    RestServiceItem item = createRestServiceItem(psiMethod, classUriPath, methodUriPath);
+                    RestServiceItem item = createRestServiceItem(psiMethod, InterfaceXEnum.HTTP,classUriPath, methodUriPath);
                     itemList.add(item);
                 }
             }

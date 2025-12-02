@@ -6,6 +6,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.searches.ReferencesSearch;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.kaylves.interfacex.annotations.InterfaceXEnum;
 import com.kaylves.interfacex.method.HttpMethod;
 import com.kaylves.interfacex.navigator.RestServiceItem;
 import com.kaylves.interfacex.utils.PsiAnnotationHelper;
@@ -84,7 +85,7 @@ public class RestTemplateResolver extends BaseServiceResolver {
 
         String requestMethod = HttpMethod.POST.name();
 
-        results.add(new RestServiceItem(method, requestMethod, method.getName(), false));
+        results.add(new RestServiceItem(method, null, requestMethod, method.getName(), false));
 
     }
 

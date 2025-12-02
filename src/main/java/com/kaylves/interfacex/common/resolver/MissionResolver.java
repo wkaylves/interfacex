@@ -1,5 +1,6 @@
 package com.kaylves.interfacex.common.resolver;
 
+import com.kaylves.interfacex.annotations.InterfaceXEnum;
 import com.kaylves.interfacex.annotations.mission.MissionClientAnnotation;
 import com.kaylves.interfacex.annotations.mission.MissionClientMethodAnnotation;
 import com.kaylves.interfacex.method.RequestPath;
@@ -64,7 +65,7 @@ public class MissionResolver extends BaseServiceResolver {
                 for (MissionClientMethodAnnotation mappingAnnotation : MissionClientMethodAnnotation.values()) {
 
                     if (mappingAnnotation.getQualifiedName().equals(annotation.getQualifiedName())) {
-                        PsiAnnotationHelper.getAnnotationAttributeValues(annotation, "path").forEach(path -> itemList.add(createRestServiceItem(psiMethod, "", new RequestPath(path, "POST"))));
+                        PsiAnnotationHelper.getAnnotationAttributeValues(annotation, "path").forEach(path -> itemList.add(createRestServiceItem(psiMethod, InterfaceXEnum.Mission,"", new RequestPath(path, "POST"))));
                     }
                 }
             }

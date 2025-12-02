@@ -1,5 +1,6 @@
 package com.kaylves.interfacex.common.resolver;
 
+import com.kaylves.interfacex.annotations.InterfaceXEnum;
 import com.kaylves.interfacex.method.RequestPath;
 import com.kaylves.interfacex.navigator.RestServiceItem;
 import com.intellij.openapi.diagnostic.Logger;
@@ -36,12 +37,12 @@ public abstract class BaseServiceResolver implements ServiceResolver {
     public abstract List<RestServiceItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope);
 
     @NotNull
-    protected RestServiceItem createRestServiceItem(PsiElement psiMethod, String classUriPath, RequestPath requestMapping) {
-        return createRestServiceItem(psiMethod, classUriPath, requestMapping, true);
+    protected RestServiceItem createRestServiceItem(PsiElement psiMethod, InterfaceXEnum interfaceXEnum,String classUriPath, RequestPath requestMapping) {
+        return createRestServiceItem(psiMethod, interfaceXEnum,classUriPath, requestMapping, true);
     }
 
     @NotNull
-    protected RestServiceItem createRestServiceItem(PsiElement psiMethod, String classUriPath, RequestPath requestMapping, Boolean isUrlWithoutReqMethod) {
+    protected RestServiceItem createRestServiceItem(PsiElement psiMethod,InterfaceXEnum interfaceXEnum, String classUriPath, RequestPath requestMapping, Boolean isUrlWithoutReqMethod) {
 
         LOG.debug("psiMethod:{},classUriPath:{},requestMapping:{},isUrlWithoutReqMethod:{}", psiMethod, classUriPath, requestMapping, isUrlWithoutReqMethod);
 
@@ -61,7 +62,7 @@ public abstract class BaseServiceResolver implements ServiceResolver {
 
         String requestPath = classUriPath + methodPath;
 
-        RestServiceItem item = new RestServiceItem(psiMethod, requestMapping.getMethod(), requestPath, isUrlWithoutReqMethod);
+        RestServiceItem item = new RestServiceItem(psiMethod, interfaceXEnum, requestMapping.getMethod(), requestPath, isUrlWithoutReqMethod);
 
         if (module != null) {
             item.setModule(module);

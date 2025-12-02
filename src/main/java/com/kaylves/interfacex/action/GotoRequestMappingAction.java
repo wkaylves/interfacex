@@ -1,5 +1,6 @@
 package com.kaylves.interfacex.action;
 
+import com.kaylves.interfacex.annotations.InterfaceXEnum;
 import com.kaylves.interfacex.method.HttpMethod;
 import com.kaylves.interfacex.navigator.RestServiceItem;
 import com.intellij.featureStatistics.FeatureUsageTracker;
@@ -43,9 +44,9 @@ public class GotoRequestMappingAction extends GotoActionBase implements DumbAwar
 
         final GotoRequestMappingModel model = new GotoRequestMappingModel(project, chooseByNameContributors);
 
-        GotoActionCallback<HttpMethod> callback = new GotoActionCallback<>() {
+        GotoActionCallback<InterfaceXEnum> callback = new GotoActionCallback<>() {
             @Override
-            protected ChooseByNameFilter<HttpMethod> createFilter(@NotNull ChooseByNamePopup popup) {
+            protected ChooseByNameFilter<InterfaceXEnum> createFilter(@NotNull ChooseByNamePopup popup) {
                 return new GotoRequestMappingFilter(popup, model, project);
             }
 
@@ -94,7 +95,7 @@ public class GotoRequestMappingAction extends GotoActionBase implements DumbAwar
         return null;
     }
 
-    protected static class GotoRequestMappingFilter extends ChooseByNameFilter<HttpMethod> {
+    protected static class GotoRequestMappingFilter extends ChooseByNameFilter<InterfaceXEnum> {
 
         GotoRequestMappingFilter(final ChooseByNamePopup popup, GotoRequestMappingModel model, final Project project) {
             super(popup, model, GotoRequestMappingConfiguration.getInstance(project), project);
@@ -106,17 +107,17 @@ public class GotoRequestMappingAction extends GotoActionBase implements DumbAwar
          */
         @Override
         @NotNull
-        protected List<HttpMethod> getAllFilterValues() {
-            return Arrays.asList(HttpMethod.values());
+        protected List<InterfaceXEnum> getAllFilterValues() {
+            return Arrays.asList(InterfaceXEnum.values());
         }
 
         @Override
-        protected String textForFilterValue(@NotNull HttpMethod value) {
+        protected String textForFilterValue(@NotNull InterfaceXEnum value) {
             return value.name();
         }
 
         @Override
-        protected Icon iconForFilterValue(@NotNull HttpMethod value) {
+        protected Icon iconForFilterValue(@NotNull InterfaceXEnum value) {
             return null;
         }
     }

@@ -1,5 +1,6 @@
 package com.kaylves.interfacex.common.resolver;
 
+import com.kaylves.interfacex.annotations.InterfaceXEnum;
 import com.kaylves.interfacex.annotations.rocketmq.RocketMQAnnotation;
 import com.kaylves.interfacex.method.HttpMethod;
 import com.kaylves.interfacex.navigator.RestServiceItem;
@@ -41,7 +42,7 @@ public abstract class AbstractRocketMQListenerResolver extends BaseServiceResolv
 
                 String path = MessageFormat.format("{0}",selectorExpression);
 
-                RestServiceItem item = new RestServiceItem(psiMethod, requestMethod, path, false);
+                RestServiceItem item = new RestServiceItem(psiMethod, InterfaceXEnum.RocketMQListener, requestMethod, path, false);
                 itemList.add(item);
             });
 

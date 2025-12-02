@@ -1,5 +1,6 @@
 package com.kaylves.interfacex.common.resolver;
 
+import com.kaylves.interfacex.annotations.InterfaceXEnum;
 import com.kaylves.interfacex.annotations.xxljob.XXLJobComponentAnnotation;
 import com.kaylves.interfacex.utils.PsiAnnotationHelper;
 import com.kaylves.interfacex.method.HttpMethod;
@@ -51,7 +52,7 @@ public class XXLJobResolver extends BaseServiceResolver {
                 String requestMethod = HttpMethod.EXECUTE.name();
                 String consumerGroup = StringUtils.trimToEmpty(PsiAnnotationHelper.getAnnotationAttributeValue(psiAnnotation, "value"));
                 RequestPath methodUriPath = new RequestPath(consumerGroup, "execute");
-                RestServiceItem item = new RestServiceItem(psiMethod, requestMethod, methodUriPath.getPath(), false);
+                RestServiceItem item = new RestServiceItem(psiMethod, InterfaceXEnum.XXLJob, requestMethod, methodUriPath.getPath(), false);
                 itemList.add(item);
             });
 
@@ -83,7 +84,7 @@ public class XXLJobResolver extends BaseServiceResolver {
                 String requestMethod = HttpMethod.EXECUTE.name();
                 String consumerGroup = StringUtils.trimToEmpty(PsiAnnotationHelper.getAnnotationAttributeValue(psiAnnotation, "value"));
                 RequestPath methodUriPath = new RequestPath(consumerGroup, psiMethod.getName());
-                RestServiceItem item = new RestServiceItem(psiMethod, requestMethod, methodUriPath.getPath(), false);
+                RestServiceItem item = new RestServiceItem(psiMethod, InterfaceXEnum.XXLJob,requestMethod, methodUriPath.getPath(), false);
                 itemList.add(item);
             }
 

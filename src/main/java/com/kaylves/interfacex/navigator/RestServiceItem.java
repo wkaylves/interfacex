@@ -1,5 +1,6 @@
 package com.kaylves.interfacex.navigator;
 
+import com.kaylves.interfacex.annotations.InterfaceXEnum;
 import com.kaylves.interfacex.utils.ModuleHelper;
 import com.kaylves.interfacex.common.ToolkitIcons;
 import com.kaylves.interfacex.method.HttpMethod;
@@ -11,6 +12,7 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
+import lombok.Getter;
 import lombok.ToString;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,14 +31,18 @@ public class RestServiceItem implements NavigationItem {
 
     private HttpMethod method;
 
+    @Getter
+    private InterfaceXEnum interfaceXEnum;
+
     private String url;
 
     private Navigatable navigationElement;
 
     private Boolean isUrlWithoutReqMethod = false;
 
-    public RestServiceItem(PsiElement psiElement, String requestMethod, String urlPath, Boolean isUrlWithoutReqMethod) {
+    public RestServiceItem(PsiElement psiElement, InterfaceXEnum interfaceXEnum,String requestMethod, String urlPath, Boolean isUrlWithoutReqMethod) {
         this.psiElement = psiElement;
+        this.interfaceXEnum = interfaceXEnum;
 
         if (psiElement instanceof PsiMethod) {
             this.psiMethod = (PsiMethod) psiElement;
@@ -55,10 +61,6 @@ public class RestServiceItem implements NavigationItem {
         }
 
         this.isUrlWithoutReqMethod = isUrlWithoutReqMethod;
-    }
-
-    public RestServiceItem(PsiElement psiElement, String requestMethod, String urlPath) {
-        this(psiElement, requestMethod, urlPath, false);
     }
 
     @Nullable

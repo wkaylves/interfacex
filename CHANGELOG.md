@@ -5,8 +5,11 @@
 
 ## [1.0.8]
 ### Added
-- 增加接口名称按字母排序
-- 导出rocketmq、rabbitmq生产者excel文件
+* 增加接口名称按字母排序
+* 导出rocketmq、rabbitmq生产者excel文件
+* Find Action / Search Everywhere支持以下类型
+RocketMQProducer、RocketMQDeliver、RocketMQListener、RabbitMQListener
+RabbitMQProducer、XXLJob 、HTTP、OpenFeign, Mission
 
 ## [1.0.7]
 ### Added

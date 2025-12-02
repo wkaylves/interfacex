@@ -1,5 +1,6 @@
 package com.kaylves.interfacex.common.resolver;
 
+import com.kaylves.interfacex.annotations.InterfaceXEnum;
 import com.kaylves.interfacex.annotations.http.JakartaPathAnnotation;
 import com.kaylves.interfacex.common.jakarta.JakartaAnnotationHelper;
 import com.kaylves.interfacex.method.RequestPath;
@@ -46,7 +47,7 @@ public class JakartaResolver extends BaseServiceResolver {
                 RequestPath[] methodUriPaths = JakartaAnnotationHelper.getRequestPaths(psiMethod);
 
                 for (RequestPath methodUriPath : methodUriPaths) {
-                    RestServiceItem item = createRestServiceItem(psiMethod, classUriPath, methodUriPath, false);
+                    RestServiceItem item = createRestServiceItem(psiMethod, InterfaceXEnum.HTTP, classUriPath, methodUriPath, false);
                     itemList.add(item);
                 }
             }

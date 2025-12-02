@@ -14,8 +14,8 @@ public enum InterfaceXEnum {
     RabbitMQProducer(RabbitMQProducerServiceStrategy.class),
 
     XXLJob(XXLJobServiceStrategy.class),
-    SpringController(SpringControllerStrategy.class),
-    OpenFeignClient(OpenFeignStrategy.class),
+    HTTP(SpringControllerStrategy.class),
+    OpenFeign(OpenFeignStrategy.class),
     Mission(MissionStrategy.class);
 
     private final Class<?> strategy;

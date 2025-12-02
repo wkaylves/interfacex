@@ -1,5 +1,6 @@
 package com.kaylves.interfacex.common.resolver;
 
+import com.kaylves.interfacex.annotations.InterfaceXEnum;
 import com.kaylves.interfacex.annotations.rabbitmq.RabbitMQAnnotation;
 import com.kaylves.interfacex.method.HttpMethod;
 import com.kaylves.interfacex.navigator.RestServiceItem;
@@ -49,7 +50,7 @@ public class RabbitMQListenerResolver extends BaseServiceResolver {
 
                 String path = MessageFormat.format("{0}",queue);
 
-                RestServiceItem item = new RestServiceItem(psiMethod, requestMethod, path, false);
+                RestServiceItem item = new RestServiceItem(psiMethod, InterfaceXEnum.RabbitMQListener,requestMethod, path, false);
                 itemList.add(item);
             }
         }

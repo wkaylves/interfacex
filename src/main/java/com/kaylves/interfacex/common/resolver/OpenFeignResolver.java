@@ -1,5 +1,6 @@
 package com.kaylves.interfacex.common.resolver;
 
+import com.kaylves.interfacex.annotations.InterfaceXEnum;
 import com.kaylves.interfacex.annotations.http.SpringHttpRequestAnnotation;
 import com.kaylves.interfacex.utils.PsiAnnotationHelper;
 import com.kaylves.interfacex.common.spring.RequestMappingAnnotationHelper;
@@ -60,7 +61,7 @@ public class OpenFeignResolver extends BaseServiceResolver {
 
                 for (RequestPath methodRequestPath : methodRequestPaths) {
                     String path = classRequestPath.getPath();
-                    RestServiceItem item = createRestServiceItem(psiMethod, path, methodRequestPath);
+                    RestServiceItem item = createRestServiceItem(psiMethod, InterfaceXEnum.OpenFeign,path, methodRequestPath);
                     itemList.add(item);
                 }
             }

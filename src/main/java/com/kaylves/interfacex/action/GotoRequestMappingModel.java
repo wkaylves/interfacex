@@ -1,5 +1,6 @@
 package com.kaylves.interfacex.action;
 
+import com.kaylves.interfacex.annotations.InterfaceXEnum;
 import com.kaylves.interfacex.method.HttpMethod;
 import com.kaylves.interfacex.navigator.RestServiceItem;
 import com.intellij.ide.IdeBundle;
@@ -22,7 +23,7 @@ import java.util.Collection;
 /**
  * Model for "Go to | File" action
  */
-public class GotoRequestMappingModel extends FilteringGotoByModel<HttpMethod> implements DumbAware, CustomMatcherModel {
+public class GotoRequestMappingModel extends FilteringGotoByModel<InterfaceXEnum> implements DumbAware, CustomMatcherModel {
 
     protected GotoRequestMappingModel(@NotNull Project project, @NotNull ChooseByNameContributor[] contributors) {
         super(project, contributors);
@@ -33,9 +34,9 @@ public class GotoRequestMappingModel extends FilteringGotoByModel<HttpMethod> im
     //  (for example: GotoClassModel2 filter language，override getFilterItems())
     @Nullable
     @Override
-    protected HttpMethod filterValueFor(NavigationItem item) {
+    protected InterfaceXEnum filterValueFor(NavigationItem item) {
         if (item instanceof RestServiceItem) {
-            return ((RestServiceItem) item).getMethod();
+            return ((RestServiceItem) item).getInterfaceXEnum();
         }
 
         return null;
@@ -43,7 +44,7 @@ public class GotoRequestMappingModel extends FilteringGotoByModel<HttpMethod> im
 
     @Nullable
     @Override
-    protected synchronized Collection<HttpMethod> getFilterItems() {
+    protected synchronized Collection<InterfaceXEnum> getFilterItems() {
         return super.getFilterItems();
     }
 

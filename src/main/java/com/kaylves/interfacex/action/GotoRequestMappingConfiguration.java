@@ -1,9 +1,10 @@
 package com.kaylves.interfacex.action;
 
-import com.kaylves.interfacex.method.HttpMethod;
 import com.intellij.ide.util.gotoByName.ChooseByNameFilterConfiguration;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
+import com.kaylves.interfacex.annotations.InterfaceXEnum;
+import com.kaylves.interfacex.method.HttpMethod;
 
 /**
  * Configuration for file type filtering popup in "Go to | Service" action.
@@ -12,7 +13,7 @@ import com.intellij.openapi.project.Project;
  */
 @State(name = "GotoRequestMappingConfiguration", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 @Service
-final class GotoRequestMappingConfiguration extends ChooseByNameFilterConfiguration<HttpMethod> {
+final class GotoRequestMappingConfiguration extends ChooseByNameFilterConfiguration<InterfaceXEnum> {
 
     /**
      * Get configuration instance
@@ -25,7 +26,7 @@ final class GotoRequestMappingConfiguration extends ChooseByNameFilterConfigurat
     }
 
     @Override
-    protected String nameForElement(HttpMethod type) {
+    protected String nameForElement(InterfaceXEnum type) {
         return type.name();
     }
 }
