@@ -22,14 +22,9 @@ import java.util.Collection;
 /**
  * Model for "Go to | File" action
  */
-public class GotoRequestMappingModel
-        extends FilteringGotoByModel<HttpMethod>
-        implements DumbAware, CustomMatcherModel {
+public class GotoRequestMappingModel extends FilteringGotoByModel<HttpMethod> implements DumbAware, CustomMatcherModel {
 
-    protected GotoRequestMappingModel(
-            @NotNull Project project,
-            @NotNull ChooseByNameContributor[] contributors
-    ) {
+    protected GotoRequestMappingModel(@NotNull Project project, @NotNull ChooseByNameContributor[] contributors) {
         super(project, contributors);
     }
 
@@ -84,10 +79,7 @@ public class GotoRequestMappingModel
     public void saveInitialCheckBoxState(boolean state) {
         PropertiesComponent propertiesComponent = PropertiesComponent.getInstance(myProject);
         if (propertiesComponent.isTrueValue("GoToRestService.OnlyCurrentModule")) {
-            propertiesComponent.setValue(
-                    "GoToRestService.OnlyCurrentModule",
-                    Boolean.toString(state)
-            );
+            propertiesComponent.setValue("GoToRestService.OnlyCurrentModule", Boolean.toString(state));
         }
     }
 
@@ -128,10 +120,7 @@ public class GotoRequestMappingModel
         // REST style params:  @RequestMapping(value="{departmentId}/employees/{employeeId}")  PathVariable
         // REST style params(regex) @RequestMapping(value="/{textualPart:[a-z-]+}.{numericPart:[\\d]+}")  PathVariable
 
-        MinusculeMatcher matcher = NameUtil.buildMatcher(
-                "*" + pattern,
-                NameUtil.MatchingCaseSensitivity.NONE
-        );
+        MinusculeMatcher matcher = NameUtil.buildMatcher("*" + pattern, NameUtil.MatchingCaseSensitivity.NONE);
         boolean matches = matcher.matches(popupItem);
         if (!matches) {
             AntPathMatcher pathMatcher = new AntPathMatcher();

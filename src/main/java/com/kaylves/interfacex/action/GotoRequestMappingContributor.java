@@ -46,18 +46,10 @@ public class GotoRequestMappingContributor implements ChooseByNameContributor {
 
     @NotNull
     @Override
-    public NavigationItem[] getItemsByName(
-            String name,
-            String pattern,
-            Project project,
-            boolean onlyThisModuleChecked
-    ) {
-        return navItem
-                .stream()
-                .filter(item -> {
-                    assert item.getName() != null;
-                    return item.getName().equals(name);
-                })
-                .toArray(NavigationItem[]::new);
+    public NavigationItem[] getItemsByName(String name, String pattern, Project project, boolean onlyThisModuleChecked) {
+        return navItem.stream().filter(item -> {
+            assert item.getName() != null;
+            return item.getName().equals(name);
+        }).toArray(NavigationItem[]::new);
     }
 }

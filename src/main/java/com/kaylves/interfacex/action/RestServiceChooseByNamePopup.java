@@ -27,65 +27,22 @@ import org.jetbrains.annotations.Nullable;
 
 public class RestServiceChooseByNamePopup extends ChooseByNamePopup {
 
-    public static final Key<
-            RestServiceChooseByNamePopup
-            > CHOOSE_BY_NAME_POPUP_IN_PROJECT_KEY = new Key<>("ChooseByNamePopup");
+    public static final Key<RestServiceChooseByNamePopup> CHOOSE_BY_NAME_POPUP_IN_PROJECT_KEY = new Key<>("ChooseByNamePopup");
 
-    protected RestServiceChooseByNamePopup(
-            @Nullable Project project,
-            @NotNull ChooseByNameModel model,
-            @NotNull ChooseByNameItemProvider provider,
-            @Nullable ChooseByNamePopup oldPopup,
-            @Nullable String predefinedText,
-            boolean mayRequestOpenInCurrentWindow,
-            int initialIndex
-    ) {
-        super(
-                project,
-                model,
-                provider,
-                oldPopup,
-                predefinedText,
-                mayRequestOpenInCurrentWindow,
-                initialIndex
-        );
+    protected RestServiceChooseByNamePopup(@Nullable Project project, @NotNull ChooseByNameModel model, @NotNull ChooseByNameItemProvider provider, @Nullable ChooseByNamePopup oldPopup, @Nullable String predefinedText, boolean mayRequestOpenInCurrentWindow, int initialIndex) {
+        super(project, model, provider, oldPopup, predefinedText, mayRequestOpenInCurrentWindow, initialIndex);
     }
 
-    public static RestServiceChooseByNamePopup createPopup(
-            final Project project,
-            @NotNull final ChooseByNameModel model,
-            @NotNull ChooseByNameItemProvider provider,
-            @Nullable final String predefinedText,
-            boolean mayRequestOpenInCurrentWindow,
-            final int initialIndex
-    ) {
+    public static RestServiceChooseByNamePopup createPopup(final Project project, @NotNull final ChooseByNameModel model, @NotNull ChooseByNameItemProvider provider, @Nullable final String predefinedText, boolean mayRequestOpenInCurrentWindow, final int initialIndex) {
         if (!StringUtil.isEmptyOrSpaces(predefinedText)) {
-            return new RestServiceChooseByNamePopup(
-                    project,
-                    model,
-                    provider,
-                    null,
-                    predefinedText,
-                    mayRequestOpenInCurrentWindow,
-                    initialIndex
-            );
+            return new RestServiceChooseByNamePopup(project, model, provider, null, predefinedText, mayRequestOpenInCurrentWindow, initialIndex);
         }
 
-        final RestServiceChooseByNamePopup oldPopup = project == null
-                ? null
-                : project.getUserData(CHOOSE_BY_NAME_POPUP_IN_PROJECT_KEY);
+        final RestServiceChooseByNamePopup oldPopup = project == null ? null : project.getUserData(CHOOSE_BY_NAME_POPUP_IN_PROJECT_KEY);
         if (oldPopup != null) {
             oldPopup.close(false);
         }
-        RestServiceChooseByNamePopup newPopup = new RestServiceChooseByNamePopup(
-                project,
-                model,
-                provider,
-                oldPopup,
-                predefinedText,
-                mayRequestOpenInCurrentWindow,
-                initialIndex
-        );
+        RestServiceChooseByNamePopup newPopup = new RestServiceChooseByNamePopup(project, model, provider, oldPopup, predefinedText, mayRequestOpenInCurrentWindow, initialIndex);
 
         if (project != null) {
             project.putUserData(CHOOSE_BY_NAME_POPUP_IN_PROJECT_KEY, newPopup);
@@ -95,10 +52,7 @@ public class RestServiceChooseByNamePopup extends ChooseByNamePopup {
 
     //TODO: resolve PathVariable
     @NotNull
-    public static String getTransformedPattern(
-            @NotNull String pattern,
-            @NotNull ChooseByNameModel model
-    ) {
+    public static String getTransformedPattern(@NotNull String pattern, @NotNull ChooseByNameModel model) {
         if (!(model instanceof GotoRequestMappingModel)) {
             return pattern;
         }

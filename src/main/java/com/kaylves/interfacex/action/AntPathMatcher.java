@@ -27,7 +27,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- *
  * <p>Part of this mapping code has been kindly borrowed from <a href="http://ant.apache.org">Apache Ant</a>.
  *
  * <p>The mapping matches URLs using the following rules:<br>
@@ -80,16 +79,10 @@ public class AntPathMatcher /*implements PathMatcher*/ {
     private static final Pattern VARIABLE_PATTERN = Pattern.compile("\\{[^/]+?\\}");
 
     private static final char[] WILDCARD_CHARS = {'*', '?', '{'};
-    final Map<String, AntPathStringMatcher> stringMatcherCache = new ConcurrentHashMap<
-            String,
-            AntPathStringMatcher
-            >(256);
+    final Map<String, AntPathStringMatcher> stringMatcherCache = new ConcurrentHashMap<String, AntPathStringMatcher>(256);
 
     //	private PathSeparatorPatternCache pathSeparatorPatternCache;
-    private final Map<String, String[]> tokenizedPatternCache = new ConcurrentHashMap<
-            String,
-            String[]
-            >(256);
+    private final Map<String, String[]> tokenizedPatternCache = new ConcurrentHashMap<String, String[]>(256);
     private String pathSeparator;
     private boolean caseSensitive = true;
     private boolean trimTokens = false;
@@ -122,12 +115,7 @@ public class AntPathMatcher /*implements PathMatcher*/ {
      *                  as far as the given base path goes is sufficient)
      * @return {@code true} if the supplied {@code path} matched, {@code false} if it didn't
      */
-    protected boolean doMatch(
-            String pattern,
-            String path,
-            boolean fullMatch,
-            Map<String, String> uriTemplateVariables
-    ) {
+    protected boolean doMatch(String pattern, String path, boolean fullMatch, Map<String, String> uriTemplateVariables) {
         if (path.startsWith(this.pathSeparator) != pattern.startsWith(this.pathSeparator)) {
             return false;
         }
@@ -160,18 +148,12 @@ public class AntPathMatcher /*implements PathMatcher*/ {
         if (pathIdxStart > pathIdxEnd) {
             // Path is exhausted, only match if rest of pattern is * or **'s
             if (pattIdxStart > pattIdxEnd) {
-                return (
-                        pattern.endsWith(this.pathSeparator) == path.endsWith(this.pathSeparator)
-                );
+                return (pattern.endsWith(this.pathSeparator) == path.endsWith(this.pathSeparator));
             }
             if (!fullMatch) {
                 return true;
             }
-            if (
-                    pattIdxStart == pattIdxEnd &&
-                            pattDirs[pattIdxStart].equals("*") &&
-                            path.endsWith(this.pathSeparator)
-            ) {
+            if (pattIdxStart == pattIdxEnd && pattDirs[pattIdxStart].equals("*") && path.endsWith(this.pathSeparator)) {
                 return true;
             }
             for (int i = pattIdxStart; i <= pattIdxEnd; i++) {
@@ -267,9 +249,7 @@ public class AntPathMatcher /*implements PathMatcher*/ {
                 pos += skipped;
                 skipped = skipSegment(path, pos, pattDir);
                 if (skipped < pattDir.length()) {
-                    return (
-                            skipped > 0 || (pattDir.length() > 0 && isWildcardChar(pattDir.charAt(0)))
-                    );
+                    return (skipped > 0 || (pattDir.length() > 0 && isWildcardChar(pattDir.charAt(0))));
                 }
                 pos += skipped;
             }
@@ -327,10 +307,7 @@ public class AntPathMatcher /*implements PathMatcher*/ {
         }
         if (tokenized == null) {
             tokenized = tokenizePath(pattern);
-            if (
-                    cachePatterns == null &&
-                            this.tokenizedPatternCache.size() >= CACHE_TURNOFF_THRESHOLD
-            ) {
+            if (cachePatterns == null && this.tokenizedPatternCache.size() >= CACHE_TURNOFF_THRESHOLD) {
                 // Try to adapt to the runtime situation that we're encountering:
                 // There are obviously too many different patterns coming in here...
                 // So let's turn off the cache since the patterns are unlikely to be reoccurring.
@@ -351,12 +328,7 @@ public class AntPathMatcher /*implements PathMatcher*/ {
      * @return the tokenized path parts
      */
     protected String[] tokenizePath(String path) {
-        return StringUtils.tokenizeToStringArray(
-                path,
-                this.pathSeparator,
-                this.trimTokens,
-                true
-        );
+        return StringUtils.tokenizeToStringArray(path, this.pathSeparator, this.trimTokens, true);
     }
 
     /**
@@ -366,11 +338,7 @@ public class AntPathMatcher /*implements PathMatcher*/ {
      * @param str     the String which must be matched against the pattern (never {@code null})
      * @return {@code true} if the string matches against the pattern, or {@code false} otherwise
      */
-    private boolean matchStrings(
-            String pattern,
-            String str,
-            Map<String, String> uriTemplateVariables
-    ) {
+    private boolean matchStrings(String pattern, String str, Map<String, String> uriTemplateVariables) {
         return getStringMatcher(pattern).matchStrings(str, uriTemplateVariables);
     }
 
@@ -394,9 +362,7 @@ public class AntPathMatcher /*implements PathMatcher*/ {
         }
         if (matcher == null) {
             matcher = new AntPathStringMatcher(pattern, this.caseSensitive);
-            if (
-                    cachePatterns == null && this.stringMatcherCache.size() >= CACHE_TURNOFF_THRESHOLD
-            ) {
+            if (cachePatterns == null && this.stringMatcherCache.size() >= CACHE_TURNOFF_THRESHOLD) {
                 // Try to adapt to the runtime situation that we're encountering:
                 // There are obviously too many different patterns coming in here...
                 // So let's turn off the cache since the patterns are unlikely to be reoccurring.
@@ -417,9 +383,7 @@ public class AntPathMatcher /*implements PathMatcher*/ {
      */
     protected static class AntPathStringMatcher {
 
-        private static final Pattern GLOB_PATTERN = Pattern.compile(
-                "\\?|\\*|\\{((?:\\{[^/]+?\\}|[^/{}]|\\\\[{}])+?)\\}"
-        );
+        private static final Pattern GLOB_PATTERN = Pattern.compile("\\?|\\*|\\{((?:\\{[^/]+?\\}|[^/{}]|\\\\[{}])+?)\\}");
 
         private static final String DEFAULT_VARIABLE_PATTERN = "(.*)";
 
@@ -459,10 +423,7 @@ public class AntPathMatcher /*implements PathMatcher*/ {
                 end = matcher.end();
             }
             patternBuilder.append(quote(pattern, end, pattern.length()));
-            this.pattern =
-                    (caseSensitive
-                            ? Pattern.compile(patternBuilder.toString())
-                            : Pattern.compile(patternBuilder.toString(), Pattern.CASE_INSENSITIVE));
+            this.pattern = (caseSensitive ? Pattern.compile(patternBuilder.toString()) : Pattern.compile(patternBuilder.toString(), Pattern.CASE_INSENSITIVE));
         }
 
         private String quote(String s, int start, int end) {
@@ -483,13 +444,7 @@ public class AntPathMatcher /*implements PathMatcher*/ {
                 if (uriTemplateVariables != null) {
                     // SPR-8455
                     if (this.variableNames.size() != matcher.groupCount()) {
-                        throw new IllegalArgumentException(
-                                "The number of capturing groups in the pattern segment " +
-                                        this.pattern +
-                                        " does not match the number of URI template variables it defines, " +
-                                        "which can occur if capturing groups are used in a URI template regex. " +
-                                        "Use non-capturing groups instead."
-                        );
+                        throw new IllegalArgumentException("The number of capturing groups in the pattern segment " + this.pattern + " does not match the number of URI template variables it defines, " + "which can occur if capturing groups are used in a URI template regex. " + "Use non-capturing groups instead.");
                     }
                     for (int i = 1; i <= matcher.groupCount(); i++) {
                         String name = this.variableNames.get(i - 1);

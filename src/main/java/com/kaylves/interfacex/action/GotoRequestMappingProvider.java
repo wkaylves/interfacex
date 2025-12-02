@@ -20,31 +20,18 @@ public class GotoRequestMappingProvider extends DefaultChooseByNameItemProvider 
     }
 
     @NotNull
-    private static MinusculeMatcher buildPatternMatcher(
-            @NotNull String pattern,
-            @NotNull NameUtil.MatchingCaseSensitivity caseSensitivity
-    ) {
+    private static MinusculeMatcher buildPatternMatcher(@NotNull String pattern, @NotNull NameUtil.MatchingCaseSensitivity caseSensitivity) {
         return NameUtil.buildMatcher(pattern, caseSensitivity);
     }
 
     @NotNull
     @Override
-    public List<String> filterNames(
-            @NotNull ChooseByNameViewModel base,
-            @NotNull String[] names,
-            @NotNull String pattern
-    ) {
+    public List<String> filterNames(@NotNull ChooseByNameViewModel base, @NotNull String[] names, @NotNull String pattern) {
         return super.filterNames(base, names, pattern);
     }
 
     @Override
-    public boolean filterElements(
-            @NotNull ChooseByNameViewModel base,
-            @NotNull String pattern,
-            boolean everywhere,
-            @NotNull ProgressIndicator indicator,
-            @NotNull Processor<Object> consumer
-    ) {
+    public boolean filterElements(@NotNull ChooseByNameViewModel base, @NotNull String pattern, boolean everywhere, @NotNull ProgressIndicator indicator, @NotNull Processor<Object> consumer) {
         pattern = ToolkitUtil.removeRedundancyMarkup(pattern);
 
         return super.filterElements(base, pattern, everywhere, indicator, consumer);

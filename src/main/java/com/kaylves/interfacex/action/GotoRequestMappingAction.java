@@ -100,6 +100,10 @@ public class GotoRequestMappingAction extends GotoActionBase implements DumbAwar
             super(popup, model, GotoRequestMappingConfiguration.getInstance(project), project);
         }
 
+        /**
+         * 自动在 Popup 右侧生成复选过滤器（就是你图中的 POST/PUT/DELETE 列表！）
+         * @return HttpMethod.values()
+         */
         @Override
         @NotNull
         protected List<HttpMethod> getAllFilterValues() {
