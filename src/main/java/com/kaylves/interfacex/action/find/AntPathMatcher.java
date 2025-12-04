@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kaylves.interfacex.action;
+package com.kaylves.interfacex.action.find;
 
 import com.kaylves.interfacex.utils.StringUtils;
 

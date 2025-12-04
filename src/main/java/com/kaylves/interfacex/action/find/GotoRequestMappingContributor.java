@@ -1,4 +1,4 @@
-package com.kaylves.interfacex.action;
+package com.kaylves.interfacex.action.find;
 
 import com.kaylves.interfacex.module.navigator.RestServiceItem;
 import com.kaylves.interfacex.utils.ServiceHelper;

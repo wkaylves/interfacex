@@ -47,7 +47,7 @@
         </action>
 
         <!-- url navigation -->
-        <action id="Toolkit.GotoService" class="com.kaylves.interfacex.action.GotoRequestMappingAction"
+        <action id="Toolkit.GotoService" class="com.kaylves.interfacex.action.find.GotoRequestMappingAction"
                 text="_Service" description="Go to Service"
                 icon="AllIcons.Actions.Search">
             <add-to-group group-id="GoToTargetEx" anchor="first"/>
