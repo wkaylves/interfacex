@@ -1,6 +1,6 @@
 package com.kaylves.interfacex.action;
 
-import com.kaylves.interfacex.method.HttpMethod;
+import com.kaylves.interfacex.common.method.HttpMethod;
 import com.intellij.ide.util.gotoByName.ChooseByNameFilterConfiguration;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;

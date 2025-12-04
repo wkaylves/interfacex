@@ -1,7 +1,7 @@
 package com.kaylves.interfacex.action;
 
-import com.kaylves.interfacex.navigator.RestServiceItem;
-import com.kaylves.interfacex.service.ServiceHelper;
+import com.kaylves.interfacex.module.navigator.RestServiceItem;
+import com.kaylves.interfacex.utils.ServiceHelper;
 import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.module.Module;

@@ -1,6 +1,6 @@
 package com.kaylves.interfacex.listener;
 
-import com.kaylves.interfacex.navigator.InterfaceXNavigator;
+import com.kaylves.interfacex.service.InterfaceXNavigatorService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
@@ -23,7 +23,7 @@ public class InterfaceXToolWindowListener implements ToolWindowManagerListener {
     @Override
     public void stateChanged(ToolWindowManager toolWindowManager) {
         ToolWindow toolWindow = toolWindowManager.getToolWindow(
-                InterfaceXNavigator.TOOL_WINDOW_ID
+                InterfaceXNavigatorService.TOOL_WINDOW_ID
         );
 
         if (toolWindow == null) {
@@ -39,7 +39,7 @@ public class InterfaceXToolWindowListener implements ToolWindowManagerListener {
             return;
         }
 
-        InterfaceXNavigator servicesNavigator = InterfaceXNavigator.getInstance(project);
+        InterfaceXNavigatorService servicesNavigator = InterfaceXNavigatorService.getInstance(project);
         servicesNavigator.scheduleStructureUpdate();
 
     }

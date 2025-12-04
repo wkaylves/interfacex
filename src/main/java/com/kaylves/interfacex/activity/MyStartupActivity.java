@@ -1,6 +1,6 @@
 package com.kaylves.interfacex.activity;
 
-import com.kaylves.interfacex.navigator.InterfaceXNavigator;
+import com.kaylves.interfacex.service.InterfaceXNavigatorService;
 import com.kaylves.interfacex.utils.ToolkitUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
@@ -24,14 +24,14 @@ public class MyStartupActivity implements StartupActivity {
             return;
         }
 
-        InterfaceXNavigator interfaceXNavigator = InterfaceXNavigator.getInstance(project);
+        InterfaceXNavigatorService interfaceXNavigatorService = InterfaceXNavigatorService.getInstance(project);
         ToolkitUtil.runWhenInitialized(project, () -> {
 
             if (project.isDisposed()) {
                 return;
             }
 
-            interfaceXNavigator.initToolWindow();
+            interfaceXNavigatorService.initToolWindow();
 
         });
     }

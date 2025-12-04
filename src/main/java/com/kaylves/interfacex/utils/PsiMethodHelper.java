@@ -1,11 +1,11 @@
 package com.kaylves.interfacex.utils;
 
-import com.kaylves.interfacex.annotations.http.JaxrsRequestAnnotation;
-import com.kaylves.interfacex.annotations.http.SpringControllerAnnotation;
-import com.kaylves.interfacex.annotations.http.SpringRequestParamAnnotations;
-import com.kaylves.interfacex.common.jaxrs.JaxrsAnnotationHelper;
-import com.kaylves.interfacex.common.spring.RequestMappingAnnotationHelper;
-import com.kaylves.interfacex.method.Parameter;
+import com.kaylves.interfacex.common.annotations.http.JaxrsRequestAnnotation;
+import com.kaylves.interfacex.common.annotations.http.SpringControllerAnnotation;
+import com.kaylves.interfacex.common.annotations.http.SpringRequestParamAnnotations;
+import com.kaylves.interfacex.utils.jaxrs.JaxrsAnnotationHelper;
+import com.kaylves.interfacex.utils.spring.SpringRequestMappingAnnotationHelper;
+import com.kaylves.interfacex.common.method.Parameter;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
@@ -205,8 +205,8 @@ public class PsiMethodHelper {
         PsiClass containingClass = psiMethod.getContainingClass();
         RestSupportedAnnotationHelper annotationHelper;
         if (isSpringRestSupported(containingClass)) {
-            ctrlPath = RequestMappingAnnotationHelper.getOneRequestMappingPath(containingClass);
-            methodPath = RequestMappingAnnotationHelper.getOneRequestMappingPath(psiMethod);
+            ctrlPath = SpringRequestMappingAnnotationHelper.getOneRequestMappingPath(containingClass);
+            methodPath = SpringRequestMappingAnnotationHelper.getOneRequestMappingPath(psiMethod);
         } else if (isJaxrsRestSupported(containingClass)) {
             ctrlPath = JaxrsAnnotationHelper.getClassUriPath(containingClass);
             methodPath = JaxrsAnnotationHelper.getMethodUriPath(psiMethod);

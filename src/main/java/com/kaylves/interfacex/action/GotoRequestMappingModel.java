@@ -1,7 +1,7 @@
 package com.kaylves.interfacex.action;
 
-import com.kaylves.interfacex.method.HttpMethod;
-import com.kaylves.interfacex.navigator.RestServiceItem;
+import com.kaylves.interfacex.common.method.HttpMethod;
+import com.kaylves.interfacex.module.navigator.RestServiceItem;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.ide.util.gotoByName.CustomMatcherModel;

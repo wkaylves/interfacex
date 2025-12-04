@@ -1,10 +1,11 @@
 package com.kaylves.interfacex.service;
 
-import com.kaylves.interfacex.navigator.RestServiceProject;
+import com.kaylves.interfacex.module.navigator.RestServiceProject;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
+import com.kaylves.interfacex.utils.ServiceHelper;
 
 import java.util.List;
 

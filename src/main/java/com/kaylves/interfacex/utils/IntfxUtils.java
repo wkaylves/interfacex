@@ -1,12 +1,13 @@
 package com.kaylves.interfacex.utils;
 
-import com.kaylves.interfacex.annotations.InterfaceXEnum;
-import com.kaylves.interfacex.annotations.http.SpringHttpRequestAnnotation;
-import com.kaylves.interfacex.bean.ServiceExportBean;
-import com.kaylves.interfacex.bean.ModulePropertiesExportBean;
-import com.kaylves.interfacex.bean.ServiceExportBeanI;
-import com.kaylves.interfacex.common.spring.RequestMappingAnnotationHelper;
-import com.kaylves.interfacex.method.RequestPath;
+import com.kaylves.interfacex.common.annotations.InterfaceXEnum;
+import com.kaylves.interfacex.common.annotations.http.SpringHttpRequestAnnotation;
+import com.kaylves.interfacex.module.export.bean.ServiceExportBean;
+import com.kaylves.interfacex.module.export.bean.ModulePropertiesExportBean;
+import com.kaylves.interfacex.module.export.bean.ServiceExportBeanI;
+import com.kaylves.interfacex.module.export.strategy.*;
+import com.kaylves.interfacex.utils.spring.SpringRequestMappingAnnotationHelper;
+import com.kaylves.interfacex.common.method.RequestPath;
 import com.intellij.lang.findUsages.FindUsagesProvider;
 import com.intellij.lang.java.JavaFindUsagesProvider;
 import com.intellij.openapi.module.Module;
@@ -21,7 +22,6 @@ import com.intellij.psi.util.PsiUtil;
 import com.intellij.refactoring.util.MoveRenameUsageInfo;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.util.Query;
-import com.kaylves.interfacex.strategy.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -89,7 +89,7 @@ public class IntfxUtils {
 
             PsiMethod[] psiMethods = psiClass.getMethods();
 
-            List<RequestPath> classRequestPaths = RequestMappingAnnotationHelper.getSpringAnnotationRequestPaths(psiClass);
+            List<RequestPath> classRequestPaths = SpringRequestMappingAnnotationHelper.getSpringAnnotationRequestPaths(psiClass);
 
             for (PsiMethod psiMethod : psiMethods) {
 

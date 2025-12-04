@@ -1,7 +1,7 @@
 package com.kaylves.interfacex.action.toolbar;
 
 import com.alibaba.excel.EasyExcel;
-import com.kaylves.interfacex.bean.ModulePropertiesExportBean;
+import com.kaylves.interfacex.module.export.bean.ModulePropertiesExportBean;
 import com.kaylves.interfacex.utils.IdeaPluginUtils;
 import com.kaylves.interfacex.utils.IntfxUtils;
 import com.intellij.notification.NotificationGroupManager;

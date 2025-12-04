@@ -1,6 +1,6 @@
 package com.kaylves.interfacex.action.toolbar;
 
-import com.kaylves.interfacex.navigator.InterfaceXNavigator;
+import com.kaylves.interfacex.service.InterfaceXNavigatorService;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -24,7 +24,7 @@ public class RefreshProjectAction extends AnAction {
         LOG.warn("trigger:refresh project");
         final Project project = getProject(e.getDataContext());
         assert project != null;
-        InterfaceXNavigator servicesNavigator = InterfaceXNavigator.getInstance(project);
+        InterfaceXNavigatorService servicesNavigator = InterfaceXNavigatorService.getInstance(project);
         servicesNavigator.scheduleStructureUpdate(true);
     }
 }
