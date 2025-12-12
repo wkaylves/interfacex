@@ -24,8 +24,9 @@ org.apache.rocketmq.spring.annotation.RocketMQMessageListener
 自动扫描类上有此注解的类com.xxl.job.core.handler.annotation.JobHandler
 
 # 变更历史
-## [1.0.8]
+## [1.0.9]
 ### Added
+* 增加使用说明
 * 增加接口名称按字母排序
 * 导出rocketmq、rabbitmq生产者excel文件
 * Find Action / Search Everywhere支持以下类型
