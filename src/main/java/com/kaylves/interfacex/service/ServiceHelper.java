@@ -37,19 +37,25 @@ public class ServiceHelper {
 
         List<ServiceResolver> serviceResolvers = new ArrayList<>();
 
+        //rocketmq
+        serviceResolvers.add(new RocketMQTemplateProducerResolver(module));
+        serviceResolvers.add(new RocketMQDeliverResolver(module));
+        serviceResolvers.add(new RocketMQCustomProducerResolver(module));
+
+        //rocketmq listener
         serviceResolvers.add(new RocketMQListenerResolver(module));
         serviceResolvers.add(new ShardThreadPoolRocketMqListenerResolver(module));
-        serviceResolvers.add(new RocketMQDeliverResolver(module));
-        serviceResolvers.add(new RocketMQProducerResolver(module));
 
 
+        //rabbitmq
         serviceResolvers.add(new RabbitMQListenerResolver(module));
         serviceResolvers.add(new RabbitMQProducerResolver(module));
 
         serviceResolvers.add(new XXLJobResolver(module));
+
+        //HTTP
         serviceResolvers.add(new SpringMVCResolver(module));
         serviceResolvers.add(new OpenFeignResolver(module));
-
         serviceResolvers.add(new MissionResolver(module));
 
         serviceResolvers.forEach(serviceResolver -> {

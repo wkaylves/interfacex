@@ -1,5 +1,6 @@
 package com.kaylves.interfacex.navigator;
 
+import com.intellij.openapi.application.ReadAction;
 import com.kaylves.interfacex.common.ToolkitIcons;
 import com.kaylves.interfacex.service.ProjectInitService;
 import com.intellij.ide.DefaultTreeExpander;
@@ -69,17 +70,18 @@ public class InterfaceXSimpleTreeStructure extends SimpleTreeStructure {
 
     public void update(boolean needRefresh) {
 
-        List<RestServiceProject> projects = ProjectInitService.getInstance(project).getServiceProjects();
+        ApplicationManager.getApplication().executeOnPooledThread(() -> {
+            ReadAction.run(() -> {
 
-        updateProjects(projects);
+                List<RestServiceProject> projects = ProjectInitService.getInstance(project).getServiceProjects();
 
-        if (needRefresh) {
+                updateProjects(projects);
 
-            ApplicationManager.getApplication().invokeLater(() -> {
-                structureTreeModel.invalidate(); // 同步方式兼容旧版:ml-citation{ref="2" data="citationList"}
+                if (needRefresh) {
+                    structureTreeModel.invalidate(); // 同步方式兼容旧版:ml-citation{ref="2" data="citationList"}
+                }
             });
-
-        }
+        });
     }
 
     public void updateProjects(List<RestServiceProject> projects) {

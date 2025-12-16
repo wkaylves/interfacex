@@ -12,7 +12,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.project.Project;
-import org.apache.commons.lang.time.DateFormatUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;

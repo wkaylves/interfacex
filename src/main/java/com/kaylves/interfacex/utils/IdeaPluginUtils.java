@@ -1,8 +1,11 @@
 package com.kaylves.interfacex.utils;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.*;
+import com.intellij.psi.JavaPsiFacade;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiMethod;
 import com.intellij.psi.javadoc.PsiDocComment;
 import com.intellij.psi.javadoc.PsiDocTag;
 import com.intellij.psi.javadoc.PsiDocTagValue;
@@ -30,6 +33,16 @@ public class IdeaPluginUtils {
      */
     public static PsiClass findPsiClass(Project project,String qualifiedName){
         return JavaPsiFacade.getInstance(project).findClass(qualifiedName, GlobalSearchScope.allScope(project));
+    }
+
+    public static PsiClass findPsiClass(Project project,String qualifiedName,final GlobalSearchScope globalSearchScope){
+        try {
+            return ReadAction.compute(() ->
+                    JavaPsiFacade.getInstance(project).findClass(qualifiedName, globalSearchScope)
+            );
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static File showFileChooser(AnActionEvent e,String filename, FileNameExtensionFilter fileNameExtensionFilter) {

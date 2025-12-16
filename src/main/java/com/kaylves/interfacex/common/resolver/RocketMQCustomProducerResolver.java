@@ -19,9 +19,9 @@ import java.util.Collection;
 import java.util.List;
 
 @Slf4j
-public class RocketMQProducerResolver extends BaseServiceResolver {
+public class RocketMQCustomProducerResolver extends BaseServiceResolver {
 
-    public RocketMQProducerResolver(Module module) {
+    public RocketMQCustomProducerResolver(Module module) {
         this.module = module;
     }
 
