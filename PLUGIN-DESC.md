@@ -24,6 +24,12 @@ org.apache.rocketmq.spring.annotation.RocketMQMessageListener
 自动扫描类上有此注解的类com.xxl.job.core.handler.annotation.JobHandler
 
 # 变更历史
+
+## [1.1.0]
+### Added
+* 加载树形菜单异步加载，兼容2024.3版本
+* RocketMQ生产者支持Spring RocketMQTemplate，独立菜单目录
+
 ## [1.0.9]
 ### Added
 * 增加使用说明
