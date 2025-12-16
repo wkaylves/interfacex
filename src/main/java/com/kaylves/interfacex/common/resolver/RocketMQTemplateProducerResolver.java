@@ -56,7 +56,6 @@ public class RocketMQTemplateProducerResolver extends BaseServiceResolver {
             PsiMethod[] psiMethods = psiClass.findMethodsByName(rabbitMethodName, true);
 
             for (PsiMethod method : psiMethods) {
-                log.info(" method success  >>>>>>>>>>>> {}",method);
 
                 Collection<PsiReference> references = ReferencesSearch.search(method, moduleScope).findAll();
                 for (PsiReference ref : references) {
@@ -65,10 +64,7 @@ public class RocketMQTemplateProducerResolver extends BaseServiceResolver {
                     if (element instanceof PsiReferenceExpression) {
                         PsiElement parent = element.getParent();
 
-                        log.info("parent result success call >>>>>>>>>>>> {}",parent);
-
                         if (parent instanceof PsiMethodCallExpression callExpression) {
-                            log.info("addCall add success call >>>>>>>>>>>> {}",psiClass);
 
                             addCall(results, callExpression, rabbitMethodName);
                         }

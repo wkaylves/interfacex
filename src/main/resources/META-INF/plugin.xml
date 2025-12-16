@@ -84,8 +84,9 @@
 
         <notificationGroup id="com.kaylves.plugin.interfacex.notification"      displayType="BALLOON"/>
 
-        <!-- Project启动初始化ToolWindow -->
-        <postStartupActivity implementation="com.kaylves.interfacex.activity.MyStartupActivity"/>
+        <toolWindow id="InterfaceX"
+                    factoryClass="com.kaylves.interfacex.toolwindow.InterfaceXToolWindow"
+                    anchor="right"/>
 
     </extensions>
 
