@@ -13,6 +13,15 @@ Spring-MVC注解
 ## OpenFeign扫描规则
 Spring OpenFeign包装注解
 
+## RabbitMQ 生产者扫描规则
+
+自动扫描当前工程下方法中调用org.apache.rocketmq.spring.core.RocketMQTemplate#convertAndSend的方法
+建议方法名称为tag名称，每个工程创建一个类即可。
+
+```java
+rocketMQTemplate.convertAndSend();
+```
+
 ## RabbitMQ 消费者扫描规则
 自动扫描Spring Bean方法有
 org.springframework.amqp.rabbit.annotation.RabbitListener的方法
@@ -25,8 +34,14 @@ org.apache.rocketmq.spring.annotation.RocketMQMessageListener
 自动扫描类上有此注解的类com.xxl.job.core.handler.annotation.JobHandler
 
 # 变更历史
-## [1.0.8]
+## [1.1.0]
 ### Added
+* 加载树形菜单异步加载，兼容2024.3版本
+* RocketMQ生产者支持Spring RocketMQTemplate，独立菜单目录
+
+## [1.0.9]
+### Added
+* 增加使用说明
 * 增加接口名称按字母排序
 * 导出rocketmq、rabbitmq生产者excel文件
 * Find Action / Search Everywhere支持以下类型
