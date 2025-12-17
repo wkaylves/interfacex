@@ -1,4 +1,4 @@
-#InterfaceX
+# InterfaceX
 
 A simple and easy-to-use component interface viewer for IntelliJ IDEA. Supports viewing entry points of HTTP, OpenFeign, RabbitMQ consumers, RocketMQ consumers, and XXL-JOB scheduled tasks.
 When projects grow large, code navigation becomes difficult — this plugin helps you quickly locate all interface entry points.
