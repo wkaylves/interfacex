@@ -1,7 +1,8 @@
-package com.kaylves.interfacex.navigator;
+package com.kaylves.interfacex.ui.navigator;
 
 import com.intellij.openapi.application.ReadAction;
 import com.kaylves.interfacex.common.ToolkitIcons;
+import com.kaylves.interfacex.service.InterfaceXNavigator;
 import com.kaylves.interfacex.service.ProjectInitService;
 import com.intellij.ide.DefaultTreeExpander;
 import com.intellij.ide.todo.TodoTreeBuilder;
@@ -58,7 +59,7 @@ public class InterfaceXSimpleTreeStructure extends SimpleTreeStructure {
     /**
      * 打开所有树子节点
      */
-    public void expandAll(){
+    public void expandAll() {
         DefaultTreeExpander myTreeExpander = new DefaultTreeExpander(simpleTree);
         myTreeExpander.expandAll();
     }
@@ -70,16 +71,16 @@ public class InterfaceXSimpleTreeStructure extends SimpleTreeStructure {
 
     public void update(boolean needRefresh) {
 
+        if (!needRefresh) {
+            return;
+        }
+
         ApplicationManager.getApplication().executeOnPooledThread(() -> {
             ReadAction.run(() -> {
 
                 List<RestServiceProject> projects = ProjectInitService.getInstance(project).getServiceProjects();
-
                 updateProjects(projects);
-
-                if (needRefresh) {
-                    structureTreeModel.invalidate(); // 同步方式兼容旧版:ml-citation{ref="2" data="citationList"}
-                }
+                structureTreeModel.invalidate(); // 同步方式兼容旧版:ml-citation{ref="2" data="citationList"}
             });
         });
     }
@@ -204,10 +205,10 @@ public class InterfaceXSimpleTreeStructure extends SimpleTreeStructure {
             updateServiceNodes(project.getServiceItemMap());
         }
 
-        private void updateServiceNodes(Map<String,List<RestServiceItem>> serviceItems) {
+        private void updateServiceNodes(Map<String, List<RestServiceItem>> serviceItems) {
 
             serviceItems.forEach((s, restServiceItems) -> {
-                categoryNodes.add(new CategoryNode(s,this, myProject));
+                categoryNodes.add(new CategoryNode(s, this, myProject));
             });
 
 
@@ -296,7 +297,7 @@ public class InterfaceXSimpleTreeStructure extends SimpleTreeStructure {
 
         private String moduleName;
 
-        public ModuleNode(SimpleNode parent, RestServiceProject project,String moduleName) {
+        public ModuleNode(SimpleNode parent, RestServiceProject project, String moduleName) {
             super(parent);
             this.project = project;
             this.moduleName = moduleName;
@@ -326,7 +327,7 @@ public class InterfaceXSimpleTreeStructure extends SimpleTreeStructure {
         @Override
         public String getName() {
 
-            if(!moduleNodes.isEmpty()){
+            if (!moduleNodes.isEmpty()) {
                 return MessageFormat.format("{0}({1})", moduleName, this.serviceNodes.size());
             }
 

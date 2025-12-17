@@ -1,8 +1,7 @@
-package com.kaylves.interfacex.action;
+package com.kaylves.interfacex.ui.action.search;
 
 import com.kaylves.interfacex.annotations.InterfaceXEnum;
-import com.kaylves.interfacex.method.HttpMethod;
-import com.kaylves.interfacex.navigator.RestServiceItem;
+import com.kaylves.interfacex.ui.navigator.RestServiceItem;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.ide.actions.GotoActionBase;
 import com.intellij.ide.util.gotoByName.ChooseByNameFilter;

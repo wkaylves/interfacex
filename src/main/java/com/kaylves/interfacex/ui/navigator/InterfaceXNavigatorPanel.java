@@ -1,4 +1,4 @@
-package com.kaylves.interfacex.navigator;
+package com.kaylves.interfacex.ui.navigator;
 
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionToolbar;

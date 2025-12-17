@@ -1,6 +1,6 @@
-package com.kaylves.interfacex.action;
+package com.kaylves.interfacex.ui.action.search;
 
-import com.kaylves.interfacex.navigator.RestServiceItem;
+import com.kaylves.interfacex.ui.navigator.RestServiceItem;
 import com.kaylves.interfacex.service.ServiceHelper;
 import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.NavigationItem;

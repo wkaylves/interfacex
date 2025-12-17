@@ -1,7 +1,10 @@
-package com.kaylves.interfacex.navigator;
+package com.kaylves.interfacex.service;
 
 import com.intellij.openapi.wm.ToolWindow;
 import com.kaylves.interfacex.common.ToolkitIcons;
+import com.kaylves.interfacex.ui.navigator.InterfaceXNavigatorPanel;
+import com.kaylves.interfacex.ui.navigator.InterfaceXNavigatorState;
+import com.kaylves.interfacex.ui.navigator.InterfaceXSimpleTreeStructure;
 import com.kaylves.interfacex.utils.ToolkitUtil;
 import com.intellij.ide.util.treeView.TreeState;
 import com.intellij.openapi.application.ApplicationManager;

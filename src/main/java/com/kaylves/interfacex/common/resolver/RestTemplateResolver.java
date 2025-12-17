@@ -6,9 +6,8 @@ import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.searches.ReferencesSearch;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.kaylves.interfacex.annotations.InterfaceXEnum;
 import com.kaylves.interfacex.method.HttpMethod;
-import com.kaylves.interfacex.navigator.RestServiceItem;
+import com.kaylves.interfacex.ui.navigator.RestServiceItem;
 import com.kaylves.interfacex.utils.PsiAnnotationHelper;
 import lombok.extern.slf4j.Slf4j;
 

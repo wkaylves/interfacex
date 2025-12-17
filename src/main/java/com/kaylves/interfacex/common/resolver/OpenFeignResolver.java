@@ -5,7 +5,7 @@ import com.kaylves.interfacex.annotations.http.SpringHttpRequestAnnotation;
 import com.kaylves.interfacex.utils.PsiAnnotationHelper;
 import com.kaylves.interfacex.common.spring.RequestMappingAnnotationHelper;
 import com.kaylves.interfacex.method.RequestPath;
-import com.kaylves.interfacex.navigator.RestServiceItem;
+import com.kaylves.interfacex.ui.navigator.RestServiceItem;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;

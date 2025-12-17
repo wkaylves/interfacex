@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.kaylves.interfacex.action;
+package com.kaylves.interfacex.ui.action.search;
 
 import com.kaylves.interfacex.utils.ToolkitUtil;
 import com.intellij.ide.util.gotoByName.ChooseByNameItemProvider;

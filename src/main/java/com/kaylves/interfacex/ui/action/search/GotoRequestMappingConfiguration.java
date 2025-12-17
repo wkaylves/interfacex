@@ -1,10 +1,9 @@
-package com.kaylves.interfacex.action;
+package com.kaylves.interfacex.ui.action.search;
 
 import com.intellij.ide.util.gotoByName.ChooseByNameFilterConfiguration;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
 import com.kaylves.interfacex.annotations.InterfaceXEnum;
-import com.kaylves.interfacex.method.HttpMethod;
 
 /**
  * Configuration for file type filtering popup in "Go to | Service" action.

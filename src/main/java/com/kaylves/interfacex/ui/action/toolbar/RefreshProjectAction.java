@@ -1,6 +1,6 @@
-package com.kaylves.interfacex.action.toolbar;
+package com.kaylves.interfacex.ui.action.toolbar;
 
-import com.kaylves.interfacex.navigator.InterfaceXNavigator;
+import com.kaylves.interfacex.service.InterfaceXNavigator;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
