@@ -5,7 +5,7 @@ import com.kaylves.interfacex.annotations.xxljob.XXLJobComponentAnnotation;
 import com.kaylves.interfacex.utils.PsiAnnotationHelper;
 import com.kaylves.interfacex.method.HttpMethod;
 import com.kaylves.interfacex.method.RequestPath;
-import com.kaylves.interfacex.navigator.RestServiceItem;
+import com.kaylves.interfacex.ui.navigator.RestServiceItem;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;

@@ -1,8 +1,8 @@
 package com.kaylves.interfacex.service;
 
 import com.kaylves.interfacex.common.resolver.*;
-import com.kaylves.interfacex.navigator.RestServiceItem;
-import com.kaylves.interfacex.navigator.RestServiceProject;
+import com.kaylves.interfacex.ui.navigator.RestServiceItem;
+import com.kaylves.interfacex.ui.navigator.RestServiceProject;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;

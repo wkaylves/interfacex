@@ -1,6 +1,10 @@
-package com.kaylves.interfacex.navigator;
+package com.kaylves.interfacex.service;
 
+import com.intellij.openapi.wm.ToolWindow;
 import com.kaylves.interfacex.common.ToolkitIcons;
+import com.kaylves.interfacex.ui.navigator.InterfaceXNavigatorPanel;
+import com.kaylves.interfacex.ui.navigator.InterfaceXNavigatorState;
+import com.kaylves.interfacex.ui.navigator.InterfaceXSimpleTreeStructure;
 import com.kaylves.interfacex.utils.ToolkitUtil;
 import com.intellij.ide.util.treeView.TreeState;
 import com.intellij.openapi.application.ApplicationManager;
@@ -67,6 +71,28 @@ public final class InterfaceXNavigator implements PersistentStateComponent<Inter
         simpleTree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
     }
 
+
+    public void initToolWindow(ToolWindow toolWindow) {
+        log.info("initToolWindow>>>>>>>>>");
+
+        myToolWindow = (ToolWindowEx) toolWindow;
+
+        initTree();
+
+        final JPanel panel = new InterfaceXNavigatorPanel(project, simpleTree);
+
+        final ContentFactory contentFactory = ServiceManager.getService(ContentFactory.class);
+
+        final Content content = contentFactory.createContent(panel, "", false);
+
+        ContentManager contentManager = myToolWindow.getContentManager();
+        contentManager.addContent(content);
+        contentManager.setSelectedContent(content, false);
+
+        initStructure();
+    }
+
+
     public void initToolWindow() {
 
         log.info("initToolWindow>>>>>>>>>");
@@ -114,10 +140,6 @@ public final class InterfaceXNavigator implements PersistentStateComponent<Inter
                 return;
             }
 
-            boolean shouldCreate = interfaceXSimpleTreeStructure == null;
-            if (shouldCreate) {
-                initStructure();
-            }
 
             runnable.run();
 

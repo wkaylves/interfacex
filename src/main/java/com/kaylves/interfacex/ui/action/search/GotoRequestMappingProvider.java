@@ -1,4 +1,4 @@
-package com.kaylves.interfacex.action;
+package com.kaylves.interfacex.ui.action.search;
 
 import com.kaylves.interfacex.utils.ToolkitUtil;
 import com.intellij.ide.util.gotoByName.ChooseByNameViewModel;

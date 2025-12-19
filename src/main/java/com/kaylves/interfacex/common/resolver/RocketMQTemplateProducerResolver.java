@@ -8,7 +8,7 @@ import com.intellij.psi.search.searches.ReferencesSearch;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.kaylves.interfacex.annotations.InterfaceXEnum;
 import com.kaylves.interfacex.method.HttpMethod;
-import com.kaylves.interfacex.navigator.RestServiceItem;
+import com.kaylves.interfacex.ui.navigator.RestServiceItem;
 import com.kaylves.interfacex.utils.IdeaPluginUtils;
 import com.kaylves.interfacex.utils.PsiAnnotationHelper;
 import lombok.extern.slf4j.Slf4j;
@@ -30,8 +30,6 @@ public class RocketMQTemplateProducerResolver extends BaseServiceResolver {
     }
 
     private List<RestServiceItem> findProducerCalls(Project project, Module module) {
-
-        log.info("module name: {}",module.getName());
 
         List<RestServiceItem> results = new ArrayList<>();
 
@@ -56,7 +54,6 @@ public class RocketMQTemplateProducerResolver extends BaseServiceResolver {
             PsiMethod[] psiMethods = psiClass.findMethodsByName(rabbitMethodName, true);
 
             for (PsiMethod method : psiMethods) {
-                log.info(" method success  >>>>>>>>>>>> {}",method);
 
                 Collection<PsiReference> references = ReferencesSearch.search(method, moduleScope).findAll();
                 for (PsiReference ref : references) {
@@ -65,10 +62,7 @@ public class RocketMQTemplateProducerResolver extends BaseServiceResolver {
                     if (element instanceof PsiReferenceExpression) {
                         PsiElement parent = element.getParent();
 
-                        log.info("parent result success call >>>>>>>>>>>> {}",parent);
-
                         if (parent instanceof PsiMethodCallExpression callExpression) {
-                            log.info("addCall add success call >>>>>>>>>>>> {}",psiClass);
 
                             addCall(results, callExpression, rabbitMethodName);
                         }

@@ -1,4 +1,4 @@
-package com.kaylves.interfacex.navigator;
+package com.kaylves.interfacex.ui.navigator;
 
 import com.kaylves.interfacex.annotations.InterfaceXEnum;
 import com.kaylves.interfacex.utils.ModuleHelper;

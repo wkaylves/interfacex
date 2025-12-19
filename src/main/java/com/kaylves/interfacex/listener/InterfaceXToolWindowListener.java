@@ -1,6 +1,6 @@
 package com.kaylves.interfacex.listener;
 
-import com.kaylves.interfacex.navigator.InterfaceXNavigator;
+import com.kaylves.interfacex.service.InterfaceXNavigator;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
