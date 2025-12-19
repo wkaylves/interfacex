@@ -7,10 +7,16 @@ Also supports exporting RabbitMQ interfaces and RabbitMQ producers.<br/>
 当项目规模变大时，代码查找困难，本插件助你快速定位所有接口入口，同时支持导出 RabbitMQ 接口和 RabbitMQ 生产者。
 
 
-## HTTP扫描规则
+## HTTP
+方便查找HTTP接口代码
+
+### 扫描规则
 Spring-MVC注解
 
-## OpenFeign扫描规则
+## OpenFeign
+当微服务较多时，一个接口可能被多个服务调用，此插件功能方便查找HTTP接口被依赖服务调用处
+
+### 扫描规则
 Spring OpenFeign包装注解
 
 ## RabbitMQ 消费者扫描规则
@@ -34,6 +40,12 @@ org.apache.rocketmq.spring.annotation.RocketMQMessageListener
 自动扫描类上有此注解的类com.xxl.job.core.handler.annotation.JobHandler
 
 # 变更历史
+
+## [1.1.1]
+### Added
+* 修复PsiElement未就绪双击末节点自动刷Tree场景，用户自主选择刷新
+* 增加文档说明
+
 ## [1.1.0]
 ### Added
 * 加载树形菜单异步加载，兼容2024.3版本

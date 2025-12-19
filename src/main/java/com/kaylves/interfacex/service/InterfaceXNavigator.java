@@ -79,7 +79,6 @@ public final class InterfaceXNavigator implements PersistentStateComponent<Inter
 
         initTree();
 
-
         final JPanel panel = new InterfaceXNavigatorPanel(project, simpleTree);
 
         final ContentFactory contentFactory = ServiceManager.getService(ContentFactory.class);
@@ -89,6 +88,8 @@ public final class InterfaceXNavigator implements PersistentStateComponent<Inter
         ContentManager contentManager = myToolWindow.getContentManager();
         contentManager.addContent(content);
         contentManager.setSelectedContent(content, false);
+
+        initStructure();
     }
 
 
@@ -139,10 +140,6 @@ public final class InterfaceXNavigator implements PersistentStateComponent<Inter
                 return;
             }
 
-            boolean shouldCreate = interfaceXSimpleTreeStructure == null;
-            if (shouldCreate) {
-                initStructure();
-            }
 
             runnable.run();
 

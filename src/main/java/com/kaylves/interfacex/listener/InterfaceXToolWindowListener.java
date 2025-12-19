@@ -40,7 +40,7 @@ public class InterfaceXToolWindowListener implements ToolWindowManagerListener {
         }
 
         InterfaceXNavigator servicesNavigator = InterfaceXNavigator.getInstance(project);
-        servicesNavigator.scheduleStructureUpdate(true);
+        servicesNavigator.scheduleStructureUpdate();
 
     }
 }
