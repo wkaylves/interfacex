@@ -18,6 +18,6 @@ public class ShardThreadPoolRocketMqListenerResolver extends AbstractRocketMQLis
 
     @Override
     public String getServiceItem() {
-        return "ShardThreadRocketMqListener";
+        return "ShardRocketMqListener";
     }
 }

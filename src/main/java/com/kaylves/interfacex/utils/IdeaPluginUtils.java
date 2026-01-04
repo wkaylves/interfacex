@@ -1,7 +1,6 @@
 package com.kaylves.interfacex.utils;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
@@ -20,32 +19,17 @@ import java.util.Objects;
 
 /**
  * IDEA插件工具
+ *
  * @author kaylves
  * @since 1.0.0
  */
 public class IdeaPluginUtils {
 
-    /**
-     * postForObject(String url, @Nullable Object request, Class<T> responseType,Object... uriVariables)
-     * @param project @{link Project}
-     * @param qualifiedName class全名
-     * @return PsiClass
-     */
-    public static PsiClass findPsiClass(Project project,String qualifiedName){
-        return JavaPsiFacade.getInstance(project).findClass(qualifiedName, GlobalSearchScope.allScope(project));
+    public static PsiClass findPsiClass(Project project, String qualifiedName, final GlobalSearchScope globalSearchScope) {
+        return JavaPsiFacade.getInstance(project).findClass(qualifiedName, globalSearchScope);
     }
 
-    public static PsiClass findPsiClass(Project project,String qualifiedName,final GlobalSearchScope globalSearchScope){
-        try {
-            return ReadAction.compute(() ->
-                    JavaPsiFacade.getInstance(project).findClass(qualifiedName, globalSearchScope)
-            );
-        } catch (RuntimeException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static File showFileChooser(AnActionEvent e,String filename, FileNameExtensionFilter fileNameExtensionFilter) {
+    public static File showFileChooser(AnActionEvent e, String filename, FileNameExtensionFilter fileNameExtensionFilter) {
 
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setSelectedFile(new File(filename));
@@ -62,8 +46,9 @@ public class IdeaPluginUtils {
 
     /**
      * 获取方法拼接注释
+     *
      * @param psiMethod {@link PsiMethod}
-     * @return  返回获取方法拼接注释
+     * @return 返回获取方法拼接注释
      */
     public static String obtainDocAsString(PsiMethod psiMethod) {
         return obtainDocAsString(psiMethod.getDocComment());
@@ -71,8 +56,9 @@ public class IdeaPluginUtils {
 
     /**
      * 获取方法拼接注释
+     *
      * @param psiDocComment {@link PsiDocComment}
-     * @return  返回获取方法拼接注释
+     * @return 返回获取方法拼接注释
      */
     public static String obtainDocAsString(PsiDocComment psiDocComment) {
 
@@ -85,11 +71,11 @@ public class IdeaPluginUtils {
             docComment = StringUtils.trimToEmpty(sb.toString());
         }
 
-        if(StringUtils.isNotBlank(docComment)){
+        if (StringUtils.isNotBlank(docComment)) {
 
             //特殊处理
-            if(docComment.contains("<一句话功能简述>")){
-                docComment = docComment.substring(0,docComment.indexOf("<一句话功能简述>"));
+            if (docComment.contains("<一句话功能简述>")) {
+                docComment = docComment.substring(0, docComment.indexOf("<一句话功能简述>"));
             }
 
         }
@@ -99,13 +85,14 @@ public class IdeaPluginUtils {
 
     /**
      * 获取作者信息
+     *
      * @param psiDocComment psiDocComment
      * @return 作者信息
      */
     public static String obtainAuth(PsiDocComment psiDocComment) {
 
         String author = "";
-        if(psiDocComment==null){
+        if (psiDocComment == null) {
             return author;
         }
 
@@ -113,7 +100,7 @@ public class IdeaPluginUtils {
         if (authorTag != null) {
 
             PsiDocTagValue psiDocTagValue = authorTag.getValueElement();
-            if(psiDocTagValue==null){
+            if (psiDocTagValue == null) {
                 return author;
             }
 
@@ -123,4 +110,5 @@ public class IdeaPluginUtils {
         return author;
 
     }
+
 }
