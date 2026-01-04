@@ -3,8 +3,8 @@ package com.kaylves.interfacex.ui.navigator;
 import com.intellij.ide.DefaultTreeExpander;
 import com.intellij.ide.todo.TodoTreeBuilder;
 import com.intellij.lang.java.JavaLanguage;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ReadAction;
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
@@ -16,7 +16,6 @@ import com.intellij.ui.treeStructure.SimpleTree;
 import com.intellij.ui.treeStructure.SimpleTreeStructure;
 import com.intellij.util.OpenSourceUtil;
 import com.kaylves.interfacex.common.ToolkitIcons;
-import com.kaylves.interfacex.service.InterfaceXNavigator;
 import com.kaylves.interfacex.service.ProjectInitService;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -75,14 +74,14 @@ public class InterfaceXSimpleTreeStructure extends SimpleTreeStructure {
             return;
         }
 
-        ApplicationManager.getApplication().executeOnPooledThread(() -> {
-            ReadAction.run(() -> {
+        ProgressManager.getInstance().runProcessWithProgressSynchronously(() -> ReadAction.run(() -> {
 
-                List<RestServiceProject> projects = ProjectInitService.getInstance(project).getServiceProjects();
-                updateProjects(projects);
-                structureTreeModel.invalidate(); // 同步方式兼容旧版:ml-citation{ref="2" data="citationList"}
-            });
-        });
+            List<RestServiceProject> projects = ProjectInitService.getInstance(project).getServiceProjects();
+            updateProjects(projects);
+            // 同步方式兼容旧版:ml-citation{ref="2" data="citationList"}
+            structureTreeModel.invalidate();
+        }),"InterfaceX Scanning Implementations...",true,project);
+
     }
 
     public void updateProjects(List<RestServiceProject> projects) {

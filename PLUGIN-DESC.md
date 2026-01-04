@@ -58,6 +58,10 @@ org.apache.rocketmq.spring.annotation.RocketMQMessageListener
 
 # 变更历史
 
+## [1.1.2]
+### Added
+* 刷新按钮点击增加显示进度条
+
 ## [1.1.1]
 ### Added
 * 增加idea高版本
