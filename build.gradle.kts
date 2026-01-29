@@ -36,6 +36,8 @@ dependencies {
   implementation("org.slf4j:slf4j-api:2.0.13")
   implementation("org.slf4j:slf4j-simple:2.0.13")
 
+  implementation("com.xuxueli:xxl-job-core:2.2.0")
+
   annotationProcessor("org.projectlombok:lombok:1.18.40");
   compileOnly("org.projectlombok:lombok:1.18.40")
   testAnnotationProcessor("org.projectlombok:lombok:1.18.40");
