@@ -58,6 +58,13 @@ org.apache.rocketmq.spring.annotation.RocketMQMessageListener
 
 # 变更历史
 
+
+## [1.1.3]
+### Added
+* 支持XLL-JOB执行
+
+鼠标右键点击执行，弹出XXL-JOB执行页面设置XLL-JOB端口号即可
+
 ## [1.1.2]
 ### Added
 * 刷新按钮点击增加显示进度条

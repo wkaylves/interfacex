@@ -17,6 +17,7 @@ import com.intellij.ui.treeStructure.SimpleTreeStructure;
 import com.intellij.util.OpenSourceUtil;
 import com.kaylves.interfacex.common.ToolkitIcons;
 import com.kaylves.interfacex.service.ProjectInitService;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,6 +33,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author kaylves
  */
+@Slf4j
 public class InterfaceXSimpleTreeStructure extends SimpleTreeStructure {
 
     RootNode myRoot = new RootNode();
@@ -53,7 +55,12 @@ public class InterfaceXSimpleTreeStructure extends SimpleTreeStructure {
 
         AsyncTreeModel asyncTreeModel = new AsyncTreeModel(structureTreeModel, this.project);
         simpleTree.setModel(asyncTreeModel);
+
+        InterfaceXPopupMenu interfaceXPopupMenu = new InterfaceXPopupMenu(simpleTree,project);
+        interfaceXPopupMenu.installPopupMenu();
     }
+
+
 
     /**
      * 打开所有树子节点

@@ -47,7 +47,7 @@
         </action>
 
         <!-- url navigation -->
-        <action id="Toolkit.GotoService" class="com.kaylves.interfacex.ui.action.search.GotoRequestMappingAction"
+        <action id="com.kaylves.interfacex.ui.action.search.GotoRequestMappingAction" class="com.kaylves.interfacex.ui.action.search.GotoRequestMappingAction"
                 text="_Service" description="Go to Service"
                 icon="AllIcons.Actions.Search">
             <add-to-group group-id="GoToTargetEx" anchor="first"/>
@@ -72,7 +72,7 @@
         <!-- 注册action group -->
         <group id="Toolkit.NavigatorActionsToolbar.InterfaceX">
             <reference id="com.kaylves.interfacex.ui.action.toolbar.RefreshProjectAction"/>
-            <reference id="Toolkit.GotoService"/>
+            <reference id="com.kaylves.interfacex.ui.action.search.GotoRequestMappingAction"/>
             <reference id="com.kaylves.interfacex.ui.action.toolbar.NavigatorInterfaceExportAction"/>
             <reference id="com.kaylves.interfacex.ui.action.toolbar.ProjectInternationalizationExportAction"/>
             <reference id="com.kaylves.interfacex.ui.action.toolbar.RocketMQProducerExportAction"/>
