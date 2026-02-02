@@ -4,7 +4,7 @@ import com.kaylves.interfacex.annotations.InterfaceXEnum;
 import com.kaylves.interfacex.annotations.mission.MissionClientAnnotation;
 import com.kaylves.interfacex.annotations.mission.MissionClientMethodAnnotation;
 import com.kaylves.interfacex.method.RequestPath;
-import com.kaylves.interfacex.ui.navigator.RestServiceItem;
+import com.kaylves.interfacex.ui.navigator.ServiceItem;
 import com.kaylves.interfacex.utils.PsiAnnotationHelper;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
@@ -31,8 +31,8 @@ public class MissionResolver extends BaseServiceResolver {
     }
 
     @Override
-    public List<RestServiceItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
-        List<RestServiceItem> itemList = new ArrayList<>();
+    public List<ServiceItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
+        List<ServiceItem> itemList = new ArrayList<>();
         Collection<PsiAnnotation> psiAnnotations = JavaAnnotationIndex.getInstance().get(MissionClientAnnotation.MISSION_CLIENT_ANNOTATION.getShortName(), project, globalSearchScope);
 
         for (PsiAnnotation psiAnnotation : psiAnnotations) {
@@ -52,10 +52,10 @@ public class MissionResolver extends BaseServiceResolver {
         return itemList;
     }
 
-    protected List<RestServiceItem> getServiceItemList(PsiClass psiClass) {
+    protected List<ServiceItem> getServiceItemList(PsiClass psiClass) {
         PsiMethod[] psiMethods = psiClass.getMethods();
 
-        List<RestServiceItem> itemList = new ArrayList<>();
+        List<ServiceItem> itemList = new ArrayList<>();
 
         for (PsiMethod psiMethod : psiMethods) {
 

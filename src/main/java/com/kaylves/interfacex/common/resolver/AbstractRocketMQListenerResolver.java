@@ -3,7 +3,7 @@ package com.kaylves.interfacex.common.resolver;
 import com.kaylves.interfacex.annotations.InterfaceXEnum;
 import com.kaylves.interfacex.annotations.rocketmq.RocketMQAnnotation;
 import com.kaylves.interfacex.method.HttpMethod;
-import com.kaylves.interfacex.ui.navigator.RestServiceItem;
+import com.kaylves.interfacex.ui.navigator.ServiceItem;
 import com.kaylves.interfacex.utils.PsiAnnotationHelper;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
@@ -20,8 +20,8 @@ public abstract class AbstractRocketMQListenerResolver extends BaseServiceResolv
 
 
     @Override
-    public List<RestServiceItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
-        List<RestServiceItem> itemList = new ArrayList<>();
+    public List<ServiceItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
+        List<ServiceItem> itemList = new ArrayList<>();
 
         Collection<PsiAnnotation> psiAnnotations = JavaAnnotationIndex.getInstance().get(getRocketMQAnnotation().getShortName(),project, globalSearchScope);
 
@@ -42,7 +42,7 @@ public abstract class AbstractRocketMQListenerResolver extends BaseServiceResolv
 
                 String path = MessageFormat.format("{0}",selectorExpression);
 
-                RestServiceItem item = new RestServiceItem(psiMethod, InterfaceXEnum.RocketMQListener, requestMethod, path, false);
+                ServiceItem item = new ServiceItem(psiMethod, InterfaceXEnum.RocketMQListener, requestMethod, path, false);
                 itemList.add(item);
             });
 

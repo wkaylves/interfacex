@@ -4,7 +4,7 @@ import com.kaylves.interfacex.annotations.InterfaceXEnum;
 import com.kaylves.interfacex.annotations.rocketmq.RocketMQDeliverAnnotation;
 import com.kaylves.interfacex.utils.PsiAnnotationHelper;
 import com.kaylves.interfacex.method.HttpMethod;
-import com.kaylves.interfacex.ui.navigator.RestServiceItem;
+import com.kaylves.interfacex.ui.navigator.ServiceItem;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
@@ -26,8 +26,8 @@ public class RocketMQDeliverResolver extends BaseServiceResolver {
     }
 
     @Override
-    public List<RestServiceItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
-        List<RestServiceItem> itemList = new ArrayList<>();
+    public List<ServiceItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
+        List<ServiceItem> itemList = new ArrayList<>();
         Collection<PsiAnnotation> psiAnnotations = JavaAnnotationIndex.getInstance().get(RocketMQDeliverAnnotation.PATH.getShortName(), project, globalSearchScope);
 
         for (PsiAnnotation psiAnnotation : psiAnnotations) {
@@ -52,7 +52,7 @@ public class RocketMQDeliverResolver extends BaseServiceResolver {
 
                 String path = MessageFormat.format("{0}",tags);
 
-                RestServiceItem item = new RestServiceItem(psiMethod, InterfaceXEnum.RocketMQDeliver, requestMethod, path, false);
+                ServiceItem item = new ServiceItem(psiMethod, InterfaceXEnum.RocketMQDeliver, requestMethod, path, false);
                 itemList.add(item);
             }
         }

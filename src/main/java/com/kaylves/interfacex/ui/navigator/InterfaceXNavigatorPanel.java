@@ -9,8 +9,10 @@ import com.intellij.openapi.ui.Splitter;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.treeStructure.SimpleTree;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.border.MatteBorder;
 
 /**
  * @author kaylves
@@ -21,6 +23,7 @@ public class InterfaceXNavigatorPanel extends SimpleToolWindowPanel {
 
     SimpleTree simpleTree;
 
+    Splitter rootSplitter;
 
     public InterfaceXNavigatorPanel(Project project,SimpleTree simpleTree) {
         super(true, true);
@@ -31,18 +34,23 @@ public class InterfaceXNavigatorPanel extends SimpleToolWindowPanel {
         initSimpleTree(simpleTree);
     }
 
+    public void setBottomComponent(@Nullable JComponent component) {
+        JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(component);
+        rootSplitter.setSecondComponent(scrollPane);
+    }
+
     private void initSimpleTree(SimpleTree simpleTree) {
         this.simpleTree = simpleTree;
 
         simpleTree.setVisible(true);
 
         JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(simpleTree);
-        scrollPane.setBorder(BorderFactory.createLineBorder(JBColor.RED));
 
-        Splitter rootSplitter = new Splitter(true, .5f);
+        rootSplitter = new Splitter(true, .5f);
         rootSplitter.setShowDividerControls(true);
         rootSplitter.setDividerWidth(10);
         rootSplitter.setFirstComponent(scrollPane);
+
         setContent(rootSplitter);
     }
 

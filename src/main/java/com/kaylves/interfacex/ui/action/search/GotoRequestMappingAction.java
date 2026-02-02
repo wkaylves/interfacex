@@ -1,7 +1,7 @@
 package com.kaylves.interfacex.ui.action.search;
 
 import com.kaylves.interfacex.annotations.InterfaceXEnum;
-import com.kaylves.interfacex.ui.navigator.RestServiceItem;
+import com.kaylves.interfacex.ui.navigator.ServiceItem;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.ide.actions.GotoActionBase;
 import com.intellij.ide.util.gotoByName.ChooseByNameFilter;
@@ -51,8 +51,8 @@ public class GotoRequestMappingAction extends GotoActionBase implements DumbAwar
 
             @Override
             public void elementChosen(ChooseByNamePopup chooseByNamePopup, Object element) {
-                if (element instanceof RestServiceItem) {
-                    RestServiceItem navigationItem = (RestServiceItem) element;
+                if (element instanceof ServiceItem) {
+                    ServiceItem navigationItem = (ServiceItem) element;
                     if (navigationItem.canNavigate()) {
                         navigationItem.navigate(true);
                     }

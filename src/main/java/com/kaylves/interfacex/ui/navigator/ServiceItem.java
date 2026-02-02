@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 
 @ToString
-public class RestServiceItem implements NavigationItem {
+public class ServiceItem implements NavigationItem {
 
     private PsiMethod psiMethod;
 
@@ -40,7 +40,7 @@ public class RestServiceItem implements NavigationItem {
 
     private Boolean isUrlWithoutReqMethod = false;
 
-    public RestServiceItem(PsiElement psiElement, InterfaceXEnum interfaceXEnum,String requestMethod, String urlPath, Boolean isUrlWithoutReqMethod) {
+    public ServiceItem(PsiElement psiElement, InterfaceXEnum interfaceXEnum, String requestMethod, String urlPath, Boolean isUrlWithoutReqMethod) {
         this.psiElement = psiElement;
         this.interfaceXEnum = interfaceXEnum;
 

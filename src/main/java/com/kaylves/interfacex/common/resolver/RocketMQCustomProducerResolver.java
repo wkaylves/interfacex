@@ -4,7 +4,7 @@ import com.kaylves.interfacex.annotations.InterfaceXEnum;
 import com.kaylves.interfacex.annotations.rocketmq.RocketMQProducerAnnotation;
 import com.kaylves.interfacex.utils.PsiAnnotationHelper;
 import com.kaylves.interfacex.method.HttpMethod;
-import com.kaylves.interfacex.ui.navigator.RestServiceItem;
+import com.kaylves.interfacex.ui.navigator.ServiceItem;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
@@ -26,8 +26,8 @@ public class RocketMQCustomProducerResolver extends BaseServiceResolver {
     }
 
     @Override
-    public List<RestServiceItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
-        List<RestServiceItem> itemList = new ArrayList<>();
+    public List<ServiceItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
+        List<ServiceItem> itemList = new ArrayList<>();
         Collection<PsiAnnotation> psiAnnotations = JavaAnnotationIndex.getInstance().get(RocketMQProducerAnnotation.ClassAnnotation.getShortName(), project, globalSearchScope);
 
         RocketMQProducerAnnotation[] pathArray = RocketMQProducerAnnotation.getPathArray();
@@ -57,7 +57,7 @@ public class RocketMQCustomProducerResolver extends BaseServiceResolver {
         return itemList;
     }
 
-    private static void processElement(PsiMethod psiMethod, RocketMQProducerAnnotation pathAnnotation, List<RestServiceItem> itemList) {
+    private static void processElement(PsiMethod psiMethod, RocketMQProducerAnnotation pathAnnotation, List<ServiceItem> itemList) {
         PsiAnnotation psiMethodAnnotation = psiMethod.getAnnotation(pathAnnotation.getQualifiedName());
 
         if (psiMethodAnnotation == null) {
@@ -82,7 +82,7 @@ public class RocketMQCustomProducerResolver extends BaseServiceResolver {
 
                 String path = MessageFormat.format("{0}",tags);
 
-                RestServiceItem item = new RestServiceItem(psiMethod, InterfaceXEnum.RocketMQProducer, requestMethod, path, false);
+                ServiceItem item = new ServiceItem(psiMethod, InterfaceXEnum.RocketMQProducer, requestMethod, path, false);
                 itemList.add(item);
             }
         }

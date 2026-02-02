@@ -211,7 +211,7 @@ public class InterfaceXSimpleTreeStructure extends SimpleTreeStructure {
             updateServiceNodes(project.getServiceItemMap());
         }
 
-        private void updateServiceNodes(Map<String, List<RestServiceItem>> serviceItems) {
+        private void updateServiceNodes(Map<String, List<ServiceItem>> serviceItems) {
 
             serviceItems.forEach((s, restServiceItems) -> {
                 categoryNodes.add(new CategoryNode(s, this, myProject));
@@ -258,10 +258,10 @@ public class InterfaceXSimpleTreeStructure extends SimpleTreeStructure {
             updateServiceNodes(project.getServiceItemMap().get(type));
         }
 
-        private void updateServiceNodes(List<RestServiceItem> serviceItems) {
+        private void updateServiceNodes(List<ServiceItem> serviceItems) {
             serviceNodes.clear();
 
-            for (RestServiceItem serviceItem : serviceItems) {
+            for (ServiceItem serviceItem : serviceItems) {
                 serviceNodes.add(new ServiceNode(this, serviceItem));
             }
 
@@ -309,10 +309,10 @@ public class InterfaceXSimpleTreeStructure extends SimpleTreeStructure {
             this.moduleName = moduleName;
         }
 
-        private void updateServiceNodes(List<RestServiceItem> serviceItems) {
+        private void updateServiceNodes(List<ServiceItem> serviceItems) {
             serviceNodes.clear();
 
-            for (RestServiceItem serviceItem : serviceItems) {
+            for (ServiceItem serviceItem : serviceItems) {
                 serviceNodes.add(new ServiceNode(this, serviceItem));
             }
 
@@ -346,9 +346,9 @@ public class InterfaceXSimpleTreeStructure extends SimpleTreeStructure {
      */
     public class ServiceNode extends BaseSimpleNode {
 
-        RestServiceItem myServiceItem;
+        ServiceItem myServiceItem;
 
-        public ServiceNode(SimpleNode parent, RestServiceItem serviceItem) {
+        public ServiceNode(SimpleNode parent, ServiceItem serviceItem) {
             super(parent);
             myServiceItem = serviceItem;
 
@@ -379,7 +379,7 @@ public class InterfaceXSimpleTreeStructure extends SimpleTreeStructure {
         public void handleDoubleClickOrEnter(SimpleTree tree, InputEvent inputEvent) {
             try {
                 ServiceNode selectedNode = (ServiceNode) tree.getSelectedNode();
-                RestServiceItem myServiceItem = selectedNode.myServiceItem;
+                ServiceItem myServiceItem = selectedNode.myServiceItem;
                 PsiElement psiElement = myServiceItem.getPsiElement();
 
                 if (!psiElement.isValid()) {

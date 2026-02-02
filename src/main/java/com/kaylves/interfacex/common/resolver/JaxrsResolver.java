@@ -4,7 +4,7 @@ import com.kaylves.interfacex.annotations.InterfaceXEnum;
 import com.kaylves.interfacex.annotations.http.JaxrsPathAnnotation;
 import com.kaylves.interfacex.common.jaxrs.JaxrsAnnotationHelper;
 import com.kaylves.interfacex.method.RequestPath;
-import com.kaylves.interfacex.ui.navigator.RestServiceItem;
+import com.kaylves.interfacex.ui.navigator.ServiceItem;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
@@ -26,8 +26,8 @@ public class JaxrsResolver extends BaseServiceResolver {
     }
 
     @Override
-    public List<RestServiceItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
-        List<RestServiceItem> itemList = new ArrayList<>();
+    public List<ServiceItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
+        List<ServiceItem> itemList = new ArrayList<>();
         Collection<PsiAnnotation> psiAnnotations = JavaAnnotationIndex.getInstance().get(JaxrsPathAnnotation.PATH.getShortName(), project, globalSearchScope);
 
         for (PsiAnnotation psiAnnotation : psiAnnotations) {
@@ -47,7 +47,7 @@ public class JaxrsResolver extends BaseServiceResolver {
                 RequestPath[] methodUriPaths = JaxrsAnnotationHelper.getRequestPaths(psiMethod);
 
                 for (RequestPath methodUriPath : methodUriPaths) {
-                    RestServiceItem item = createRestServiceItem(psiMethod, InterfaceXEnum.HTTP,classUriPath, methodUriPath);
+                    ServiceItem item = createRestServiceItem(psiMethod, InterfaceXEnum.HTTP,classUriPath, methodUriPath);
                     itemList.add(item);
                 }
             }
