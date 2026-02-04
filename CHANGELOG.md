@@ -3,6 +3,11 @@
 
 ## [Unreleased]
 
+## [1.1.4]
+### Added
+* 支持XLL-JOB UI布局调整
+* SimpleTree默认初始化所有接口
+
 ## [1.1.3]
 ### Added
 * 支持XLL-JOB执行

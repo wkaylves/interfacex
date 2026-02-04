@@ -46,9 +46,9 @@ public final class InterfaceXNavigator implements PersistentStateComponent<Inter
 
     private final Project project;
 
-    SimpleTree simpleTree;
+    private SimpleTree simpleTree;
 
-    ToolWindowEx myToolWindow;
+    private ToolWindowEx myToolWindow;
 
     @Getter
     InterfaceXNavigatorPanel rootPannel;
@@ -88,9 +88,6 @@ public final class InterfaceXNavigator implements PersistentStateComponent<Inter
         ContentManager contentManager = myToolWindow.getContentManager();
         contentManager.addContent(content);
         contentManager.setSelectedContent(content, false);
-
-
-        initStructure();
     }
 
     public void scheduleStructureUpdate() {
@@ -112,14 +109,18 @@ public final class InterfaceXNavigator implements PersistentStateComponent<Inter
                 return;
             }
 
+            boolean shouldCreate = interfaceXSimpleTreeStructure == null;
+            if (shouldCreate) {
+                initStructure();
+            }
 
-            runnable.run();
 
-//            // fixme: compat
-//            if (shouldCreate) {
+//             fixme: compat
+//            if(shouldCreate){
 //                TreeState.createFrom(interfaceXNavigatorState.treeState).applyTo(simpleTree);
 //            }
 
+            runnable.run();
         });
     }
 

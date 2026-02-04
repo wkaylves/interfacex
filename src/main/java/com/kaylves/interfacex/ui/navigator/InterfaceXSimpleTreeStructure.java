@@ -77,24 +77,23 @@ public class InterfaceXSimpleTreeStructure extends SimpleTreeStructure {
 
     public void update(boolean needRefresh) {
 
-        if (!needRefresh) {
-            return;
-        }
-
-        ProgressManager.getInstance().runProcessWithProgressSynchronously(() -> ReadAction.run(() -> {
-
+        ReadAction.run(() -> {
             List<RestServiceProject> projects = ProjectInitService.getInstance(project).getServiceProjects();
             updateProjects(projects);
-            // 同步方式兼容旧版:ml-citation{ref="2" data="citationList"}
-            structureTreeModel.invalidate();
-        }),"InterfaceX Scanning Implementations...",true,project);
+        });
 
+        if (needRefresh) {
+            ProgressManager.getInstance().runProcessWithProgressSynchronously(() -> ReadAction.run(() -> {
+                structureTreeModel.invalidate();
+                // 同步方式兼容旧版:ml-citation{ref="2" data="citationList"}
+            }),"InterfaceX Scanning Implementations...",true,project);
+        }
     }
 
     public void updateProjects(List<RestServiceProject> projects) {
 
         for (RestServiceProject each : projects) {
-
+            log.info("module name : {}", each.getModuleName());
             ProjectNode node = findNodeFor(each);
 
             if (node == null) {
@@ -346,7 +345,7 @@ public class InterfaceXSimpleTreeStructure extends SimpleTreeStructure {
      */
     public class ServiceNode extends BaseSimpleNode {
 
-        ServiceItem myServiceItem;
+        public ServiceItem myServiceItem;
 
         public ServiceNode(SimpleNode parent, ServiceItem serviceItem) {
             super(parent);
