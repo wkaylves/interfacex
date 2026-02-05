@@ -1,7 +1,7 @@
 package com.kaylves.interfacex.ui.action.search;
 
 import com.kaylves.interfacex.annotations.InterfaceXEnum;
-import com.kaylves.interfacex.ui.navigator.RestServiceItem;
+import com.kaylves.interfacex.ui.navigator.ServiceItem;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.ide.util.gotoByName.CustomMatcherModel;
@@ -34,8 +34,8 @@ public class GotoRequestMappingModel extends FilteringGotoByModel<InterfaceXEnum
     @Nullable
     @Override
     protected InterfaceXEnum filterValueFor(NavigationItem item) {
-        if (item instanceof RestServiceItem) {
-            return ((RestServiceItem) item).getInterfaceXEnum();
+        if (item instanceof ServiceItem) {
+            return ((ServiceItem) item).getInterfaceXEnum();
         }
 
         return null;

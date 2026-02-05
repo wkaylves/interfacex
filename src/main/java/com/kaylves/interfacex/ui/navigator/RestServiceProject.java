@@ -13,11 +13,11 @@ public class RestServiceProject{
 
     private Module module;
 
-    public List<RestServiceItem> serviceItems;
+    public List<ServiceItem> serviceItems;
 
-    private final Map<String,List<RestServiceItem>> serviceItemMap;
+    private final Map<String,List<ServiceItem>> serviceItemMap;
 
-    public RestServiceProject(Module module, Map<String,List<RestServiceItem>> serviceItemMap) {
+    public RestServiceProject(Module module, Map<String,List<ServiceItem>> serviceItemMap) {
         this.moduleName = module.getName();
         this.serviceItemMap = serviceItemMap;
     }

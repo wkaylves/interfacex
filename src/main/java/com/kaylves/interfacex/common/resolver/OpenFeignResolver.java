@@ -5,7 +5,7 @@ import com.kaylves.interfacex.annotations.http.SpringHttpRequestAnnotation;
 import com.kaylves.interfacex.utils.PsiAnnotationHelper;
 import com.kaylves.interfacex.common.spring.RequestMappingAnnotationHelper;
 import com.kaylves.interfacex.method.RequestPath;
-import com.kaylves.interfacex.ui.navigator.RestServiceItem;
+import com.kaylves.interfacex.ui.navigator.ServiceItem;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
@@ -25,8 +25,8 @@ public class OpenFeignResolver extends BaseServiceResolver {
     }
 
     @Override
-    public List<RestServiceItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
-        List<RestServiceItem> itemList = new ArrayList<>();
+    public List<ServiceItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
+        List<ServiceItem> itemList = new ArrayList<>();
         Collection<PsiAnnotation> psiAnnotations = JavaAnnotationIndex.getInstance().get(SpringHttpRequestAnnotation.FEIGN_CLIENT.getShortName(), project, globalSearchScope);
 
         for (PsiAnnotation psiAnnotation : psiAnnotations) {
@@ -46,12 +46,12 @@ public class OpenFeignResolver extends BaseServiceResolver {
         return itemList;
     }
 
-    protected List<RestServiceItem> getServiceItemList(PsiClass psiClass) {
+    protected List<ServiceItem> getServiceItemList(PsiClass psiClass) {
 
         List<RequestPath> classRequestPaths = RequestMappingAnnotationHelper.getSpringAnnotationRequestPaths(psiClass);
 
         PsiMethod[] psiMethods = psiClass.getMethods();
-        List<RestServiceItem> itemList = new ArrayList<>();
+        List<ServiceItem> itemList = new ArrayList<>();
 
         for (PsiMethod psiMethod : psiMethods) {
             RequestPath[] methodRequestPaths = RequestMappingAnnotationHelper.getSpringAnnotationRequestPaths(psiMethod);
@@ -61,7 +61,7 @@ public class OpenFeignResolver extends BaseServiceResolver {
 
                 for (RequestPath methodRequestPath : methodRequestPaths) {
                     String path = classRequestPath.getPath();
-                    RestServiceItem item = createRestServiceItem(psiMethod, InterfaceXEnum.OpenFeign,path, methodRequestPath);
+                    ServiceItem item = createRestServiceItem(psiMethod, InterfaceXEnum.OpenFeign,path, methodRequestPath);
                     itemList.add(item);
                 }
             }

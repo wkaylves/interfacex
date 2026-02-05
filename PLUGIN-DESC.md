@@ -58,6 +58,10 @@ org.apache.rocketmq.spring.annotation.RocketMQMessageListener
 
 # 变更历史
 
+## [1.1.4]
+### Added
+* 支持XLL-JOB UI布局调整
+* SimpleTree默认初始化所有接口
 
 ## [1.1.3]
 ### Added

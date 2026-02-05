@@ -5,7 +5,7 @@ import com.kaylves.interfacex.annotations.http.PathMappingAnnotation;
 import com.kaylves.interfacex.annotations.http.SpringControllerAnnotation;
 import com.kaylves.interfacex.common.spring.RequestMappingAnnotationHelper;
 import com.kaylves.interfacex.method.RequestPath;
-import com.kaylves.interfacex.ui.navigator.RestServiceItem;
+import com.kaylves.interfacex.ui.navigator.ServiceItem;
 import com.kaylves.interfacex.utils.PropertiesHandler;
 import com.kaylves.interfacex.utils.PsiAnnotationHelper;
 import com.intellij.openapi.module.Module;
@@ -30,8 +30,8 @@ public class SpringMVCResolver extends BaseServiceResolver {
     }
 
     @Override
-    public List<RestServiceItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
-        List<RestServiceItem> itemList = new ArrayList<>();
+    public List<ServiceItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
+        List<ServiceItem> itemList = new ArrayList<>();
 
         SpringControllerAnnotation[] supportedAnnotations = SpringControllerAnnotation.values();
         for (PathMappingAnnotation controllerAnnotation : supportedAnnotations) {
@@ -40,7 +40,7 @@ public class SpringMVCResolver extends BaseServiceResolver {
         return itemList;
     }
 
-    private void filterSpringList(Project project, GlobalSearchScope globalSearchScope, PathMappingAnnotation controllerAnnotation, List<RestServiceItem> itemList) {
+    private void filterSpringList(Project project, GlobalSearchScope globalSearchScope, PathMappingAnnotation controllerAnnotation, List<ServiceItem> itemList) {
         // java:
         Collection<PsiAnnotation> psiAnnotations = JavaAnnotationIndex.getInstance().get(controllerAnnotation.getShortName(), project, globalSearchScope);
 
@@ -58,10 +58,10 @@ public class SpringMVCResolver extends BaseServiceResolver {
         }
     }
 
-    protected List<RestServiceItem> getServiceItemList(PsiClass psiClass) {
+    protected List<ServiceItem> getServiceItemList(PsiClass psiClass) {
         PsiMethod[] psiMethods = psiClass.getMethods();
 
-        List<RestServiceItem> itemList = new ArrayList<>();
+        List<ServiceItem> itemList = new ArrayList<>();
         List<RequestPath> classRequestPaths = RequestMappingAnnotationHelper.getSpringAnnotationRequestPaths(psiClass);
 
         for (PsiMethod psiMethod : psiMethods) {
@@ -74,7 +74,7 @@ public class SpringMVCResolver extends BaseServiceResolver {
 
                 for (RequestPath methodRequestPath : methodRequestPaths) {
                     String path = classRequestPath.getPath();
-                    RestServiceItem item = createRestServiceItem(psiMethod, InterfaceXEnum.HTTP, path, methodRequestPath);
+                    ServiceItem item = createRestServiceItem(psiMethod, InterfaceXEnum.HTTP, path, methodRequestPath);
                     itemList.add(item);
                 }
             }

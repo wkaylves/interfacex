@@ -2,7 +2,7 @@ package com.kaylves.interfacex.common.resolver;
 
 import com.kaylves.interfacex.annotations.InterfaceXEnum;
 import com.kaylves.interfacex.method.RequestPath;
-import com.kaylves.interfacex.ui.navigator.RestServiceItem;
+import com.kaylves.interfacex.ui.navigator.ServiceItem;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
@@ -22,8 +22,8 @@ public abstract class BaseServiceResolver implements ServiceResolver {
     Project project;
 
     @Override
-    public List<RestServiceItem> findServiceItemsInModule() {
-        List<RestServiceItem> itemList = new ArrayList<>();
+    public List<ServiceItem> findServiceItemsInModule() {
+        List<ServiceItem> itemList = new ArrayList<>();
 
         if (module == null) {
             return itemList;
@@ -34,15 +34,15 @@ public abstract class BaseServiceResolver implements ServiceResolver {
         return getRestServiceItemList(module.getProject(), globalSearchScope);
     }
 
-    public abstract List<RestServiceItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope);
+    public abstract List<ServiceItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope);
 
     @NotNull
-    protected RestServiceItem createRestServiceItem(PsiElement psiMethod, InterfaceXEnum interfaceXEnum,String classUriPath, RequestPath requestMapping) {
+    protected ServiceItem createRestServiceItem(PsiElement psiMethod, InterfaceXEnum interfaceXEnum, String classUriPath, RequestPath requestMapping) {
         return createRestServiceItem(psiMethod, interfaceXEnum,classUriPath, requestMapping, true);
     }
 
     @NotNull
-    protected RestServiceItem createRestServiceItem(PsiElement psiMethod,InterfaceXEnum interfaceXEnum, String classUriPath, RequestPath requestMapping, Boolean isUrlWithoutReqMethod) {
+    protected ServiceItem createRestServiceItem(PsiElement psiMethod, InterfaceXEnum interfaceXEnum, String classUriPath, RequestPath requestMapping, Boolean isUrlWithoutReqMethod) {
 
         LOG.debug("psiMethod:{},classUriPath:{},requestMapping:{},isUrlWithoutReqMethod:{}", psiMethod, classUriPath, requestMapping, isUrlWithoutReqMethod);
 
@@ -62,7 +62,7 @@ public abstract class BaseServiceResolver implements ServiceResolver {
 
         String requestPath = classUriPath + methodPath;
 
-        RestServiceItem item = new RestServiceItem(psiMethod, interfaceXEnum, requestMapping.getMethod(), requestPath, isUrlWithoutReqMethod);
+        ServiceItem item = new ServiceItem(psiMethod, interfaceXEnum, requestMapping.getMethod(), requestPath, isUrlWithoutReqMethod);
 
         if (module != null) {
             item.setModule(module);

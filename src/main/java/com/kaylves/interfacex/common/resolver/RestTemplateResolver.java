@@ -7,7 +7,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.searches.ReferencesSearch;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.kaylves.interfacex.method.HttpMethod;
-import com.kaylves.interfacex.ui.navigator.RestServiceItem;
+import com.kaylves.interfacex.ui.navigator.ServiceItem;
 import com.kaylves.interfacex.utils.PsiAnnotationHelper;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,11 +23,11 @@ public class RestTemplateResolver extends BaseServiceResolver {
     }
 
     @Override
-    public List<RestServiceItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
+    public List<ServiceItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
         return findProducerCalls(project, this.module);
     }
 
-    private List<RestServiceItem> findProducerCalls(Project project, Module module) {
+    private List<ServiceItem> findProducerCalls(Project project, Module module) {
         String[] methodsByNames = {"postForObject","postForEntity","getForObject","getForEntity"};
 
         String[] targetClassNames = {
@@ -38,7 +38,7 @@ public class RestTemplateResolver extends BaseServiceResolver {
 
         GlobalSearchScope moduleScope = GlobalSearchScope.moduleScope(module);
 
-        List<RestServiceItem> results = new ArrayList<>();
+        List<ServiceItem> results = new ArrayList<>();
 
         for (String methodsByName : methodsByNames) {
 
@@ -65,7 +65,7 @@ public class RestTemplateResolver extends BaseServiceResolver {
         return results;
     }
 
-    private void addCall(List<RestServiceItem> results, PsiMethodCallExpression callExpr, String callType) {
+    private void addCall(List<ServiceItem> results, PsiMethodCallExpression callExpr, String callType) {
 
         PsiElement parent = PsiTreeUtil.getParentOfType(callExpr, PsiMethod.class);
 
@@ -84,7 +84,7 @@ public class RestTemplateResolver extends BaseServiceResolver {
 
         String requestMethod = HttpMethod.POST.name();
 
-        results.add(new RestServiceItem(method, null, requestMethod, method.getName(), false));
+        results.add(new ServiceItem(method, null, requestMethod, method.getName(), false));
 
     }
 

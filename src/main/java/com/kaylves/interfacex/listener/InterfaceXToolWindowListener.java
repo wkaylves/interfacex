@@ -5,6 +5,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
+import lombok.extern.slf4j.Slf4j;
 
 
 /**
@@ -12,6 +13,7 @@ import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
  * @author kaylves
  * @since 1.0.0
  */
+@Slf4j
 public class InterfaceXToolWindowListener implements ToolWindowManagerListener {
 
     private final Project project;
@@ -39,6 +41,7 @@ public class InterfaceXToolWindowListener implements ToolWindowManagerListener {
             return;
         }
 
+        log.info("Tool window visible: {}", visible);
         InterfaceXNavigator servicesNavigator = InterfaceXNavigator.getInstance(project);
         servicesNavigator.scheduleStructureUpdate();
 

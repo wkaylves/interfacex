@@ -2,7 +2,7 @@ package com.kaylves.interfacex.common.resolver;
 
 import com.kaylves.interfacex.annotations.InterfaceXEnum;
 import com.kaylves.interfacex.method.HttpMethod;
-import com.kaylves.interfacex.ui.navigator.RestServiceItem;
+import com.kaylves.interfacex.ui.navigator.ServiceItem;
 import com.kaylves.interfacex.utils.PsiAnnotationHelper;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
@@ -24,12 +24,12 @@ public class RabbitMQProducerResolver extends BaseServiceResolver {
     }
 
     @Override
-    public List<RestServiceItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
+    public List<ServiceItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
         return findProducerCalls(project, this.module);
     }
 
-    private List<RestServiceItem> findProducerCalls(Project project, Module module) {
-        List<RestServiceItem> results = new ArrayList<>();
+    private List<ServiceItem> findProducerCalls(Project project, Module module) {
+        List<ServiceItem> results = new ArrayList<>();
         String rabbitMethodName = "convertAndSend";
         String[] targetClassNames = {
                 "com.hbfintech.mint.rabbit.core.RabbitTemplateProxy",
@@ -63,7 +63,7 @@ public class RabbitMQProducerResolver extends BaseServiceResolver {
         return results;
     }
 
-    private void addCall(List<RestServiceItem> results, PsiMethodCallExpression callExpr, String callType) {
+    private void addCall(List<ServiceItem> results, PsiMethodCallExpression callExpr, String callType) {
 
         PsiElement parent = PsiTreeUtil.getParentOfType(callExpr, PsiMethod.class);
 
@@ -82,7 +82,7 @@ public class RabbitMQProducerResolver extends BaseServiceResolver {
 
         String requestMethod = HttpMethod.PRODUCE.name();
 
-        results.add(new RestServiceItem(method, InterfaceXEnum.RabbitMQProducer, requestMethod, method.getName(), false));
+        results.add(new ServiceItem(method, InterfaceXEnum.RabbitMQProducer, requestMethod, method.getName(), false));
 
     }
 

@@ -1,12 +1,11 @@
 package com.kaylves.interfacex.common.resolver;
 
 
-import com.kaylves.interfacex.ui.navigator.RestServiceItem;
-import com.kaylves.interfacex.service.ServiceItem;
+import com.kaylves.interfacex.ui.navigator.ServiceItem;
 
 import java.util.List;
 
-public interface ServiceResolver extends ServiceItem {
+public interface ServiceResolver extends com.kaylves.interfacex.service.ServiceItem {
 
-    List<RestServiceItem> findServiceItemsInModule();
+    List<ServiceItem> findServiceItemsInModule();
 }

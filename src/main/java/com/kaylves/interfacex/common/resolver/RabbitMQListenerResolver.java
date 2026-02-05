@@ -3,7 +3,7 @@ package com.kaylves.interfacex.common.resolver;
 import com.kaylves.interfacex.annotations.InterfaceXEnum;
 import com.kaylves.interfacex.annotations.rabbitmq.RabbitMQAnnotation;
 import com.kaylves.interfacex.method.HttpMethod;
-import com.kaylves.interfacex.ui.navigator.RestServiceItem;
+import com.kaylves.interfacex.ui.navigator.ServiceItem;
 import com.kaylves.interfacex.utils.PsiAnnotationHelper;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
@@ -24,8 +24,8 @@ public class RabbitMQListenerResolver extends BaseServiceResolver {
     }
 
     @Override
-    public List<RestServiceItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
-        List<RestServiceItem> itemList = new ArrayList<>();
+    public List<ServiceItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
+        List<ServiceItem> itemList = new ArrayList<>();
         Collection<PsiAnnotation> psiAnnotations = JavaAnnotationIndex.getInstance().get(RabbitMQAnnotation.PATH.getShortName(), project, globalSearchScope);
 
         for (PsiAnnotation psiAnnotation : psiAnnotations) {
@@ -50,7 +50,7 @@ public class RabbitMQListenerResolver extends BaseServiceResolver {
 
                 String path = MessageFormat.format("{0}",queue);
 
-                RestServiceItem item = new RestServiceItem(psiMethod, InterfaceXEnum.RabbitMQListener,requestMethod, path, false);
+                ServiceItem item = new ServiceItem(psiMethod, InterfaceXEnum.RabbitMQListener,requestMethod, path, false);
                 itemList.add(item);
             }
         }

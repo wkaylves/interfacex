@@ -9,18 +9,25 @@ import com.intellij.openapi.ui.Splitter;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.treeStructure.SimpleTree;
+import lombok.Getter;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.border.MatteBorder;
 
 /**
  * @author kaylves
  */
+@Getter
 public class InterfaceXNavigatorPanel extends SimpleToolWindowPanel {
 
     protected final Project project;
 
     SimpleTree simpleTree;
 
+    Splitter rootSplitter;
+
+    private InterfaceXForm interfaceXForm;
 
     public InterfaceXNavigatorPanel(Project project,SimpleTree simpleTree) {
         super(true, true);
@@ -31,18 +38,25 @@ public class InterfaceXNavigatorPanel extends SimpleToolWindowPanel {
         initSimpleTree(simpleTree);
     }
 
+    public void setBottomComponent(@Nullable InterfaceXForm interfaceXForm) {
+        assert interfaceXForm != null;
+        this.interfaceXForm = interfaceXForm;
+        JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(interfaceXForm.getPanel());
+        rootSplitter.setSecondComponent(scrollPane);
+    }
+
     private void initSimpleTree(SimpleTree simpleTree) {
         this.simpleTree = simpleTree;
 
         simpleTree.setVisible(true);
 
         JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(simpleTree);
-        scrollPane.setBorder(BorderFactory.createLineBorder(JBColor.RED));
 
-        Splitter rootSplitter = new Splitter(true, .5f);
+        rootSplitter = new Splitter(true, .5f);
         rootSplitter.setShowDividerControls(true);
         rootSplitter.setDividerWidth(10);
         rootSplitter.setFirstComponent(scrollPane);
+
         setContent(rootSplitter);
     }
 

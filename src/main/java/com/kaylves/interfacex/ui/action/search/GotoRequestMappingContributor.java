@@ -1,6 +1,6 @@
 package com.kaylves.interfacex.ui.action.search;
 
-import com.kaylves.interfacex.ui.navigator.RestServiceItem;
+import com.kaylves.interfacex.ui.navigator.ServiceItem;
 import com.kaylves.interfacex.service.ServiceHelper;
 import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.NavigationItem;
@@ -14,7 +14,7 @@ public class GotoRequestMappingContributor implements ChooseByNameContributor {
 
     Module myModule;
 
-    private List<RestServiceItem> navItem;
+    private List<ServiceItem> navItem;
 
     public GotoRequestMappingContributor(Module myModule) {
         this.myModule = myModule;
@@ -24,7 +24,7 @@ public class GotoRequestMappingContributor implements ChooseByNameContributor {
     @Override
     public String[] getNames(Project project, boolean onlyThisModuleChecked) {
         String[] names = null;
-        List<RestServiceItem> itemList;
+        List<ServiceItem> itemList;
         ///todo find all rest url file in project
         if (onlyThisModuleChecked && myModule != null) {
             itemList = ServiceHelper.buildRestServiceItemListUsingResolver(myModule);
@@ -37,7 +37,7 @@ public class GotoRequestMappingContributor implements ChooseByNameContributor {
         names = new String[itemList.size()];
 
         for (int i = 0; i < itemList.size(); i++) {
-            RestServiceItem requestMappingNavigationItem = itemList.get(i);
+            ServiceItem requestMappingNavigationItem = itemList.get(i);
             names[i] = requestMappingNavigationItem.getName();
         }
 

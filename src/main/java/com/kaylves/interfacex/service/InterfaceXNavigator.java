@@ -1,29 +1,26 @@
 package com.kaylves.interfacex.service;
 
-import com.intellij.openapi.wm.ToolWindow;
-import com.kaylves.interfacex.common.ToolkitIcons;
-import com.kaylves.interfacex.ui.navigator.InterfaceXNavigatorPanel;
-import com.kaylves.interfacex.ui.navigator.InterfaceXNavigatorState;
-import com.kaylves.interfacex.ui.navigator.InterfaceXSimpleTreeStructure;
-import com.kaylves.interfacex.utils.ToolkitUtil;
 import com.intellij.ide.util.treeView.TreeState;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.WriteExternalException;
-import com.intellij.openapi.wm.ToolWindowAnchor;
+import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
-import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.treeStructure.SimpleTree;
+import com.kaylves.interfacex.ui.navigator.InterfaceXNavigatorPanel;
+import com.kaylves.interfacex.ui.navigator.InterfaceXNavigatorState;
+import com.kaylves.interfacex.ui.navigator.InterfaceXSimpleTreeStructure;
+import com.kaylves.interfacex.utils.ToolkitUtil;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.jdom.Element;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import javax.swing.tree.TreeSelectionModel;
 
 
@@ -49,9 +46,12 @@ public final class InterfaceXNavigator implements PersistentStateComponent<Inter
 
     private final Project project;
 
-    SimpleTree simpleTree;
+    private SimpleTree simpleTree;
 
-    ToolWindowEx myToolWindow;
+    private ToolWindowEx myToolWindow;
+
+    @Getter
+    InterfaceXNavigatorPanel rootPannel;
 
     InterfaceXSimpleTreeStructure interfaceXSimpleTreeStructure;
 
@@ -65,7 +65,7 @@ public final class InterfaceXNavigator implements PersistentStateComponent<Inter
     }
 
 
-    private void initTree() {
+    private void createSimpleTree() {
         simpleTree = new SimpleTree();
         simpleTree.getEmptyText().clear();
         simpleTree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
@@ -77,44 +77,13 @@ public final class InterfaceXNavigator implements PersistentStateComponent<Inter
 
         myToolWindow = (ToolWindowEx) toolWindow;
 
-        initTree();
+        createSimpleTree();
 
-        final JPanel panel = new InterfaceXNavigatorPanel(project, simpleTree);
-
-        final ContentFactory contentFactory = ServiceManager.getService(ContentFactory.class);
-
-        final Content content = contentFactory.createContent(panel, "", false);
-
-        ContentManager contentManager = myToolWindow.getContentManager();
-        contentManager.addContent(content);
-        contentManager.setSelectedContent(content, false);
-
-        initStructure();
-    }
-
-
-    public void initToolWindow() {
-
-        log.info("initToolWindow>>>>>>>>>");
-
-        final ToolWindowManagerEx manager = ToolWindowManagerEx.getInstanceEx(project);
-
-        myToolWindow = (ToolWindowEx) manager.getToolWindow(TOOL_WINDOW_ID);
-        if (myToolWindow != null) {
-            return;
-        }
-
-        initTree();
-
-        myToolWindow = (ToolWindowEx) manager.registerToolWindow(TOOL_WINDOW_ID, false, ToolWindowAnchor.RIGHT, project, true);
-
-        myToolWindow.setIcon(ToolkitIcons.SERVICE);
-
-        final JPanel panel = new InterfaceXNavigatorPanel(project, simpleTree);
+        rootPannel = new InterfaceXNavigatorPanel(project, simpleTree);
 
         final ContentFactory contentFactory = ServiceManager.getService(ContentFactory.class);
 
-        final Content content = contentFactory.createContent(panel, "", false);
+        final Content content = contentFactory.createContent(rootPannel, "", false);
 
         ContentManager contentManager = myToolWindow.getContentManager();
         contentManager.addContent(content);
@@ -140,14 +109,18 @@ public final class InterfaceXNavigator implements PersistentStateComponent<Inter
                 return;
             }
 
+            boolean shouldCreate = interfaceXSimpleTreeStructure == null;
+            if (shouldCreate) {
+                initStructure();
+            }
 
-            runnable.run();
 
-//            // fixme: compat
-//            if (shouldCreate) {
+//             fixme: compat
+//            if(shouldCreate){
 //                TreeState.createFrom(interfaceXNavigatorState.treeState).applyTo(simpleTree);
 //            }
 
+            runnable.run();
         });
     }
 
