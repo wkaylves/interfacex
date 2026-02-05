@@ -35,8 +35,8 @@ public  class XXLJobActionListener implements ActionListener {
         // trigger data
         final TriggerParam triggerParam = new TriggerParam();
         triggerParam.setJobId(1);
-        triggerParam.setExecutorHandler(xxlJobFrom.getServiceItem().getUrl());
-        triggerParam.setExecutorParams(null);
+        triggerParam.setExecutorHandler(xxlJobFrom.getInterfaceXItem().getUrl());
+        triggerParam.setExecutorParams(xxlJobFrom.getParamTxtArea().getText());
         triggerParam.setExecutorBlockStrategy(ExecutorBlockStrategyEnum.COVER_EARLY.name());
         triggerParam.setGlueType(GlueTypeEnum.BEAN.name());
         triggerParam.setGlueSource(null);
@@ -54,6 +54,8 @@ public  class XXLJobActionListener implements ActionListener {
         xxlJobFrom.getResultEditorPane().setContentType("text/html");
 
         xxlJobFrom.getResultEditorPane().setText(s);
+        xxlJobFrom.getTabbedPane1().setSelectedIndex(1);
+
 
     }
 }

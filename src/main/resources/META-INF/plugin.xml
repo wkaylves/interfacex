@@ -26,28 +26,28 @@
 
     <projectListeners>
         <listener
-                class="com.kaylves.interfacex.listener.InterfaceXToolWindowListener"
+                class="com.kaylves.interfacex.ui.toolwindow.InterfaceXToolWindowListener"
                 topic="com.intellij.openapi.wm.ex.ToolWindowManagerListener"/>
 
     </projectListeners>
 
     <actions>
-        <action id="com.kaylves.interfacex.ui.action.toolbar.NavigatorInterfaceExportAction"
-                class="com.kaylves.interfacex.ui.action.toolbar.NavigatorInterfaceExportAction"
+        <action id="com.kaylves.interfacex.action.toolbar.NavigatorInterfaceExportAction"
+                class="com.kaylves.interfacex.action.toolbar.NavigatorInterfaceExportAction"
                 description="NavigatorExportAction"
                 text="导出Excel文件"
                 icon="AllIcons.Actions.Download">
         </action>
 
-        <action id="com.kaylves.interfacex.ui.action.toolbar.RefreshProjectAction"
-                class="com.kaylves.interfacex.ui.action.toolbar.RefreshProjectAction"
+        <action id="com.kaylves.interfacex.action.toolbar.RefreshProjectAction"
+                class="com.kaylves.interfacex.action.toolbar.RefreshProjectAction"
                 description="RefreshProjectAction"
                 text="刷新"
                 icon="AllIcons.Actions.Refresh">
         </action>
 
         <!-- url navigation -->
-        <action id="com.kaylves.interfacex.ui.action.search.GotoRequestMappingAction" class="com.kaylves.interfacex.ui.action.search.GotoRequestMappingAction"
+        <action id="com.kaylves.interfacex.action.search.GotoRequestMappingAction" class="com.kaylves.interfacex.action.search.GotoRequestMappingAction"
                 text="_Service" description="Go to Service"
                 icon="AllIcons.Actions.Search">
             <add-to-group group-id="GoToTargetEx" anchor="first"/>
@@ -55,15 +55,15 @@
             <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt B"/>
         </action>
 
-        <action id="com.kaylves.interfacex.ui.action.toolbar.ProjectInternationalizationExportAction"
-                class="com.kaylves.interfacex.ui.action.toolbar.ProjectInternationalizationExportAction"
+        <action id="com.kaylves.interfacex.action.toolbar.ProjectInternationalizationExportAction"
+                class="com.kaylves.interfacex.action.toolbar.ProjectInternationalizationExportAction"
                 description="导出国际化文件"
                 text="导出国际化文件"
                 icon="AllIcons.Actions.Download">
         </action>
 
-        <action id="com.kaylves.interfacex.ui.action.toolbar.RocketMQProducerExportAction"
-                class="com.kaylves.interfacex.ui.action.toolbar.RocketMQProducerExportAction"
+        <action id="com.kaylves.interfacex.action.toolbar.RocketMQProducerExportAction"
+                class="com.kaylves.interfacex.action.toolbar.RocketMQProducerExportAction"
                 description="导出MQ生产者"
                 text="导出MQ生产者"
                 icon="AllIcons.Actions.Download">
@@ -71,11 +71,11 @@
 
         <!-- 注册action group -->
         <group id="Toolkit.NavigatorActionsToolbar.InterfaceX">
-            <reference id="com.kaylves.interfacex.ui.action.toolbar.RefreshProjectAction"/>
-            <reference id="com.kaylves.interfacex.ui.action.search.GotoRequestMappingAction"/>
-            <reference id="com.kaylves.interfacex.ui.action.toolbar.NavigatorInterfaceExportAction"/>
-            <reference id="com.kaylves.interfacex.ui.action.toolbar.ProjectInternationalizationExportAction"/>
-            <reference id="com.kaylves.interfacex.ui.action.toolbar.RocketMQProducerExportAction"/>
+            <reference id="com.kaylves.interfacex.action.toolbar.RefreshProjectAction"/>
+            <reference id="com.kaylves.interfacex.action.search.GotoRequestMappingAction"/>
+            <reference id="com.kaylves.interfacex.action.toolbar.NavigatorInterfaceExportAction"/>
+            <reference id="com.kaylves.interfacex.action.toolbar.ProjectInternationalizationExportAction"/>
+            <reference id="com.kaylves.interfacex.action.toolbar.RocketMQProducerExportAction"/>
         </group>
 
     </actions>

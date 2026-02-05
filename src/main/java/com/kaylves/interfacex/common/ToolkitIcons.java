@@ -1,6 +1,6 @@
 package com.kaylves.interfacex.common;
 
-import com.kaylves.interfacex.method.HttpMethod;
+import com.kaylves.interfacex.common.constants.HttpMethod;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.util.IconLoader;
 
@@ -11,8 +11,6 @@ public class ToolkitIcons {
     public static final Icon MODULE = AllIcons.Modules.UnloadedModule; // 16x16
 
     public static final Icon Refresh = AllIcons.Actions.Refresh; // 16x16
-
-//    public static final Icon SERVICE = AllIcons.Actions.Refresh; // 16x16
 
     public static final Icon SERVICE = IconLoader.getIcon("/icons/service.png",ToolkitIcons.class.getClassLoader()); // 16x16
 

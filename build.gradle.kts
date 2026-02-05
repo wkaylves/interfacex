@@ -38,6 +38,8 @@ dependencies {
 
   implementation("com.xuxueli:xxl-job-core:2.2.0")
 
+  implementation("org.apache.rocketmq:rocketmq-client:5.1.0")
+
   annotationProcessor("org.projectlombok:lombok:1.18.40");
   compileOnly("org.projectlombok:lombok:1.18.40")
   testAnnotationProcessor("org.projectlombok:lombok:1.18.40");

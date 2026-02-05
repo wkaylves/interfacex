@@ -60,12 +60,13 @@ org.apache.rocketmq.spring.annotation.RocketMQMessageListener
 
 ## [1.1.4]
 ### Added
-* 支持XLL-JOB UI布局调整
+* XLL-JOB UI布局调整,方便DEBUG调试
 * SimpleTree默认初始化所有接口
 
 ## [1.1.3]
 ### Added
 * 支持XLL-JOB执行
+
 
 鼠标右键点击执行，弹出XXL-JOB执行页面设置XLL-JOB端口号即可
 

@@ -6,7 +6,6 @@ import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
-import com.kaylves.interfacex.common.ToolkitIcons;
 import com.kaylves.interfacex.service.InterfaceXNavigator;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;

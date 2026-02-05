@@ -3,14 +3,21 @@
 
 ## [Unreleased]
 
+## [1.2.0]
+### Added
+* 新增rocketmq消息发送支持
+* add rocketmq send message support
+
 ## [1.1.4]
 ### Added
-* 支持XLL-JOB UI布局调整
+* XLL-JOB UI布局调整,方便DEBUG调试
 * SimpleTree默认初始化所有接口
 
 ## [1.1.3]
 ### Added
-* 支持XLL-JOB执行
+* 支持XLL-JOB执行 
+解决容器环境不xxl-job调试无法调用本地进行验证的痛点
+
 
 鼠标右键点击执行，弹出XXL-JOB执行页面设置XLL-JOB端口号即可
 

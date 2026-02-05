@@ -1,9 +1,9 @@
 package com.kaylves.interfacex.ui.form;
 
 import com.intellij.ui.JBColor;
+import com.kaylves.interfacex.common.constants.InterfaceXItemCategoryEnum;
 import com.kaylves.interfacex.ui.navigator.InterfaceXForm;
-import com.kaylves.interfacex.ui.navigator.InterfaceXSimpleTreeStructure;
-import com.kaylves.interfacex.ui.navigator.ServiceItem;
+import com.kaylves.interfacex.common.InterfaceXItem;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,16 +19,19 @@ public class XXLJobForm implements InterfaceXForm {
     private JTextField handlerTxt;
     private JEditorPane resultEditorPane;
     private JPanel rootPanel;
-    private ServiceItem serviceItem;
+    private JTabbedPane tabbedPane1;
+    private JPanel tapPanel1;
+    private JPanel tabPannel2;
+    private JTextArea paramTxtArea;
+    private InterfaceXItem interfaceXItem;
 
-    public XXLJobForm(ServiceItem serviceItem) {
-        this.serviceItem = serviceItem;
-        this.addressTxt.setText("http://localhost:8080/");
-        this.handlerTxt.setText(serviceItem.getUrl());
-        this.getRootPanel().setBorder(BorderFactory.createTitledBorder(new MatteBorder(2,0,0,0, JBColor.YELLOW), serviceItem.getInterfaceXEnum().name()));
+    public XXLJobForm(InterfaceXItem interfaceXItem) {
+        this.interfaceXItem = interfaceXItem;
+        this.addressTxt.setText("http://localhost:11813/");
+        this.handlerTxt.setText(interfaceXItem.getUrl());
+        this.getRootPanel().setBorder(BorderFactory.createTitledBorder(new MatteBorder(2,0,0,0, JBColor.YELLOW), interfaceXItem.getInterfaceXItemCategoryEnum().name()));
         reqBtn.addActionListener(new XXLJobActionListener(this));
     }
-
 
     @Override
     public JPanel getPanel() {
@@ -36,7 +39,12 @@ public class XXLJobForm implements InterfaceXForm {
     }
 
     @Override
-    public void flush(ServiceItem serviceItem) {
-        this.handlerTxt.setText(serviceItem.getUrl());
+    public void flush(InterfaceXItem interfaceXItem) {
+        this.handlerTxt.setText(interfaceXItem.getUrl());
+    }
+
+    @Override
+    public InterfaceXItemCategoryEnum getInterfaceXEnum() {
+        return InterfaceXItemCategoryEnum.XXLJob;
     }
 }
