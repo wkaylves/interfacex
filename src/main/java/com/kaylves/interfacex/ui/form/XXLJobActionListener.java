@@ -52,7 +52,6 @@ public  class XXLJobActionListener implements ActionListener {
 
         String s = "<html><body>"+resultJson+"</body></html>";
         xxlJobFrom.getResultEditorPane().setContentType("text/html");
-
         xxlJobFrom.getResultEditorPane().setText(s);
         xxlJobFrom.getTabbedPane1().setSelectedIndex(1);
 

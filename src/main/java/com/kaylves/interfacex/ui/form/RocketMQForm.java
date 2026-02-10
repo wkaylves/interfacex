@@ -1,13 +1,12 @@
 package com.kaylves.interfacex.ui.form;
 
-
 import com.intellij.lang.java.JavaLanguage;
 import com.intellij.psi.PsiElement;
 import com.intellij.ui.JBColor;
+import com.kaylves.interfacex.common.InterfaceXItem;
 import com.kaylves.interfacex.common.constants.InterfaceXItemCategoryEnum;
 import com.kaylves.interfacex.module.rocketmq.RocketMQItem;
 import com.kaylves.interfacex.ui.navigator.InterfaceXForm;
-import com.kaylves.interfacex.common.InterfaceXItem;
 import com.kaylves.interfacex.utils.PsiMethodHelper;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -18,19 +17,19 @@ import javax.swing.border.MatteBorder;
 @Getter
 @Slf4j
 public class RocketMQForm implements InterfaceXForm {
-
-    private JPanel rootPanel;
     private JTextField serverTxt;
     private JButton reqBtn;
-    private JEditorPane bodyEditorPanel;
     private JTextField topicTxt;
     private JTextField tagTxt;
     private JTabbedPane tabbedPanel;
     private JPanel bodyTabPanel;
-    private JEditorPane resultEditorPanel;
     private JPanel resTabPanel;
+    private JPanel rootPanel;
+    private JEditorPane bodyEditorPanel;
+    private JEditorPane resultEditorPanel;
 
     InterfaceXItem interfaceXItem;
+
 
     public RocketMQForm(InterfaceXItem interfaceXItem) {
         initUIContent(interfaceXItem);

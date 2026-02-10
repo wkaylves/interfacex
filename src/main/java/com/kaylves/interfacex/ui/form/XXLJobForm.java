@@ -21,9 +21,10 @@ public class XXLJobForm implements InterfaceXForm {
     private JPanel rootPanel;
     private JTabbedPane tabbedPane1;
     private JPanel tapPanel1;
-    private JPanel tabPannel2;
+    private JPanel tabPanel2;
     private JTextArea paramTxtArea;
-    private InterfaceXItem interfaceXItem;
+
+    private final InterfaceXItem interfaceXItem;
 
     public XXLJobForm(InterfaceXItem interfaceXItem) {
         this.interfaceXItem = interfaceXItem;

@@ -23,13 +23,14 @@ public class RocketmqActionListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String producerGroup = "InterfaceX";
-        String namesrvAddr = rocketMQForm.getServerTxt().getText();
-        String topic = rocketMQForm.getTopicTxt().getText();
-        String tag = rocketMQForm.getTagTxt().getText();
-        String body = rocketMQForm.getBodyEditorPanel().getText();
-        DefaultMQProducer producer = new DefaultMQProducer(producerGroup);
 
+        DefaultMQProducer producer = new DefaultMQProducer(producerGroup);
         try {
+            String namesrvAddr = rocketMQForm.getServerTxt().getText();
+            String topic = rocketMQForm.getTopicTxt().getText();
+            String tag = rocketMQForm.getTagTxt().getText();
+            String body = rocketMQForm.getBodyEditorPanel().getText();
+
             producer.setNamesrvAddr(namesrvAddr);
             producer.start();
             Message msg = new Message(topic, tag, body.getBytes());

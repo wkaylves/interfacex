@@ -7,6 +7,7 @@ Solves the problem of xxl-job debugging in a container environment, where the lo
 一个在 IntelliJ IDEA 平台上简单易用的组件接口查看工具，支持查看 HTTP、OpenFeign、RabbitMQ 消费者、RocketMQ 消费者、XXL-JOB 定时任务等接口方法入口。
 当项目规模变大时，代码查找困难，本插件助你快速定位所有接口入口，同时支持导出 RabbitMQ 接口和 RabbitMQ 生产者。支持XXLJOB任务执行，
 解决容器环境下xxl-job调试问题无法调用本地环境的痛点
+支持RocketMQ消息发送
 
 ## HTTP
 方便查找HTTP接口代码
