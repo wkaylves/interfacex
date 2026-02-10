@@ -1,6 +1,7 @@
-package com.kaylves.interfacex.module.rocketmq;
+package com.kaylves.interfacex.module.rocketmq.impl;
 
 import com.kaylves.interfacex.common.ExportServiceStrategy;
+import com.kaylves.interfacex.module.rocketmq.RocketMQDeliverAnnotation;
 import com.kaylves.interfacex.module.spring.SpringComponentAnnotation;
 import com.kaylves.interfacex.bean.RocketMQProducerExportBean;
 import com.kaylves.interfacex.utils.IdeaPluginUtils;

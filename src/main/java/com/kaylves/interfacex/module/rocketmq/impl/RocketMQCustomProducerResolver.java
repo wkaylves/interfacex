@@ -1,7 +1,9 @@
-package com.kaylves.interfacex.module.rocketmq;
+package com.kaylves.interfacex.module.rocketmq.impl;
 
 import com.kaylves.interfacex.common.constants.InterfaceXItemCategoryEnum;
 import com.kaylves.interfacex.module.resolver.BaseServiceResolver;
+import com.kaylves.interfacex.module.rocketmq.RocketMQItem;
+import com.kaylves.interfacex.module.rocketmq.RocketMQProducerAnnotation;
 import com.kaylves.interfacex.utils.PsiAnnotationHelper;
 import com.kaylves.interfacex.common.constants.HttpMethod;
 import com.kaylves.interfacex.common.InterfaceXItem;
@@ -80,9 +82,9 @@ public class RocketMQCustomProducerResolver extends BaseServiceResolver {
 
                 String requestMethod = HttpMethod.PRODUCE.name();
 
-                String path = MessageFormat.format("{0}",tags);
+                RocketMQItem rocketMQItem = RocketMQItem.builder().topic(topic).tag(tags).build();
 
-                InterfaceXItem item = new InterfaceXItem(psiMethod, InterfaceXItemCategoryEnum.RocketMQProducer, requestMethod, path, false);
+                InterfaceXItem item = new InterfaceXItem(psiMethod, InterfaceXItemCategoryEnum.RocketMQProducer, requestMethod, rocketMQItem, false);
                 itemList.add(item);
             }
         }

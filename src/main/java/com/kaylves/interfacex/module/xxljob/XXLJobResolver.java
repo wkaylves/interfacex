@@ -52,7 +52,10 @@ public class XXLJobResolver extends BaseServiceResolver {
                 String requestMethod = HttpMethod.EXECUTE.name();
                 String consumerGroup = StringUtils.trimToEmpty(PsiAnnotationHelper.getAnnotationAttributeValue(psiAnnotation, "value"));
                 RequestPath methodUriPath = new RequestPath(consumerGroup, "execute");
-                InterfaceXItem item = new InterfaceXItem(psiMethod, InterfaceXItemCategoryEnum.XXLJob, requestMethod, methodUriPath.getPath(), false);
+
+                XXLJobItem xxlJobItem = XXLJobItem.builder().jobName(methodUriPath.getPath()).build();
+
+                InterfaceXItem item = new InterfaceXItem(psiMethod, InterfaceXItemCategoryEnum.XXLJob, requestMethod, xxlJobItem, false);
                 itemList.add(item);
             });
 
@@ -84,7 +87,11 @@ public class XXLJobResolver extends BaseServiceResolver {
                 String requestMethod = HttpMethod.EXECUTE.name();
                 String consumerGroup = StringUtils.trimToEmpty(PsiAnnotationHelper.getAnnotationAttributeValue(psiAnnotation, "value"));
                 RequestPath methodUriPath = new RequestPath(consumerGroup, psiMethod.getName());
-                InterfaceXItem item = new InterfaceXItem(psiMethod, InterfaceXItemCategoryEnum.XXLJob,requestMethod, methodUriPath.getPath(), false);
+
+
+                XXLJobItem xxlJobItem = XXLJobItem.builder().jobName(methodUriPath.getPath()).build();
+
+                InterfaceXItem item = new InterfaceXItem(psiMethod, InterfaceXItemCategoryEnum.XXLJob,requestMethod, xxlJobItem, false);
                 itemList.add(item);
             }
 

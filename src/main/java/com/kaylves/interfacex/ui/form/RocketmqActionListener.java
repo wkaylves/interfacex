@@ -9,9 +9,12 @@ import org.apache.rocketmq.common.message.Message;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * @author kaylves
+ */
 public class RocketmqActionListener implements ActionListener {
 
-    private RocketMQForm rocketMQForm;
+    private final RocketMQForm rocketMQForm;
 
     public RocketmqActionListener(RocketMQForm rocketMQForm) {
         this.rocketMQForm = rocketMQForm;
@@ -27,30 +30,26 @@ public class RocketmqActionListener implements ActionListener {
         DefaultMQProducer producer = new DefaultMQProducer(producerGroup);
 
         try {
-
             producer.setNamesrvAddr(namesrvAddr);
             producer.start();
             Message msg = new Message(topic, tag, body.getBytes());
             SendResult sendResult = producer.send(msg);
 
-
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
             String resultJson = gson.toJson(sendResult);
-
-            String s = "<html><body>"+resultJson+"</body></html>";
-            rocketMQForm.getResultEditorPanel().setContentType("text/html");
-
-            rocketMQForm.getResultEditorPanel().setText(s);
-
+            setResultText(resultJson);
         } catch (Exception ex) {
-            String s = "<html><body>"+ex.getMessage()+"</body></html>";
-            rocketMQForm.getResultEditorPanel().setContentType("text/html");
-            rocketMQForm.getResultEditorPanel().setText(s);
-
+            setResultText(ex.getMessage());
         }  finally {
             producer.shutdown();
         }
 
+    }
+
+    private void setResultText(String resultText) {
+        String s = "<html><body>" + resultText + "</body></html>";
+        rocketMQForm.getResultEditorPanel().setContentType("text/html");
+        rocketMQForm.getResultEditorPanel().setText(s);
+        rocketMQForm.getTabbedPanel().setSelectedIndex(1);
     }
 }

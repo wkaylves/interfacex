@@ -1,9 +1,11 @@
-package com.kaylves.interfacex.module.rocketmq;
+package com.kaylves.interfacex.module.rocketmq.impl;
 
 import com.kaylves.interfacex.common.constants.InterfaceXItemCategoryEnum;
 import com.kaylves.interfacex.module.resolver.BaseServiceResolver;
 import com.kaylves.interfacex.common.constants.HttpMethod;
 import com.kaylves.interfacex.common.InterfaceXItem;
+import com.kaylves.interfacex.module.rocketmq.RocketMQAnnotation;
+import com.kaylves.interfacex.module.rocketmq.RocketMQItem;
 import com.kaylves.interfacex.utils.PsiAnnotationHelper;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
@@ -42,7 +44,9 @@ public abstract class AbstractRocketMQListenerResolver extends BaseServiceResolv
 
                 String path = MessageFormat.format("{0}",selectorExpression);
 
-                InterfaceXItem item = new InterfaceXItem(psiMethod, InterfaceXItemCategoryEnum.RocketMQListener, requestMethod, path, false);
+                RocketMQItem rocketMQItem = RocketMQItem.builder().tag(path).build();
+
+                InterfaceXItem item = new InterfaceXItem(psiMethod, InterfaceXItemCategoryEnum.RocketMQListener, requestMethod, rocketMQItem, false);
                 itemList.add(item);
             });
 
@@ -52,7 +56,7 @@ public abstract class AbstractRocketMQListenerResolver extends BaseServiceResolv
     }
 
 
-    public abstract RocketMQAnnotation  getRocketMQAnnotation();
+    public abstract RocketMQAnnotation getRocketMQAnnotation();
 
     public abstract String getServiceItemCategory();
 }

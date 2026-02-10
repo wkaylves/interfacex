@@ -120,12 +120,14 @@ public class PsiMethodHelper {
         for (PsiParameter psiParameter : psiParameters) {
             PsiType paramPsiType = psiParameter.getType();
             String paramType = paramPsiType.getCanonicalText();
+
             if ("javax.servlet.http.HttpServletRequest".equals(paramType) || "javax.servlet.http.HttpServletResponse".equals(paramType)) {
                 continue;
             }
             // @RequestParam
             PsiModifierList modifierList = psiParameter.getModifierList();
-            boolean requestBodyFound = modifierList.findAnnotation(SpringRequestParamAnnotations.REQUEST_BODY.getQualifiedName()) != null;
+            boolean requestBodyFound = true;
+//            boolean requestBodyFound = modifierList.findAnnotation(SpringRequestParamAnnotations.REQUEST_BODY.getQualifiedName()) != null;
             String paramName = psiParameter.getName();
             String requestName = null;
 
@@ -203,7 +205,6 @@ public class PsiMethodHelper {
         String ctrlPath = null;
         String methodPath = null;
         PsiClass containingClass = psiMethod.getContainingClass();
-        RestSupportedAnnotationHelper annotationHelper;
         if (isSpringRestSupported(containingClass)) {
             ctrlPath = RequestMappingAnnotationHelper.getOneRequestMappingPath(containingClass);
             methodPath = RequestMappingAnnotationHelper.getOneRequestMappingPath(psiMethod);

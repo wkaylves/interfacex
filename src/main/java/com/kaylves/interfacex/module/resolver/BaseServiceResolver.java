@@ -1,6 +1,7 @@
 package com.kaylves.interfacex.module.resolver;
 
 import com.kaylves.interfacex.common.constants.InterfaceXItemCategoryEnum;
+import com.kaylves.interfacex.module.http.HttpItem;
 import com.kaylves.interfacex.module.http.method.RequestPath;
 import com.kaylves.interfacex.common.InterfaceXItem;
 import com.intellij.openapi.diagnostic.Logger;
@@ -62,7 +63,9 @@ public abstract class BaseServiceResolver implements ServiceResolver {
 
         String requestPath = classUriPath + methodPath;
 
-        InterfaceXItem item = new InterfaceXItem(psiMethod, interfaceXItemCategoryEnum, requestMapping.getMethod(), requestPath, isUrlWithoutReqMethod);
+        HttpItem httpItem = HttpItem.builder().url(requestPath).build();
+
+        InterfaceXItem item = new InterfaceXItem(psiMethod, interfaceXItemCategoryEnum, requestMapping.getMethod(), httpItem, isUrlWithoutReqMethod);
 
         if (module != null) {
             item.setModule(module);

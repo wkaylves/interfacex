@@ -1,11 +1,10 @@
 package com.kaylves.interfacex.module.spring;
 
-import com.kaylves.interfacex.module.mission.MissionClientMethodAnnotation;
-import com.kaylves.interfacex.module.http.SpringRequestMethodAnnotation;
-import com.kaylves.interfacex.utils.PsiAnnotationHelper;
-import com.kaylves.interfacex.utils.RestSupportedAnnotationHelper;
-import com.kaylves.interfacex.module.http.method.RequestPath;
 import com.intellij.psi.*;
+import com.kaylves.interfacex.module.http.SpringRequestMethodAnnotation;
+import com.kaylves.interfacex.module.http.method.RequestPath;
+import com.kaylves.interfacex.module.mission.MissionClientMethodAnnotation;
+import com.kaylves.interfacex.utils.PsiAnnotationHelper;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class RequestMappingAnnotationHelper implements RestSupportedAnnotationHelper {
+public class RequestMappingAnnotationHelper{
 
     /**
      * Filter all annotations

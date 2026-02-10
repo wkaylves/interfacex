@@ -58,6 +58,11 @@ org.apache.rocketmq.spring.annotation.RocketMQMessageListener
 
 # 变更历史
 
+## [1.2.0]
+### Added
+* add rocketmq send message support
+* add copy service param as json support
+
 ## [1.1.4]
 ### Added
 * XLL-JOB UI布局调整,方便DEBUG调试

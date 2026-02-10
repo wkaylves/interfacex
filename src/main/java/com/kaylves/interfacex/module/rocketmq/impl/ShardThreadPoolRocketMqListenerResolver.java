@@ -1,6 +1,7 @@
-package com.kaylves.interfacex.module.rocketmq;
+package com.kaylves.interfacex.module.rocketmq.impl;
 
 import com.intellij.openapi.module.Module;
+import com.kaylves.interfacex.module.rocketmq.RocketMQAnnotation;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

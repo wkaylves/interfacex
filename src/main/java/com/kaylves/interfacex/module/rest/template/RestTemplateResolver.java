@@ -7,6 +7,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.searches.ReferencesSearch;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.kaylves.interfacex.common.constants.HttpMethod;
+import com.kaylves.interfacex.module.http.HttpItem;
 import com.kaylves.interfacex.module.resolver.BaseServiceResolver;
 import com.kaylves.interfacex.common.InterfaceXItem;
 import com.kaylves.interfacex.utils.PsiAnnotationHelper;
@@ -85,8 +86,9 @@ public class RestTemplateResolver extends BaseServiceResolver {
 
         String requestMethod = HttpMethod.POST.name();
 
-        results.add(new InterfaceXItem(method, null, requestMethod, method.getName(), false));
+        HttpItem httpItem = HttpItem.builder().url(method.getName()).build();
 
+        results.add(new InterfaceXItem(method, null, requestMethod, httpItem, false));
     }
 
     @Override

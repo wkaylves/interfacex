@@ -1,7 +1,9 @@
-package com.kaylves.interfacex.module.rabbitmq;
+package com.kaylves.interfacex.module.rabbitmq.impl;
 
 import com.kaylves.interfacex.common.constants.InterfaceXItemCategoryEnum;
 import com.kaylves.interfacex.common.constants.HttpMethod;
+import com.kaylves.interfacex.module.rabbitmq.RabbitMQAnnotation;
+import com.kaylves.interfacex.module.rabbitmq.RabbitMQItem;
 import com.kaylves.interfacex.module.resolver.BaseServiceResolver;
 import com.kaylves.interfacex.common.InterfaceXItem;
 import com.kaylves.interfacex.utils.PsiAnnotationHelper;
@@ -50,7 +52,11 @@ public class RabbitMQListenerResolver extends BaseServiceResolver {
 
                 String path = MessageFormat.format("{0}",queue);
 
-                InterfaceXItem item = new InterfaceXItem(psiMethod, InterfaceXItemCategoryEnum.RabbitMQListener,requestMethod, path, false);
+                RabbitMQItem rabbitMQItem = RabbitMQItem.builder()
+                        .queueName(path)
+                        .build();
+
+                InterfaceXItem item = new InterfaceXItem(psiMethod, InterfaceXItemCategoryEnum.RabbitMQListener,requestMethod, rabbitMQItem, false);
                 itemList.add(item);
             }
         }

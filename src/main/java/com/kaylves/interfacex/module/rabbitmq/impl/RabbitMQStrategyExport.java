@@ -1,7 +1,8 @@
-package com.kaylves.interfacex.module.rabbitmq;
+package com.kaylves.interfacex.module.rabbitmq.impl;
 
 import com.kaylves.interfacex.common.ExportServiceStrategy;
 import com.kaylves.interfacex.bean.ServiceExportBean;
+import com.kaylves.interfacex.module.rabbitmq.RabbitMQAnnotation;
 import com.kaylves.interfacex.utils.PsiAnnotationHelper;
 import com.kaylves.interfacex.utils.IdeaPluginUtils;
 import com.intellij.openapi.application.ReadAction;

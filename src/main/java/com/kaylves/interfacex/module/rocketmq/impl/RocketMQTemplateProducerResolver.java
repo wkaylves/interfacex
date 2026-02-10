@@ -1,4 +1,4 @@
-package com.kaylves.interfacex.module.rocketmq;
+package com.kaylves.interfacex.module.rocketmq.impl;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
@@ -10,6 +10,7 @@ import com.kaylves.interfacex.common.constants.InterfaceXItemCategoryEnum;
 import com.kaylves.interfacex.common.constants.HttpMethod;
 import com.kaylves.interfacex.module.resolver.BaseServiceResolver;
 import com.kaylves.interfacex.common.InterfaceXItem;
+import com.kaylves.interfacex.module.rocketmq.RocketMQItem;
 import com.kaylves.interfacex.utils.IdeaPluginUtils;
 import com.kaylves.interfacex.utils.PsiAnnotationHelper;
 import lombok.extern.slf4j.Slf4j;
@@ -94,8 +95,9 @@ public class RocketMQTemplateProducerResolver extends BaseServiceResolver {
 
         String requestMethod = HttpMethod.PRODUCE.name();
 
-        results.add(new InterfaceXItem(method, InterfaceXItemCategoryEnum.RocketMQProducer, requestMethod, method.getName(), false));
+        RocketMQItem rocketMQItem = RocketMQItem.builder().tag(method.getName()).build();
 
+        results.add(new InterfaceXItem(method, InterfaceXItemCategoryEnum.RocketMQProducer, requestMethod, rocketMQItem, false));
     }
 
     @Override

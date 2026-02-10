@@ -1,7 +1,9 @@
-package com.kaylves.interfacex.module.rocketmq;
+package com.kaylves.interfacex.module.rocketmq.impl;
 
 import com.kaylves.interfacex.common.constants.InterfaceXItemCategoryEnum;
 import com.kaylves.interfacex.module.resolver.BaseServiceResolver;
+import com.kaylves.interfacex.module.rocketmq.RocketMQDeliverAnnotation;
+import com.kaylves.interfacex.module.rocketmq.RocketMQItem;
 import com.kaylves.interfacex.utils.PsiAnnotationHelper;
 import com.kaylves.interfacex.common.constants.HttpMethod;
 import com.kaylves.interfacex.common.InterfaceXItem;
@@ -13,7 +15,6 @@ import com.intellij.psi.search.GlobalSearchScope;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -48,11 +49,19 @@ public class RocketMQDeliverResolver extends BaseServiceResolver {
 
                 String requestMethod = HttpMethod.PRODUCE.name();
 
-                String tags = StringUtils.trimToEmpty(PsiAnnotationHelper.getAnnotationAttributeValue(psiAnnotation, "tags"));
+                String topic = StringUtils.trimToEmpty(PsiAnnotationHelper.getAnnotationAttributeValue(
+                        psiAnnotation,
+                        "topic"));
+                String tags = StringUtils.trimToEmpty(PsiAnnotationHelper.getAnnotationAttributeValue(
+                        psiAnnotation,
+                        "tags"));
+                String keys = StringUtils.trimToEmpty(PsiAnnotationHelper.getAnnotationAttributeValue(
+                        psiAnnotation,
+                        "keys"));
 
-                String path = MessageFormat.format("{0}",tags);
+                RocketMQItem rocketMQItem = RocketMQItem.builder().tag(tags).topic(topic).keys(keys).build();
 
-                InterfaceXItem item = new InterfaceXItem(psiMethod, InterfaceXItemCategoryEnum.RocketMQDeliver, requestMethod, path, false);
+                InterfaceXItem item = new InterfaceXItem(psiMethod, InterfaceXItemCategoryEnum.RocketMQDeliver, requestMethod, rocketMQItem, false);
                 itemList.add(item);
             }
         }

@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 
 @ToString
-public class InterfaceXItem implements NavigationItem {
+public class InterfaceXItem implements NavigationItem,InterfaceXUrl {
 
     private PsiMethod psiMethod;
 
@@ -33,13 +33,14 @@ public class InterfaceXItem implements NavigationItem {
     @Getter
     private InterfaceXItemCategoryEnum interfaceXItemCategoryEnum;
 
-    private String url;
+    @Getter
+    private final InterfaceXUrl originalItem;
 
     private Navigatable navigationElement;
 
     private Boolean isUrlWithoutReqMethod = false;
 
-    public InterfaceXItem(PsiElement psiElement, InterfaceXItemCategoryEnum interfaceXItemCategoryEnum, String requestMethod, String urlPath, Boolean isUrlWithoutReqMethod) {
+    public InterfaceXItem(PsiElement psiElement, InterfaceXItemCategoryEnum interfaceXItemCategoryEnum, String requestMethod, InterfaceXUrl url, Boolean isUrlWithoutReqMethod) {
         this.psiElement = psiElement;
         this.interfaceXItemCategoryEnum = interfaceXItemCategoryEnum;
 
@@ -53,7 +54,7 @@ public class InterfaceXItem implements NavigationItem {
             method = HttpMethod.getByRequestMethod(requestMethod);
         }
 
-        this.url = urlPath;
+        this.originalItem = url;
 
         if (psiElement instanceof Navigatable) {
             navigationElement = (Navigatable) psiElement;
@@ -62,16 +63,21 @@ public class InterfaceXItem implements NavigationItem {
         this.isUrlWithoutReqMethod = isUrlWithoutReqMethod;
     }
 
+    @Override
+    public String getUrl() {
+        return this.originalItem.getUrl();
+    }
+
     @Nullable
     @Override
     public String getName() {
-        return this.url;
+        return getUrl();
     }
 
     @Nullable
     @Override
     public ItemPresentation getPresentation() {
-        return new RestServiceItemPresentation();
+        return new InterfaceXItemPresentation();
     }
 
     @Override
@@ -101,7 +107,7 @@ public class InterfaceXItem implements NavigationItem {
                 com.intellij.psi.codeStyle.NameUtil.buildMatcher("*" + pattern, com.intellij.psi.codeStyle.NameUtil.MatchingCaseSensitivity.NONE
         );
 
-        return matcher.matches(this.url);
+        return matcher.matches(getUrl());
     }
 
     public Module getModule() {
@@ -128,13 +134,6 @@ public class InterfaceXItem implements NavigationItem {
         this.method = method;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
 
     public String getFullUrl() {
         if (module == null) {
@@ -142,7 +141,7 @@ public class InterfaceXItem implements NavigationItem {
         }
 
         ModuleHelper moduleHelper = ModuleHelper.create(module);
-        return moduleHelper.getServiceHostPrefix() + getUrl();
+        return moduleHelper.getServiceHostPrefix() + originalItem.getUrl();
     }
 
     public PsiElement getPsiElement() {
@@ -153,12 +152,12 @@ public class InterfaceXItem implements NavigationItem {
         return this.module.getName() + this.getFullUrl() + this.getMethod();
     }
 
-    private class RestServiceItemPresentation implements ItemPresentation {
+    private class InterfaceXItemPresentation implements ItemPresentation {
 
         @Nullable
         @Override
         public String getPresentableText() {
-            return url;
+            return originalItem.getUrl();
         }
 
         @Nullable

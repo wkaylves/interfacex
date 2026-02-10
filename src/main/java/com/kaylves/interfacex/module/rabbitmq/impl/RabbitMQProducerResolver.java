@@ -1,7 +1,8 @@
-package com.kaylves.interfacex.module.rabbitmq;
+package com.kaylves.interfacex.module.rabbitmq.impl;
 
 import com.kaylves.interfacex.common.constants.InterfaceXItemCategoryEnum;
 import com.kaylves.interfacex.common.constants.HttpMethod;
+import com.kaylves.interfacex.module.rabbitmq.RabbitMQItem;
 import com.kaylves.interfacex.module.resolver.BaseServiceResolver;
 import com.kaylves.interfacex.common.InterfaceXItem;
 import com.kaylves.interfacex.utils.PsiAnnotationHelper;
@@ -83,8 +84,8 @@ public class RabbitMQProducerResolver extends BaseServiceResolver {
 
         String requestMethod = HttpMethod.PRODUCE.name();
 
-        results.add(new InterfaceXItem(method, InterfaceXItemCategoryEnum.RabbitMQProducer, requestMethod, method.getName(), false));
-
+        RabbitMQItem rabbitMQItem = RabbitMQItem.builder().queueName(method.getName()).build();
+        results.add(new InterfaceXItem(method, InterfaceXItemCategoryEnum.RabbitMQProducer, requestMethod, rabbitMQItem, false));
     }
 
     @Override

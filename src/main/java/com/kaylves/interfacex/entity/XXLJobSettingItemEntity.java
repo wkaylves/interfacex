@@ -1,4 +1,4 @@
-package com.kaylves.interfacex.model;
+package com.kaylves.interfacex.entity;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import lombok.Data;
  * @author kaylves
  */
 @Data
-public class XXLJobSettingItemModel {
+public class XXLJobSettingItemEntity {
 
     /**
      * nameServer

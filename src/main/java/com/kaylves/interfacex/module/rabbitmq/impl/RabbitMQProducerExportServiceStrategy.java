@@ -1,4 +1,4 @@
-package com.kaylves.interfacex.module.rabbitmq;
+package com.kaylves.interfacex.module.rabbitmq.impl;
 
 import com.kaylves.interfacex.bean.RabbitMQProducerExportBean;
 import com.kaylves.interfacex.common.ExportServiceStrategy;

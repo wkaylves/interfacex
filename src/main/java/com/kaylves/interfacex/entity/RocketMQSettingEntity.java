@@ -1,6 +1,6 @@
-package com.kaylves.interfacex.model;
+package com.kaylves.interfacex.entity;
 
-public class RocketMQSettingModel {
+public class RocketMQSettingEntity {
 
     /**
      * nameServer
