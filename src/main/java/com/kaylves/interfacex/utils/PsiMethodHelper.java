@@ -1,11 +1,11 @@
 package com.kaylves.interfacex.utils;
 
-import com.kaylves.interfacex.annotations.http.JaxrsRequestAnnotation;
-import com.kaylves.interfacex.annotations.http.SpringControllerAnnotation;
-import com.kaylves.interfacex.annotations.http.SpringRequestParamAnnotations;
-import com.kaylves.interfacex.common.jaxrs.JaxrsAnnotationHelper;
-import com.kaylves.interfacex.common.spring.RequestMappingAnnotationHelper;
-import com.kaylves.interfacex.method.Parameter;
+import com.kaylves.interfacex.module.http.JaxrsRequestAnnotation;
+import com.kaylves.interfacex.module.http.SpringControllerAnnotation;
+import com.kaylves.interfacex.module.http.SpringRequestParamAnnotations;
+import com.kaylves.interfacex.module.http.jaxrs.JaxrsAnnotationHelper;
+import com.kaylves.interfacex.module.spring.RequestMappingAnnotationHelper;
+import com.kaylves.interfacex.module.http.method.Parameter;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
@@ -120,12 +120,14 @@ public class PsiMethodHelper {
         for (PsiParameter psiParameter : psiParameters) {
             PsiType paramPsiType = psiParameter.getType();
             String paramType = paramPsiType.getCanonicalText();
+
             if ("javax.servlet.http.HttpServletRequest".equals(paramType) || "javax.servlet.http.HttpServletResponse".equals(paramType)) {
                 continue;
             }
             // @RequestParam
             PsiModifierList modifierList = psiParameter.getModifierList();
-            boolean requestBodyFound = modifierList.findAnnotation(SpringRequestParamAnnotations.REQUEST_BODY.getQualifiedName()) != null;
+            boolean requestBodyFound = true;
+//            boolean requestBodyFound = modifierList.findAnnotation(SpringRequestParamAnnotations.REQUEST_BODY.getQualifiedName()) != null;
             String paramName = psiParameter.getName();
             String requestName = null;
 
@@ -203,7 +205,6 @@ public class PsiMethodHelper {
         String ctrlPath = null;
         String methodPath = null;
         PsiClass containingClass = psiMethod.getContainingClass();
-        RestSupportedAnnotationHelper annotationHelper;
         if (isSpringRestSupported(containingClass)) {
             ctrlPath = RequestMappingAnnotationHelper.getOneRequestMappingPath(containingClass);
             methodPath = RequestMappingAnnotationHelper.getOneRequestMappingPath(psiMethod);

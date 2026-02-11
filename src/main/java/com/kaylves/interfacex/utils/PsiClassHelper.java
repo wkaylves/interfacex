@@ -25,8 +25,11 @@ import java.util.*;
 public class PsiClassHelper {
 
     private static int autoCorrelationCount = 0;
+
     PsiClass psiClass;
+
     private int listIterateCount = 0;
+
     private Module myModule;
 
     protected PsiClassHelper(@NotNull PsiClass psiClass) {
@@ -76,7 +79,7 @@ public class PsiClassHelper {
             case "atomicinteger":
                 return "1";
             case "string":
-                paramValue = "restfulToolkitX";
+                paramValue = "interfacex";
                 break;
             case "localdate":
                 paramValue = LocalDate.now().toString();

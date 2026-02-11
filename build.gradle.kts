@@ -38,9 +38,16 @@ dependencies {
 
   implementation("com.xuxueli:xxl-job-core:2.2.0")
 
+  implementation("org.apache.rocketmq:rocketmq-client:5.1.0")
+
   annotationProcessor("org.projectlombok:lombok:1.18.40");
   compileOnly("org.projectlombok:lombok:1.18.40")
   testAnnotationProcessor("org.projectlombok:lombok:1.18.40");
+
+  // 测试框架（必需）
+//  testImplementation("com.jetbrains.intellij.platform:platform-test-framework")
+
+
 }
 
 // Configure Gradle IntelliJ Plugin
@@ -53,6 +60,8 @@ intellij {
   plugins.set(properties("platformPlugins").map { it.split(',').map(String::trim).filter(String::isNotEmpty) })
 
 }
+
+
 
 tasks {
   // Set the JVM compatibility versions
@@ -117,6 +126,6 @@ tasks {
   }
 
   publishPlugin {
-    token.set(System.getenv("PUBLISH_TOKEN"))
+    token.set(System.getenv("IDEA_TOKEN"))
   }
 }

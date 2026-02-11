@@ -1,13 +1,16 @@
 package com.kaylves.interfacex.utils;
 
-import com.kaylves.interfacex.annotations.InterfaceXEnum;
-import com.kaylves.interfacex.annotations.http.SpringHttpRequestAnnotation;
+import com.kaylves.interfacex.common.ExportServiceStrategy;
+import com.kaylves.interfacex.common.constants.InterfaceXItemCategoryEnum;
+import com.kaylves.interfacex.module.http.SpringHttpRequestAnnotation;
 import com.kaylves.interfacex.bean.RocketMQProducerExportBean;
 import com.kaylves.interfacex.bean.ServiceExportBean;
 import com.kaylves.interfacex.bean.ModulePropertiesExportBean;
 import com.kaylves.interfacex.bean.ServiceExportBeanI;
-import com.kaylves.interfacex.common.spring.RequestMappingAnnotationHelper;
-import com.kaylves.interfacex.method.RequestPath;
+import com.kaylves.interfacex.module.mission.MissionStrategyExport;
+import com.kaylves.interfacex.module.openfeign.OpenFeignStrategyExport;
+import com.kaylves.interfacex.module.spring.RequestMappingAnnotationHelper;
+import com.kaylves.interfacex.module.http.method.RequestPath;
 import com.intellij.lang.findUsages.FindUsagesProvider;
 import com.intellij.lang.java.JavaFindUsagesProvider;
 import com.intellij.openapi.module.Module;
@@ -22,7 +25,8 @@ import com.intellij.psi.util.PsiUtil;
 import com.intellij.refactoring.util.MoveRenameUsageInfo;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.util.Query;
-import com.kaylves.interfacex.strategy.*;
+import com.kaylves.interfacex.module.spring.SpringControllerStrategyExport;
+import com.kaylves.interfacex.module.xxljob.XXLJobExportServiceStrategy;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -35,14 +39,14 @@ import java.util.*;
 @Slf4j
 public class IntfxUtils {
 
-    public static List<ServiceExportBeanI> getServiceExportBeans(Project project, InterfaceXEnum... interfaceXEnums)  {
+    public static List<ServiceExportBeanI> getServiceExportBeans(Project project, InterfaceXItemCategoryEnum... interfaceXItemCategories)  {
 
-        List<ServiceStrategy> serviceStrateties = new ArrayList<>();
+        List<ExportServiceStrategy> serviceStrateties = new ArrayList<>();
 
-        for (InterfaceXEnum interfaceXEnum : interfaceXEnums) {
-            Class<?>  stratetyClass = interfaceXEnum.getStrategy();
+        for (InterfaceXItemCategoryEnum interfaceXItemCategoryEnum : interfaceXItemCategories) {
+            Class<?>  stratetyClass = interfaceXItemCategoryEnum.getStrategy();
             try {
-                serviceStrateties.add((ServiceStrategy) stratetyClass.newInstance());
+                serviceStrateties.add((ExportServiceStrategy) stratetyClass.newInstance());
             }catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -67,16 +71,16 @@ public class IntfxUtils {
 
     public static List<ServiceExportBean> getServiceExportBeans(Project project) {
 
-        List<ServiceStrategy> serviceStrategy = new ArrayList<>();
+        List<ExportServiceStrategy> exportServiceStrategy = new ArrayList<>();
 
-        serviceStrategy.add(new OpenFeignStrategy());
-        serviceStrategy.add(new SpringControllerStrategy());
-        serviceStrategy.add(new XXLJobServiceStrategy());
-        serviceStrategy.add(new MissionStrategy());
+        exportServiceStrategy.add(new OpenFeignStrategyExport());
+        exportServiceStrategy.add(new SpringControllerStrategyExport());
+        exportServiceStrategy.add(new XXLJobExportServiceStrategy());
+        exportServiceStrategy.add(new MissionStrategyExport());
 
         List<ServiceExportBean> serviceExportBeans = new ArrayList<>();
 
-        serviceStrategy.forEach(serviceStratety -> serviceExportBeans.addAll(serviceStratety.obtainServiceExportBeans(project)));
+        exportServiceStrategy.forEach(serviceStratety -> serviceExportBeans.addAll(serviceStratety.obtainServiceExportBeans(project)));
 
         return serviceExportBeans;
     }

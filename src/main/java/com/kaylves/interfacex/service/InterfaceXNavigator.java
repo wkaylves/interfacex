@@ -1,27 +1,27 @@
 package com.kaylves.interfacex.service;
 
 import com.intellij.ide.util.treeView.TreeState;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.*;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.treeStructure.SimpleTree;
+import com.kaylves.interfacex.common.constants.InterfaceXItemCategoryEnum;
+import com.kaylves.interfacex.ui.navigator.InterfaceXForm;
 import com.kaylves.interfacex.ui.navigator.InterfaceXNavigatorPanel;
 import com.kaylves.interfacex.ui.navigator.InterfaceXNavigatorState;
 import com.kaylves.interfacex.ui.navigator.InterfaceXSimpleTreeStructure;
 import com.kaylves.interfacex.utils.ToolkitUtil;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.jdom.Element;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.tree.TreeSelectionModel;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
@@ -38,9 +38,11 @@ import javax.swing.tree.TreeSelectionModel;
 @Slf4j
 public final class InterfaceXNavigator implements PersistentStateComponent<InterfaceXNavigatorState>{
 
-    public static final Logger LOG = Logger.getInstance(InterfaceXNavigator.class);
-
+    @Getter
     InterfaceXNavigatorState interfaceXNavigatorState = new InterfaceXNavigatorState();
+
+    @Getter
+    private Map<InterfaceXItemCategoryEnum, InterfaceXForm> formCache = new ConcurrentHashMap<>();
 
     public static final String TOOL_WINDOW_ID = "InterfaceX";
 
@@ -53,6 +55,7 @@ public final class InterfaceXNavigator implements PersistentStateComponent<Inter
     @Getter
     InterfaceXNavigatorPanel rootPannel;
 
+    @Getter
     InterfaceXSimpleTreeStructure interfaceXSimpleTreeStructure;
 
     public InterfaceXNavigator(Project project) {
@@ -114,11 +117,10 @@ public final class InterfaceXNavigator implements PersistentStateComponent<Inter
                 initStructure();
             }
 
-
 //             fixme: compat
-//            if(shouldCreate){
-//                TreeState.createFrom(interfaceXNavigatorState.treeState).applyTo(simpleTree);
-//            }
+            if(shouldCreate){
+                TreeState.createFrom(interfaceXNavigatorState.treeState).applyTo(simpleTree);
+            }
 
             runnable.run();
         });
@@ -132,24 +134,6 @@ public final class InterfaceXNavigator implements PersistentStateComponent<Inter
     @Nullable
     @Override
     public InterfaceXNavigatorState getState() {
-        if (interfaceXSimpleTreeStructure != null) {
-            try {
-                interfaceXNavigatorState.treeState = new Element("root");
-
-                //======================================================================================
-                // 2023.3 Threading Model Changes
-                // https://plugins.jetbrains.com/docs/intellij/general-threading-rules.html#-9rmqiu_24
-                ApplicationManager.getApplication().invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        TreeState.createOn(simpleTree).writeExternal(interfaceXNavigatorState.treeState);
-                    }
-                });
-
-            } catch (WriteExternalException e) {
-                LOG.warn(e);
-            }
-        }
         return interfaceXNavigatorState;
     }
 

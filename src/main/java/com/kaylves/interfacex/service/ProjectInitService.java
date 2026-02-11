@@ -1,10 +1,11 @@
 package com.kaylves.interfacex.service;
 
-import com.kaylves.interfacex.ui.navigator.RestServiceProject;
+import com.kaylves.interfacex.common.InterfaceXProject;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
+import com.kaylves.interfacex.utils.InterfaceXHelper;
 
 import java.util.List;
 
@@ -24,11 +25,11 @@ public final class ProjectInitService implements Disposable {
         return p.getService(ProjectInitService.class);
     }
 
-    public List<RestServiceProject> getServiceProjects() {
+    public List<InterfaceXProject> getServiceProjects() {
         return DumbService
                 .getInstance(project)
                 .runReadActionInSmartMode(() ->
-                        ServiceHelper.buildRestServiceProjectListUsingResolver(project)
+                        InterfaceXHelper.buildRestServiceProjectListUsingResolver(project)
                 );
     }
 
