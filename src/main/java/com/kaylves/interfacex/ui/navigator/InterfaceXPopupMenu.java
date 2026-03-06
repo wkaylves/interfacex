@@ -10,8 +10,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.ui.PopupHandler;
 import com.intellij.ui.treeStructure.SimpleNode;
 import com.intellij.ui.treeStructure.SimpleTree;
-import com.kaylves.interfacex.common.InterfaceXItem;
-import com.kaylves.interfacex.common.constants.InterfaceXItemCategoryEnum;
+import com.kaylves.interfacex.common.InterfaceItem;
+import com.kaylves.interfacex.common.constants.InterfaceItemCategoryEnum;
 import com.kaylves.interfacex.service.InterfaceXNavigator;
 import com.kaylves.interfacex.ui.form.InterfaceXFormFactory;
 import com.kaylves.interfacex.utils.PsiMethodHelper;
@@ -63,18 +63,18 @@ public class InterfaceXPopupMenu {
         SimpleNode simpleNode = simpleTree.getSelectedNode();
 
         if (simpleNode instanceof InterfaceXSimpleTreeStructure.ServiceNode serviceNode) {
-            if (serviceNode.myInterfaceXItem.getInterfaceXItemCategoryEnum() == InterfaceXItemCategoryEnum.RabbitMQListener
-                    || serviceNode.myInterfaceXItem.getInterfaceXItemCategoryEnum() == InterfaceXItemCategoryEnum.RocketMQListener
-                    || serviceNode.myInterfaceXItem.getInterfaceXItemCategoryEnum() == InterfaceXItemCategoryEnum.RocketMQDeliver
-                    || serviceNode.myInterfaceXItem.getInterfaceXItemCategoryEnum() == InterfaceXItemCategoryEnum.RocketMQProducer) {
+            if (serviceNode.interfaceItem.getInterfaceItemCategoryEnum() == InterfaceItemCategoryEnum.RabbitMQListener
+                    || serviceNode.interfaceItem.getInterfaceItemCategoryEnum() == InterfaceItemCategoryEnum.RocketMQListener
+                    || serviceNode.interfaceItem.getInterfaceItemCategoryEnum() == InterfaceItemCategoryEnum.RocketMQDeliver
+                    || serviceNode.interfaceItem.getInterfaceItemCategoryEnum() == InterfaceItemCategoryEnum.RocketMQProducer) {
 
-                InterfaceXItem interfaceXItem = serviceNode.myInterfaceXItem;
+                InterfaceItem interfaceItem = serviceNode.interfaceItem;
                 String requestBodyJson;
-                PsiElement psiElement = interfaceXItem.getPsiElement();
+                PsiElement psiElement = interfaceItem.getPsiElement();
                 if (psiElement.getLanguage() == JavaLanguage.INSTANCE) {
                     PsiMethodHelper psiMethodHelper = PsiMethodHelper
-                            .create(interfaceXItem.getPsiMethod())
-                            .withModule(interfaceXItem.getModule());
+                            .create(interfaceItem.getPsiMethod())
+                            .withModule(interfaceItem.getModule());
                     requestBodyJson = psiMethodHelper.buildRequestBodyJson();
                     log.info("requestBodyJson:{}", requestBodyJson);
                     CopyPasteManager.getInstance().setContents(new StringSelection(requestBodyJson));
@@ -87,10 +87,10 @@ public class InterfaceXPopupMenu {
         SimpleNode simpleNode = simpleTree.getSelectedNode();
         if (simpleNode instanceof InterfaceXSimpleTreeStructure.ServiceNode serviceNode) {
 
-            if (serviceNode.myInterfaceXItem.getInterfaceXItemCategoryEnum() == InterfaceXItemCategoryEnum.XXLJob
-                    || serviceNode.myInterfaceXItem.getInterfaceXItemCategoryEnum() == InterfaceXItemCategoryEnum.RocketMQDeliver
-                    || serviceNode.myInterfaceXItem.getInterfaceXItemCategoryEnum() == InterfaceXItemCategoryEnum.RocketMQProducer) {
-                log.info("service node:{}", serviceNode.myInterfaceXItem.getName());
+            if (serviceNode.interfaceItem.getInterfaceItemCategoryEnum() == InterfaceItemCategoryEnum.XXLJob
+                    || serviceNode.interfaceItem.getInterfaceItemCategoryEnum() == InterfaceItemCategoryEnum.RocketMQDeliver
+                    || serviceNode.interfaceItem.getInterfaceItemCategoryEnum() == InterfaceItemCategoryEnum.RocketMQProducer) {
+                log.info("service node:{}", serviceNode.interfaceItem.getName());
                 createOrFlushInterfaceXForm(serviceNode);
             } else {
                 JOptionPane.showMessageDialog(null, "当前类型暂不支持！", "提示", JOptionPane.INFORMATION_MESSAGE);
@@ -104,25 +104,25 @@ public class InterfaceXPopupMenu {
      * @param serviceNode serviceNode
      */
     private void createOrFlushInterfaceXForm(InterfaceXSimpleTreeStructure.ServiceNode serviceNode) {
-        InterfaceXNavigatorPanel interfaceXNavigatorPanel = InterfaceXNavigator.getInstance(project).getRootPannel();
+        InterfaceXNavigatorPanel interfaceXNavigatorPanel = InterfaceXNavigator.getInstance(project).getRootPanel();
 
         log.info("interfaceXNavigatorPanel>>>>>>>>>>>");
 
         InterfaceXNavigator servicesNavigator = InterfaceXNavigator.getInstance(project);
 
-        InterfaceXItemCategoryEnum triggerInterfaceXItemCategoryEnum = InterfaceXItemCategoryEnum.getUniqueEnum(serviceNode.myInterfaceXItem.getInterfaceXItemCategoryEnum());
+        InterfaceItemCategoryEnum triggerInterfaceItemCategoryEnum = InterfaceItemCategoryEnum.getUniqueEnum(serviceNode.interfaceItem.getInterfaceItemCategoryEnum());
 
-        InterfaceXForm interfaceXForm = servicesNavigator.getFormCache().get(triggerInterfaceXItemCategoryEnum);
+        InterfaceXForm interfaceXForm = servicesNavigator.getFormCache().get(triggerInterfaceItemCategoryEnum);
 
         if (interfaceXForm == null) {
-            interfaceXForm = InterfaceXFormFactory.createInterfaceXForm(serviceNode);
+            interfaceXForm = InterfaceXFormFactory.createInterfaceForm(serviceNode);
             interfaceXNavigatorPanel.setBottomComponent(interfaceXForm);
             servicesNavigator.getFormCache().put(interfaceXForm.getInterfaceXEnum(), interfaceXForm);
             return;
         }
 
         //刷新
-        interfaceXForm.flush(serviceNode.myInterfaceXItem);
+        interfaceXForm.flush(serviceNode.interfaceItem);
         servicesNavigator.getFormCache().put(interfaceXForm.getInterfaceXEnum(), interfaceXForm);
         interfaceXNavigatorPanel.setBottomComponent(interfaceXForm);
     }

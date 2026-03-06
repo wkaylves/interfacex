@@ -22,6 +22,7 @@ import java.util.List;
 
 /**
  * RocketMQ服务暴露策略
+ * @author kaylves
  */
 public class RocketProducerExportServiceStrategy implements ExportServiceStrategy<RocketMQProducerExportBean> {
     @Override

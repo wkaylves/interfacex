@@ -1,9 +1,9 @@
 package com.kaylves.interfacex.module.resolver;
 
-import com.kaylves.interfacex.common.constants.InterfaceXItemCategoryEnum;
+import com.kaylves.interfacex.common.constants.InterfaceItemCategoryEnum;
 import com.kaylves.interfacex.module.http.HttpItem;
 import com.kaylves.interfacex.module.http.method.RequestPath;
-import com.kaylves.interfacex.common.InterfaceXItem;
+import com.kaylves.interfacex.common.InterfaceItem;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
@@ -14,7 +14,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class BaseServiceResolver implements ServiceResolver {
+/**
+ * @author kaylves
+ */
+public abstract class BaseServiceResolver implements IServiceResolver {
 
     public static final Logger LOG = Logger.getInstance(BaseServiceResolver.class);
 
@@ -23,8 +26,8 @@ public abstract class BaseServiceResolver implements ServiceResolver {
     protected Project project;
 
     @Override
-    public List<InterfaceXItem> findServiceItemsInModule() {
-        List<InterfaceXItem> itemList = new ArrayList<>();
+    public List<InterfaceItem> findServiceItemsInModule() {
+        List<InterfaceItem> itemList = new ArrayList<>();
 
         if (module == null) {
             return itemList;
@@ -35,15 +38,15 @@ public abstract class BaseServiceResolver implements ServiceResolver {
         return getRestServiceItemList(module.getProject(), globalSearchScope);
     }
 
-    public abstract List<InterfaceXItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope);
+    public abstract List<InterfaceItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope);
 
     @NotNull
-    protected InterfaceXItem createRestServiceItem(PsiElement psiMethod, InterfaceXItemCategoryEnum interfaceXItemCategoryEnum, String classUriPath, RequestPath requestMapping) {
-        return createRestServiceItem(psiMethod, interfaceXItemCategoryEnum, classUriPath, requestMapping, true);
+    protected InterfaceItem createRestServiceItem(PsiElement psiMethod, InterfaceItemCategoryEnum interfaceItemCategoryEnum, String classUriPath, RequestPath requestMapping) {
+        return createRestServiceItem(psiMethod, interfaceItemCategoryEnum, classUriPath, requestMapping, true);
     }
 
     @NotNull
-    protected InterfaceXItem createRestServiceItem(PsiElement psiMethod, InterfaceXItemCategoryEnum interfaceXItemCategoryEnum, String classUriPath, RequestPath requestMapping, Boolean isUrlWithoutReqMethod) {
+    protected InterfaceItem createRestServiceItem(PsiElement psiMethod, InterfaceItemCategoryEnum interfaceItemCategoryEnum, String classUriPath, RequestPath requestMapping, Boolean isUrlWithoutReqMethod) {
 
         LOG.debug("psiMethod:{},classUriPath:{},requestMapping:{},isUrlWithoutReqMethod:{}", psiMethod, classUriPath, requestMapping, isUrlWithoutReqMethod);
 
@@ -65,7 +68,7 @@ public abstract class BaseServiceResolver implements ServiceResolver {
 
         HttpItem httpItem = HttpItem.builder().url(requestPath).build();
 
-        InterfaceXItem item = new InterfaceXItem(psiMethod, interfaceXItemCategoryEnum, requestMapping.getMethod(), httpItem, isUrlWithoutReqMethod);
+        InterfaceItem item = new InterfaceItem(psiMethod, interfaceItemCategoryEnum, requestMapping.getMethod(), httpItem, isUrlWithoutReqMethod);
 
         if (module != null) {
             item.setModule(module);

@@ -47,13 +47,28 @@ public class ToolkitIcons {
                 ToolkitIcons.class
         ); // 16x16 GRAY
 
-        public static Icon PRODUCE = IconLoader.getIcon(
-                "/icons/method/p.png",
+        public static Icon CONSUME_GRAY = IconLoader.getIcon(
+                "/icons/method/L_gray.png",
                 ToolkitIcons.class
-        ); // 16x16 GRAY
+        );
+
+        public static Icon PRODUCE = IconLoader.getIcon(
+                "/icons/method/P-ROCKET.png",
+                ToolkitIcons.class
+        ); // 16x16
+
+        public static Icon PRODUCE_GRAY = IconLoader.getIcon(
+                "/icons/method/P-ROCKET-GRAY.png",
+                ToolkitIcons.class
+        ); // 16x16
 
         public static Icon EXECUTE = IconLoader.getIcon(
                 "/icons/method/x.png",
+                ToolkitIcons.class
+        ); // 16x16 GRAY
+
+        public static Icon EXECUTE_GRAY = IconLoader.getIcon(
+                "/icons/method/x_gray.png",
                 ToolkitIcons.class
         ); // 16x16 GRAY
 
@@ -79,5 +94,36 @@ public class ToolkitIcons {
             return null;
         }
         // OPTIONS HEAD
+
+        public static Icon get(HttpMethod method,Boolean useAble) {
+            if (method == null) {
+                return UNDEFINED;
+            }
+            if (method.equals(HttpMethod.GET)) {
+                return METHOD.GET;
+            } else if (method.equals(HttpMethod.POST)) {
+                return METHOD.POST;
+            } else if (method.equals(HttpMethod.PUT) || method.equals(HttpMethod.PATCH)) {
+                return METHOD.PUT;
+            } else if (method.equals(HttpMethod.DELETE)) {
+                return METHOD.DELETE;
+            }else if (method.equals(HttpMethod.PRODUCE)) {
+                if(!useAble){
+                    return METHOD.PRODUCE_GRAY;
+                }
+                return METHOD.PRODUCE;
+            }else if (method.equals(HttpMethod.CONSUME)) {
+                if(!useAble){
+                    return METHOD.CONSUME_GRAY;
+                }
+                return METHOD.CONSUME;
+            }else if (method.equals(HttpMethod.EXECUTE)) {
+                if(!useAble){
+                    return METHOD.EXECUTE_GRAY;
+                }
+                return METHOD.EXECUTE;
+            }
+            return null;
+        }
     }
 }

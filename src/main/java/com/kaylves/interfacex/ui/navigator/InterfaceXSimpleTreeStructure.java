@@ -18,8 +18,8 @@ import com.intellij.ui.treeStructure.SimpleNode;
 import com.intellij.ui.treeStructure.SimpleTree;
 import com.intellij.ui.treeStructure.SimpleTreeStructure;
 import com.intellij.util.OpenSourceUtil;
-import com.kaylves.interfacex.common.InterfaceXProject;
-import com.kaylves.interfacex.common.InterfaceXItem;
+import com.kaylves.interfacex.common.InterfaceProject;
+import com.kaylves.interfacex.common.InterfaceItem;
 import com.kaylves.interfacex.common.ToolkitIcons;
 import com.kaylves.interfacex.service.InterfaceXNavigator;
 import com.kaylves.interfacex.service.ProjectInitService;
@@ -45,7 +45,7 @@ public class InterfaceXSimpleTreeStructure extends SimpleTreeStructure {
 
     RootNode myRoot = new RootNode();
 
-    private final Map<InterfaceXProject, ProjectNode> myProjectToNodeMapping = new ConcurrentHashMap<>(1);
+    private final Map<InterfaceProject, ProjectNode> myProjectToNodeMapping = new ConcurrentHashMap<>(1);
 
     protected Project project;
 
@@ -63,8 +63,8 @@ public class InterfaceXSimpleTreeStructure extends SimpleTreeStructure {
         AsyncTreeModel asyncTreeModel = new AsyncTreeModel(structureTreeModel, this.project);
         simpleTree.setModel(asyncTreeModel);
 
-        InterfaceXPopupMenu interfaceXPopupMenu = new InterfaceXPopupMenu(simpleTree,project);
-        interfaceXPopupMenu.installPopupMenu();
+        InterfaceXPopupMenu xPopupMenu = new InterfaceXPopupMenu(simpleTree,project);
+        xPopupMenu.installPopupMenu();
     }
 
 
@@ -85,7 +85,7 @@ public class InterfaceXSimpleTreeStructure extends SimpleTreeStructure {
     public void update(boolean needRefresh) {
 
         ReadAction.run(() -> {
-            List<InterfaceXProject> projects = ProjectInitService.getInstance(project).getServiceProjects();
+            List<InterfaceProject> projects = ProjectInitService.getInstance(project).getServiceProjects();
             updateProjects(projects);
 
             updateCachedTreeState();
@@ -100,9 +100,9 @@ public class InterfaceXSimpleTreeStructure extends SimpleTreeStructure {
         }
     }
 
-    public void updateProjects(List<InterfaceXProject> projects) {
+    public void updateProjects(List<InterfaceProject> projects) {
 
-        for (InterfaceXProject each : projects) {
+        for (InterfaceProject each : projects) {
             log.info("module name : {}", each.getModuleName());
             ProjectNode node = findNodeFor(each);
 
@@ -116,7 +116,7 @@ public class InterfaceXSimpleTreeStructure extends SimpleTreeStructure {
         myRoot.updateProjectNodes(projects);
     }
 
-    private ProjectNode findNodeFor(InterfaceXProject project) {
+    private ProjectNode findNodeFor(InterfaceProject project) {
         return myProjectToNodeMapping.get(project);
     }
 
@@ -185,10 +185,10 @@ public class InterfaceXSimpleTreeStructure extends SimpleTreeStructure {
             return "InterfaceX";
         }
 
-        public void updateProjectNodes(List<InterfaceXProject> projects) {
+        public void updateProjectNodes(List<InterfaceProject> projects) {
             projectNodes.clear();
 
-            for (InterfaceXProject project : projects) {
+            for (InterfaceProject project : projects) {
                 ProjectNode projectNode = new ProjectNode(this, project);
                 projectNodes.add(projectNode);
             }
@@ -205,9 +205,9 @@ public class InterfaceXSimpleTreeStructure extends SimpleTreeStructure {
 
         List<CategoryNode> categoryNodes = new ArrayList<>();
 
-        final InterfaceXProject myProject;
+        final InterfaceProject myProject;
 
-        public ProjectNode(SimpleNode parent, InterfaceXProject project) {
+        public ProjectNode(SimpleNode parent, InterfaceProject project) {
 
             super(parent);
             myProject = project;
@@ -220,7 +220,7 @@ public class InterfaceXSimpleTreeStructure extends SimpleTreeStructure {
             updateServiceNodes(project.getServiceItemMap());
         }
 
-        private void updateServiceNodes(Map<String, List<InterfaceXItem>> serviceItems) {
+        private void updateServiceNodes(Map<String, List<InterfaceItem>> serviceItems) {
 
             serviceItems.forEach((s, restServiceItems) -> {
                 categoryNodes.add(new CategoryNode(s, this, myProject));
@@ -251,11 +251,11 @@ public class InterfaceXSimpleTreeStructure extends SimpleTreeStructure {
 
         List<ServiceNode> serviceNodes = new ArrayList<>();
 
-        final InterfaceXProject myProject;
+        final InterfaceProject myProject;
 
         private final String type;
 
-        public CategoryNode(String type, SimpleNode parent, InterfaceXProject project) {
+        public CategoryNode(String type, SimpleNode parent, InterfaceProject project) {
 
             super(parent);
             this.type = type;
@@ -267,11 +267,11 @@ public class InterfaceXSimpleTreeStructure extends SimpleTreeStructure {
             updateServiceNodes(project.getServiceItemMap().get(type));
         }
 
-        private void updateServiceNodes(List<InterfaceXItem> interfaceXItems) {
+        private void updateServiceNodes(List<InterfaceItem> interfaceItems) {
             serviceNodes.clear();
 
-            for (InterfaceXItem interfaceXItem : interfaceXItems) {
-                serviceNodes.add(new ServiceNode(this, interfaceXItem));
+            for (InterfaceItem interfaceItem : interfaceItems) {
+                serviceNodes.add(new ServiceNode(this, interfaceItem));
             }
 
             SimpleNode parent = getParent();
@@ -306,23 +306,23 @@ public class InterfaceXSimpleTreeStructure extends SimpleTreeStructure {
 
         List<ServiceNode> serviceNodes = new ArrayList<>();
 
-        final InterfaceXProject project;
+        final InterfaceProject project;
 
         List<ModuleNode> moduleNodes = new ArrayList<>();
 
         private String moduleName;
 
-        public ModuleNode(SimpleNode parent, InterfaceXProject project, String moduleName) {
+        public ModuleNode(SimpleNode parent, InterfaceProject project, String moduleName) {
             super(parent);
             this.project = project;
             this.moduleName = moduleName;
         }
 
-        private void updateServiceNodes(List<InterfaceXItem> interfaceXItems) {
+        private void updateServiceNodes(List<InterfaceItem> interfaceItems) {
             serviceNodes.clear();
 
-            for (InterfaceXItem interfaceXItem : interfaceXItems) {
-                serviceNodes.add(new ServiceNode(this, interfaceXItem));
+            for (InterfaceItem interfaceItem : interfaceItems) {
+                serviceNodes.add(new ServiceNode(this, interfaceItem));
             }
 
             SimpleNode parent = getParent();
@@ -355,13 +355,13 @@ public class InterfaceXSimpleTreeStructure extends SimpleTreeStructure {
      */
     public class ServiceNode extends BaseSimpleNode {
 
-        public InterfaceXItem myInterfaceXItem;
+        public InterfaceItem interfaceItem;
 
-        public ServiceNode(SimpleNode parent, InterfaceXItem interfaceXItem) {
+        public ServiceNode(SimpleNode parent, InterfaceItem interfaceItem) {
             super(parent);
-            myInterfaceXItem = interfaceXItem;
+            this.interfaceItem = interfaceItem;
 
-            Icon icon = ToolkitIcons.METHOD.get(interfaceXItem.getMethod());
+            Icon icon = ToolkitIcons.METHOD.get(interfaceItem.getMethod(), interfaceItem.getUseAble());
             if (icon != null) {
                 getTemplatePresentation().setIcon(icon);
                 setIcon(icon); //兼容 IDEA 2016
@@ -375,7 +375,7 @@ public class InterfaceXSimpleTreeStructure extends SimpleTreeStructure {
 
         @Override
         public String getName() {
-            return myInterfaceXItem.getName();
+            return interfaceItem.getName();
         }
 
         @Override
@@ -388,8 +388,9 @@ public class InterfaceXSimpleTreeStructure extends SimpleTreeStructure {
         public void handleDoubleClickOrEnter(SimpleTree tree, InputEvent inputEvent) {
             try {
                 ServiceNode selectedNode = (ServiceNode) tree.getSelectedNode();
-                InterfaceXItem myInterfaceXItem = selectedNode.myInterfaceXItem;
-                PsiElement psiElement = myInterfaceXItem.getPsiElement();
+                assert selectedNode != null;
+                InterfaceItem myInterfaceItem = selectedNode.interfaceItem;
+                PsiElement psiElement = myInterfaceItem.getPsiElement();
 
                 if (!psiElement.isValid()) {
                     throw new RuntimeException("psiElement is not valid!!!");
@@ -399,7 +400,7 @@ public class InterfaceXSimpleTreeStructure extends SimpleTreeStructure {
                 }
 
                 if (psiElement.getLanguage() == JavaLanguage.INSTANCE) {
-                    PsiMethod psiMethod = myInterfaceXItem.getPsiMethod();
+                    PsiMethod psiMethod = myInterfaceItem.getPsiMethod();
                     OpenSourceUtil.navigate(psiMethod);
                 }
             } catch (ClassCastException ignore) {
@@ -434,7 +435,7 @@ public class InterfaceXSimpleTreeStructure extends SimpleTreeStructure {
         try {
             Element newState = new Element("root");
             TreeState.createOn(simpleTree).writeExternal(newState);
-            InterfaceXNavigatorState interfaceXNavigatorState = InterfaceXNavigator.getInstance(project).getInterfaceXNavigatorState();
+            InterfaceXNavigatorState interfaceXNavigatorState = InterfaceXNavigator.getInstance(project).getXNavigatorState();
 
             // 调试：验证是否写入内容
             if (newState.getChildren().isEmpty() && newState.getAttributes().isEmpty()) {

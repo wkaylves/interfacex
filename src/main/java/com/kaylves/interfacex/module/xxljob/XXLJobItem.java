@@ -1,12 +1,12 @@
 package com.kaylves.interfacex.module.xxljob;
 
-import com.kaylves.interfacex.common.InterfaceXUrl;
+import com.kaylves.interfacex.common.InterfaceUrl;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-public class XXLJobItem implements InterfaceXUrl {
+public class XXLJobItem implements InterfaceUrl {
 
     private String jobName;
 

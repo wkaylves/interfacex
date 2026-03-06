@@ -1,6 +1,9 @@
 package com.kaylves.interfacex.common;
 
-public interface ServiceItemCategory {
+/**
+ * @author kaylves
+ */
+public interface ServiceItemCategoryI {
     /**
      * 获取Service item category
      * @return String

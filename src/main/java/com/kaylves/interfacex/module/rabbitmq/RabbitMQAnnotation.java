@@ -2,6 +2,10 @@ package com.kaylves.interfacex.module.rabbitmq;
 
 import com.kaylves.interfacex.module.http.PathMappingAnnotation;
 
+/**
+ * @author kaylves
+ */
+
 public enum RabbitMQAnnotation implements PathMappingAnnotation {
 
     PATH("RabbitListener", "org.springframework.amqp.rabbit.annotation.RabbitListener");

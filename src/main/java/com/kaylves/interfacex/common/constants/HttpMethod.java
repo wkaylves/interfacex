@@ -1,7 +1,8 @@
 package com.kaylves.interfacex.common.constants;
 
-import java.util.HashMap;
-import java.util.Map;
+/**
+ * @author kaylves
+ */
 
 public enum HttpMethod {
     /**
@@ -31,14 +32,6 @@ public enum HttpMethod {
      * 定时任务执行
      */
     EXECUTE;
-
-    private static final Map<String, HttpMethod> methodMap = new HashMap(8);
-
-    static {
-        for (HttpMethod httpMethod : values()) {
-            methodMap.put(httpMethod.name(), httpMethod);
-        }
-    }
 
     public static HttpMethod getByRequestMethod(String method) {
         if (method == null || method.isEmpty()) {

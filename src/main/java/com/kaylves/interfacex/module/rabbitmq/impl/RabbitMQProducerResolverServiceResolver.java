@@ -1,10 +1,10 @@
 package com.kaylves.interfacex.module.rabbitmq.impl;
 
-import com.kaylves.interfacex.common.constants.InterfaceXItemCategoryEnum;
+import com.kaylves.interfacex.common.constants.InterfaceItemCategoryEnum;
 import com.kaylves.interfacex.common.constants.HttpMethod;
 import com.kaylves.interfacex.module.rabbitmq.RabbitMQItem;
 import com.kaylves.interfacex.module.resolver.BaseServiceResolver;
-import com.kaylves.interfacex.common.InterfaceXItem;
+import com.kaylves.interfacex.common.InterfaceItem;
 import com.kaylves.interfacex.utils.PsiAnnotationHelper;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
@@ -19,19 +19,19 @@ import java.util.Collection;
 import java.util.List;
 
 @Slf4j
-public class RabbitMQProducerResolver extends BaseServiceResolver {
+public class RabbitMQProducerResolverServiceResolver extends BaseServiceResolver {
 
-    public RabbitMQProducerResolver(Module module) {
+    public RabbitMQProducerResolverServiceResolver(Module module) {
         this.module = module;
     }
 
     @Override
-    public List<InterfaceXItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
+    public List<InterfaceItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
         return findProducerCalls(project, this.module);
     }
 
-    private List<InterfaceXItem> findProducerCalls(Project project, Module module) {
-        List<InterfaceXItem> results = new ArrayList<>();
+    private List<InterfaceItem> findProducerCalls(Project project, Module module) {
+        List<InterfaceItem> results = new ArrayList<>();
         String rabbitMethodName = "convertAndSend";
         String[] targetClassNames = {
                 "com.hbfintech.mint.rabbit.core.RabbitTemplateProxy",
@@ -65,7 +65,7 @@ public class RabbitMQProducerResolver extends BaseServiceResolver {
         return results;
     }
 
-    private void addCall(List<InterfaceXItem> results, PsiMethodCallExpression callExpr, String callType) {
+    private void addCall(List<InterfaceItem> results, PsiMethodCallExpression callExpr, String callType) {
 
         PsiElement parent = PsiTreeUtil.getParentOfType(callExpr, PsiMethod.class);
 
@@ -85,7 +85,7 @@ public class RabbitMQProducerResolver extends BaseServiceResolver {
         String requestMethod = HttpMethod.PRODUCE.name();
 
         RabbitMQItem rabbitMQItem = RabbitMQItem.builder().queueName(method.getName()).build();
-        results.add(new InterfaceXItem(method, InterfaceXItemCategoryEnum.RabbitMQProducer, requestMethod, rabbitMQItem, false));
+        results.add(new InterfaceItem(method, InterfaceItemCategoryEnum.RabbitMQProducer, requestMethod, rabbitMQItem, false));
     }
 
     @Override

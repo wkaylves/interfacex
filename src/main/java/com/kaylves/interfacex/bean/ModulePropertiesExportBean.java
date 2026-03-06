@@ -5,6 +5,7 @@ import lombok.Data;
 
 /**
  * 国际化文件导出Bean
+ * @author kaylves
  */
 @Data
 public class ModulePropertiesExportBean {

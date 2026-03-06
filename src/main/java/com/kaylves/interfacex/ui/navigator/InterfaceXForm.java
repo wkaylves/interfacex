@@ -1,7 +1,7 @@
 package com.kaylves.interfacex.ui.navigator;
 
-import com.kaylves.interfacex.common.InterfaceXItem;
-import com.kaylves.interfacex.common.constants.InterfaceXItemCategoryEnum;
+import com.kaylves.interfacex.common.InterfaceItem;
+import com.kaylves.interfacex.common.constants.InterfaceItemCategoryEnum;
 
 import javax.swing.*;
 
@@ -19,13 +19,13 @@ public interface InterfaceXForm {
 
     /**
      * flush form
-     * @param interfaceXItem ServiceItem
+     * @param interfaceItem ServiceItem
      */
-    void flush(InterfaceXItem interfaceXItem);
+    void flush(InterfaceItem interfaceItem);
 
     /**
      * 获取接口类型
      * @return InterfaceXEnum
      */
-    InterfaceXItemCategoryEnum getInterfaceXEnum();
+    InterfaceItemCategoryEnum getInterfaceXEnum();
 }

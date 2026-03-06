@@ -1,12 +1,12 @@
 package com.kaylves.interfacex.module.rabbitmq;
 
-import com.kaylves.interfacex.common.InterfaceXUrl;
+import com.kaylves.interfacex.common.InterfaceUrl;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-public class RabbitMQItem implements InterfaceXUrl {
+public class RabbitMQItem implements InterfaceUrl {
 
     private String exchangeName;
 

@@ -3,7 +3,7 @@ package com.kaylves.interfacex.action.search;
 import com.intellij.ide.util.gotoByName.ChooseByNameFilterConfiguration;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
-import com.kaylves.interfacex.common.constants.InterfaceXItemCategoryEnum;
+import com.kaylves.interfacex.common.constants.InterfaceItemCategoryEnum;
 
 /**
  * Configuration for file type filtering popup in "Go to | Service" action.
@@ -12,7 +12,7 @@ import com.kaylves.interfacex.common.constants.InterfaceXItemCategoryEnum;
  */
 @State(name = "GotoRequestMappingConfiguration", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 @Service
-final class GotoRequestMappingConfiguration extends ChooseByNameFilterConfiguration<InterfaceXItemCategoryEnum> {
+final class GotoRequestMappingConfiguration extends ChooseByNameFilterConfiguration<InterfaceItemCategoryEnum> {
 
     /**
      * Get configuration instance
@@ -25,7 +25,7 @@ final class GotoRequestMappingConfiguration extends ChooseByNameFilterConfigurat
     }
 
     @Override
-    protected String nameForElement(InterfaceXItemCategoryEnum type) {
+    protected String nameForElement(InterfaceItemCategoryEnum type) {
         return type.name();
     }
 }

@@ -9,7 +9,7 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.treeStructure.SimpleTree;
-import com.kaylves.interfacex.common.constants.InterfaceXItemCategoryEnum;
+import com.kaylves.interfacex.common.constants.InterfaceItemCategoryEnum;
 import com.kaylves.interfacex.ui.navigator.InterfaceXForm;
 import com.kaylves.interfacex.ui.navigator.InterfaceXNavigatorPanel;
 import com.kaylves.interfacex.ui.navigator.InterfaceXNavigatorState;
@@ -34,15 +34,15 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 1.0
  */
 @Service(Service.Level.PROJECT)
-@State(name = "InterfaceXNavigator", storages = {@Storage(StoragePathMacros.WORKSPACE_FILE)})
+@State(name = "InterfaceXNavigator", storages = {@Storage("InterfaceX.xml")})
 @Slf4j
 public final class InterfaceXNavigator implements PersistentStateComponent<InterfaceXNavigatorState>{
 
     @Getter
-    InterfaceXNavigatorState interfaceXNavigatorState = new InterfaceXNavigatorState();
+    InterfaceXNavigatorState xNavigatorState = new InterfaceXNavigatorState();
 
     @Getter
-    private Map<InterfaceXItemCategoryEnum, InterfaceXForm> formCache = new ConcurrentHashMap<>();
+    private Map<InterfaceItemCategoryEnum, InterfaceXForm> formCache = new ConcurrentHashMap<>();
 
     public static final String TOOL_WINDOW_ID = "InterfaceX";
 
@@ -53,7 +53,7 @@ public final class InterfaceXNavigator implements PersistentStateComponent<Inter
     private ToolWindowEx myToolWindow;
 
     @Getter
-    InterfaceXNavigatorPanel rootPannel;
+    InterfaceXNavigatorPanel rootPanel;
 
     @Getter
     InterfaceXSimpleTreeStructure interfaceXSimpleTreeStructure;
@@ -82,11 +82,11 @@ public final class InterfaceXNavigator implements PersistentStateComponent<Inter
 
         createSimpleTree();
 
-        rootPannel = new InterfaceXNavigatorPanel(project, simpleTree);
+        rootPanel = new InterfaceXNavigatorPanel(project, simpleTree);
 
         final ContentFactory contentFactory = ServiceManager.getService(ContentFactory.class);
 
-        final Content content = contentFactory.createContent(rootPannel, "", false);
+        final Content content = contentFactory.createContent(rootPanel, "", false);
 
         ContentManager contentManager = myToolWindow.getContentManager();
         contentManager.addContent(content);
@@ -119,7 +119,7 @@ public final class InterfaceXNavigator implements PersistentStateComponent<Inter
 
 //             fixme: compat
             if(shouldCreate){
-                TreeState.createFrom(interfaceXNavigatorState.treeState).applyTo(simpleTree);
+                TreeState.createFrom(xNavigatorState.treeState).applyTo(simpleTree);
             }
 
             runnable.run();
@@ -134,12 +134,12 @@ public final class InterfaceXNavigator implements PersistentStateComponent<Inter
     @Nullable
     @Override
     public InterfaceXNavigatorState getState() {
-        return interfaceXNavigatorState;
+        return xNavigatorState;
     }
 
     @Override
     public void loadState(InterfaceXNavigatorState state) {
-        interfaceXNavigatorState = state;
+        this.xNavigatorState = state;
         scheduleStructureUpdate();
     }
 }

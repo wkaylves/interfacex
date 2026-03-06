@@ -3,6 +3,22 @@
 
 ## [Unreleased]
 
+## [1.2.1]
+### 中文
+* XXLJOB代码未使用变更背景为灰色，判断条件类或方法上有@Deprecated
+* RocketMQ消费者代码未使用变更背景为灰色,判断条件类或方法上有注解@Deprecated
+* **可以选择指定"接口"进行扫描**
+  * **HTTP**
+  * **RocketMQ消费者**
+  * **RabbitMQ生产者**
+  * **OpenFeign**
+  * **XXL-JOB**
+
+### English
+* XXLJOB add unused color on tree node 
+* rocket listener add unused color on tree node 
+
+
 ## [1.2.0]
 ### Added
 * add rocketmq send message support

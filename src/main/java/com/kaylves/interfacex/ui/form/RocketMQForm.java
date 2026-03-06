@@ -3,8 +3,8 @@ package com.kaylves.interfacex.ui.form;
 import com.intellij.lang.java.JavaLanguage;
 import com.intellij.psi.PsiElement;
 import com.intellij.ui.JBColor;
-import com.kaylves.interfacex.common.InterfaceXItem;
-import com.kaylves.interfacex.common.constants.InterfaceXItemCategoryEnum;
+import com.kaylves.interfacex.common.InterfaceItem;
+import com.kaylves.interfacex.common.constants.InterfaceItemCategoryEnum;
 import com.kaylves.interfacex.module.rocketmq.RocketMQItem;
 import com.kaylves.interfacex.ui.navigator.InterfaceXForm;
 import com.kaylves.interfacex.utils.PsiMethodHelper;
@@ -28,29 +28,29 @@ public class RocketMQForm implements InterfaceXForm {
     private JEditorPane bodyEditorPanel;
     private JEditorPane resultEditorPanel;
 
-    InterfaceXItem interfaceXItem;
+    InterfaceItem interfaceItem;
 
 
-    public RocketMQForm(InterfaceXItem interfaceXItem) {
-        initUIContent(interfaceXItem);
+    public RocketMQForm(InterfaceItem interfaceItem) {
+        initUIContent(interfaceItem);
 
         reqBtn.addActionListener(new RocketmqActionListener(this));
 
         this.getRootPanel().setBorder(
                 BorderFactory.createTitledBorder(
                         new MatteBorder(2,0,0,0, JBColor.YELLOW),
-                        interfaceXItem.getInterfaceXItemCategoryEnum().name()));
+                        interfaceItem.getInterfaceItemCategoryEnum().name()));
     }
 
-    private void initUIContent(InterfaceXItem interfaceXItem) {
-        this.interfaceXItem = interfaceXItem;
-        this.tagTxt.setText(interfaceXItem.getUrl());
-        setTopic(interfaceXItem);
+    private void initUIContent(InterfaceItem interfaceItem) {
+        this.interfaceItem = interfaceItem;
+        this.tagTxt.setText(interfaceItem.getUrl());
+        setTopic(interfaceItem);
         setReqBody();
     }
 
-    private void setTopic(InterfaceXItem interfaceXItem) {
-        RocketMQItem rocketMQItem = (RocketMQItem) interfaceXItem.getOriginalItem();
+    private void setTopic(InterfaceItem interfaceItem) {
+        RocketMQItem rocketMQItem = (RocketMQItem) interfaceItem.getOriginalItem();
         this.topicTxt.setText(rocketMQItem.getTopic());
     }
 
@@ -61,11 +61,11 @@ public class RocketMQForm implements InterfaceXForm {
 
     public void setReqBody(){
         String requestBodyJson;
-        PsiElement psiElement = interfaceXItem.getPsiElement();
+        PsiElement psiElement = interfaceItem.getPsiElement();
         if (psiElement.getLanguage() == JavaLanguage.INSTANCE) {
             PsiMethodHelper psiMethodHelper = PsiMethodHelper
-                    .create(interfaceXItem.getPsiMethod())
-                    .withModule(interfaceXItem.getModule());
+                    .create(interfaceItem.getPsiMethod())
+                    .withModule(interfaceItem.getModule());
             requestBodyJson = psiMethodHelper.buildRequestBodyJson();
             log.info("requestBodyJson:{}",requestBodyJson);
             this.bodyEditorPanel.setText(requestBodyJson);
@@ -73,12 +73,12 @@ public class RocketMQForm implements InterfaceXForm {
     }
 
     @Override
-    public void flush(InterfaceXItem interfaceXItem) {
-        initUIContent(interfaceXItem);
+    public void flush(InterfaceItem interfaceItem) {
+        initUIContent(interfaceItem);
     }
 
     @Override
-    public InterfaceXItemCategoryEnum getInterfaceXEnum() {
-        return InterfaceXItemCategoryEnum.RocketMQProducer;
+    public InterfaceItemCategoryEnum getInterfaceXEnum() {
+        return InterfaceItemCategoryEnum.RocketMQProducer;
     }
 }

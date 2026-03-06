@@ -4,6 +4,9 @@ import com.alibaba.excel.annotation.ExcelProperty;
 import lombok.Builder;
 import lombok.Data;
 
+/**
+ * @author kaylves
+ */
 @Data
 @Builder
 public class RabbitMQProducerExportBean implements ServiceExportBeanI{

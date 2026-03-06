@@ -18,6 +18,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 
+/**
+ * @author kaylves
+ */
 public class RocketMQListenerStrategyExport implements ExportServiceStrategy<RocketMQProducerExportBean> {
 
     @Override

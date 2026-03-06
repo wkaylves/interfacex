@@ -1,7 +1,7 @@
 package com.kaylves.interfacex.action.search;
 
-import com.kaylves.interfacex.common.constants.InterfaceXItemCategoryEnum;
-import com.kaylves.interfacex.common.InterfaceXItem;
+import com.kaylves.interfacex.common.constants.InterfaceItemCategoryEnum;
+import com.kaylves.interfacex.common.InterfaceItem;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.ide.util.gotoByName.CustomMatcherModel;
@@ -22,7 +22,7 @@ import java.util.Collection;
 /**
  * Model for "Go to | File" action
  */
-public class GotoRequestMappingModel extends FilteringGotoByModel<InterfaceXItemCategoryEnum> implements DumbAware, CustomMatcherModel {
+public class GotoRequestMappingModel extends FilteringGotoByModel<InterfaceItemCategoryEnum> implements DumbAware, CustomMatcherModel {
 
     protected GotoRequestMappingModel(@NotNull Project project, @NotNull ChooseByNameContributor[] contributors) {
         super(project, contributors);
@@ -33,9 +33,9 @@ public class GotoRequestMappingModel extends FilteringGotoByModel<InterfaceXItem
     //  (for example: GotoClassModel2 filter language，override getFilterItems())
     @Nullable
     @Override
-    protected InterfaceXItemCategoryEnum filterValueFor(NavigationItem item) {
-        if (item instanceof InterfaceXItem) {
-            return ((InterfaceXItem) item).getInterfaceXItemCategoryEnum();
+    protected InterfaceItemCategoryEnum filterValueFor(NavigationItem item) {
+        if (item instanceof InterfaceItem) {
+            return ((InterfaceItem) item).getInterfaceItemCategoryEnum();
         }
 
         return null;
@@ -43,7 +43,7 @@ public class GotoRequestMappingModel extends FilteringGotoByModel<InterfaceXItem
 
     @Nullable
     @Override
-    protected synchronized Collection<InterfaceXItemCategoryEnum> getFilterItems() {
+    protected synchronized Collection<InterfaceItemCategoryEnum> getFilterItems() {
         return super.getFilterItems();
     }
 

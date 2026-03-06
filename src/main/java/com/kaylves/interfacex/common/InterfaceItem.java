@@ -1,6 +1,6 @@
 package com.kaylves.interfacex.common;
 
-import com.kaylves.interfacex.common.constants.InterfaceXItemCategoryEnum;
+import com.kaylves.interfacex.common.constants.InterfaceItemCategoryEnum;
 import com.kaylves.interfacex.utils.ModuleHelper;
 import com.kaylves.interfacex.common.constants.HttpMethod;
 import com.intellij.navigation.ItemPresentation;
@@ -12,13 +12,17 @@ import com.intellij.pom.Navigatable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
+/**
+ * @author kaylves
+ */
 @ToString
-public class InterfaceXItem implements NavigationItem,InterfaceXUrl {
+public class InterfaceItem implements NavigationItem, InterfaceUrl {
 
     private PsiMethod psiMethod;
 
@@ -31,18 +35,22 @@ public class InterfaceXItem implements NavigationItem,InterfaceXUrl {
     private HttpMethod method;
 
     @Getter
-    private InterfaceXItemCategoryEnum interfaceXItemCategoryEnum;
+    private InterfaceItemCategoryEnum interfaceItemCategoryEnum;
 
     @Getter
-    private final InterfaceXUrl originalItem;
+    private final InterfaceUrl originalItem;
 
     private Navigatable navigationElement;
 
     private Boolean isUrlWithoutReqMethod = false;
 
-    public InterfaceXItem(PsiElement psiElement, InterfaceXItemCategoryEnum interfaceXItemCategoryEnum, String requestMethod, InterfaceXUrl url, Boolean isUrlWithoutReqMethod) {
+    @Setter
+    @Getter
+    private Boolean useAble=true;
+
+    public InterfaceItem(PsiElement psiElement, InterfaceItemCategoryEnum interfaceItemCategoryEnum, String requestMethod, InterfaceUrl url, Boolean isUrlWithoutReqMethod) {
         this.psiElement = psiElement;
-        this.interfaceXItemCategoryEnum = interfaceXItemCategoryEnum;
+        this.interfaceItemCategoryEnum = interfaceItemCategoryEnum;
 
         if (psiElement instanceof PsiMethod) {
             this.psiMethod = (PsiMethod) psiElement;
@@ -193,7 +201,7 @@ public class InterfaceXItem implements NavigationItem,InterfaceXUrl {
         @Nullable
         @Override
         public Icon getIcon(boolean unused) {
-            return ToolkitIcons.METHOD.get(method);
+            return ToolkitIcons.METHOD.get(method,useAble);
         }
     }
 }

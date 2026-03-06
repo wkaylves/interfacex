@@ -6,10 +6,10 @@ import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.searches.ReferencesSearch;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.kaylves.interfacex.common.constants.InterfaceXItemCategoryEnum;
+import com.kaylves.interfacex.common.constants.InterfaceItemCategoryEnum;
 import com.kaylves.interfacex.common.constants.HttpMethod;
 import com.kaylves.interfacex.module.resolver.BaseServiceResolver;
-import com.kaylves.interfacex.common.InterfaceXItem;
+import com.kaylves.interfacex.common.InterfaceItem;
 import com.kaylves.interfacex.module.rocketmq.RocketMQItem;
 import com.kaylves.interfacex.utils.IdeaPluginUtils;
 import com.kaylves.interfacex.utils.PsiAnnotationHelper;
@@ -20,20 +20,20 @@ import java.util.Collection;
 import java.util.List;
 
 @Slf4j
-public class RocketMQTemplateProducerResolver extends BaseServiceResolver {
+public class RocketMQTemplateProducerResolverServiceResolver extends BaseServiceResolver {
 
-    public RocketMQTemplateProducerResolver(Module module) {
+    public RocketMQTemplateProducerResolverServiceResolver(Module module) {
         this.module = module;
     }
 
     @Override
-    public List<InterfaceXItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
+    public List<InterfaceItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
         return findProducerCalls(project, this.module);
     }
 
-    private List<InterfaceXItem> findProducerCalls(Project project, Module module) {
+    private List<InterfaceItem> findProducerCalls(Project project, Module module) {
 
-        List<InterfaceXItem> results = new ArrayList<>();
+        List<InterfaceItem> results = new ArrayList<>();
 
         String[] targetClassNames = {
                 "org.apache.rocketmq.spring.core.RocketMQTemplate"
@@ -76,7 +76,7 @@ public class RocketMQTemplateProducerResolver extends BaseServiceResolver {
         return results;
     }
 
-    private void addCall(List<InterfaceXItem> results, PsiMethodCallExpression callExpr, String callType) {
+    private void addCall(List<InterfaceItem> results, PsiMethodCallExpression callExpr, String callType) {
 
         PsiElement parent = PsiTreeUtil.getParentOfType(callExpr, PsiMethod.class);
 
@@ -97,7 +97,7 @@ public class RocketMQTemplateProducerResolver extends BaseServiceResolver {
 
         RocketMQItem rocketMQItem = RocketMQItem.builder().tag(method.getName()).build();
 
-        results.add(new InterfaceXItem(method, InterfaceXItemCategoryEnum.RocketMQProducer, requestMethod, rocketMQItem, false));
+        results.add(new InterfaceItem(method, InterfaceItemCategoryEnum.RocketMQProducer, requestMethod, rocketMQItem, false));
     }
 
     @Override

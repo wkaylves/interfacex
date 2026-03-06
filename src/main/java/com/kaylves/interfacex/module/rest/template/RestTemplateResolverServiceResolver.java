@@ -9,7 +9,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.kaylves.interfacex.common.constants.HttpMethod;
 import com.kaylves.interfacex.module.http.HttpItem;
 import com.kaylves.interfacex.module.resolver.BaseServiceResolver;
-import com.kaylves.interfacex.common.InterfaceXItem;
+import com.kaylves.interfacex.common.InterfaceItem;
 import com.kaylves.interfacex.utils.PsiAnnotationHelper;
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,18 +18,18 @@ import java.util.Collection;
 import java.util.List;
 
 @Slf4j
-public class RestTemplateResolver extends BaseServiceResolver {
+public class RestTemplateResolverServiceResolver extends BaseServiceResolver {
 
-    public RestTemplateResolver(Module module) {
+    public RestTemplateResolverServiceResolver(Module module) {
         this.module = module;
     }
 
     @Override
-    public List<InterfaceXItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
+    public List<InterfaceItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
         return findProducerCalls(project, this.module);
     }
 
-    private List<InterfaceXItem> findProducerCalls(Project project, Module module) {
+    private List<InterfaceItem> findProducerCalls(Project project, Module module) {
         String[] methodsByNames = {"postForObject","postForEntity","getForObject","getForEntity"};
 
         String[] targetClassNames = {
@@ -40,7 +40,7 @@ public class RestTemplateResolver extends BaseServiceResolver {
 
         GlobalSearchScope moduleScope = GlobalSearchScope.moduleScope(module);
 
-        List<InterfaceXItem> results = new ArrayList<>();
+        List<InterfaceItem> results = new ArrayList<>();
 
         for (String methodsByName : methodsByNames) {
 
@@ -67,7 +67,7 @@ public class RestTemplateResolver extends BaseServiceResolver {
         return results;
     }
 
-    private void addCall(List<InterfaceXItem> results, PsiMethodCallExpression callExpr, String callType) {
+    private void addCall(List<InterfaceItem> results, PsiMethodCallExpression callExpr, String callType) {
 
         PsiElement parent = PsiTreeUtil.getParentOfType(callExpr, PsiMethod.class);
 
@@ -88,7 +88,7 @@ public class RestTemplateResolver extends BaseServiceResolver {
 
         HttpItem httpItem = HttpItem.builder().url(method.getName()).build();
 
-        results.add(new InterfaceXItem(method, null, requestMethod, httpItem, false));
+        results.add(new InterfaceItem(method, null, requestMethod, httpItem, false));
     }
 
     @Override

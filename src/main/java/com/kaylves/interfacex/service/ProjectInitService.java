@@ -1,6 +1,6 @@
 package com.kaylves.interfacex.service;
 
-import com.kaylves.interfacex.common.InterfaceXProject;
+import com.kaylves.interfacex.common.InterfaceProject;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.project.DumbService;
@@ -25,11 +25,14 @@ public final class ProjectInitService implements Disposable {
         return p.getService(ProjectInitService.class);
     }
 
-    public List<InterfaceXProject> getServiceProjects() {
+    public List<InterfaceProject> getServiceProjects() {
+
+        InterfaceXNavigator navigator =InterfaceXNavigator.getInstance(project);
+
         return DumbService
                 .getInstance(project)
                 .runReadActionInSmartMode(() ->
-                        InterfaceXHelper.buildRestServiceProjectListUsingResolver(project)
+                        InterfaceXHelper.getInterfaceProjectUsingResolver(project,navigator.xNavigatorState)
                 );
     }
 

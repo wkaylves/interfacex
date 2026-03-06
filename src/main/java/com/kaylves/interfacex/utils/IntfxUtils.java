@@ -1,7 +1,7 @@
 package com.kaylves.interfacex.utils;
 
 import com.kaylves.interfacex.common.ExportServiceStrategy;
-import com.kaylves.interfacex.common.constants.InterfaceXItemCategoryEnum;
+import com.kaylves.interfacex.common.constants.InterfaceItemCategoryEnum;
 import com.kaylves.interfacex.module.http.SpringHttpRequestAnnotation;
 import com.kaylves.interfacex.bean.RocketMQProducerExportBean;
 import com.kaylves.interfacex.bean.ServiceExportBean;
@@ -39,12 +39,12 @@ import java.util.*;
 @Slf4j
 public class IntfxUtils {
 
-    public static List<ServiceExportBeanI> getServiceExportBeans(Project project, InterfaceXItemCategoryEnum... interfaceXItemCategories)  {
+    public static List<ServiceExportBeanI> getServiceExportBeans(Project project, InterfaceItemCategoryEnum... interfaceXItemCategories)  {
 
         List<ExportServiceStrategy> serviceStrateties = new ArrayList<>();
 
-        for (InterfaceXItemCategoryEnum interfaceXItemCategoryEnum : interfaceXItemCategories) {
-            Class<?>  stratetyClass = interfaceXItemCategoryEnum.getStrategy();
+        for (InterfaceItemCategoryEnum interfaceItemCategoryEnum : interfaceXItemCategories) {
+            Class<?>  stratetyClass = interfaceItemCategoryEnum.getExportStrategy();
             try {
                 serviceStrateties.add((ExportServiceStrategy) stratetyClass.newInstance());
             }catch (Exception e) {

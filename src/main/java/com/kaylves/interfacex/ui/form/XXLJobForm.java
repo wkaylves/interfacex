@@ -1,9 +1,9 @@
 package com.kaylves.interfacex.ui.form;
 
 import com.intellij.ui.JBColor;
-import com.kaylves.interfacex.common.constants.InterfaceXItemCategoryEnum;
+import com.kaylves.interfacex.common.constants.InterfaceItemCategoryEnum;
 import com.kaylves.interfacex.ui.navigator.InterfaceXForm;
-import com.kaylves.interfacex.common.InterfaceXItem;
+import com.kaylves.interfacex.common.InterfaceItem;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,13 +24,13 @@ public class XXLJobForm implements InterfaceXForm {
     private JPanel tabPanel2;
     private JTextArea paramTxtArea;
 
-    private final InterfaceXItem interfaceXItem;
+    private final InterfaceItem interfaceItem;
 
-    public XXLJobForm(InterfaceXItem interfaceXItem) {
-        this.interfaceXItem = interfaceXItem;
+    public XXLJobForm(InterfaceItem interfaceItem) {
+        this.interfaceItem = interfaceItem;
         this.addressTxt.setText("http://localhost:11813/");
-        this.handlerTxt.setText(interfaceXItem.getUrl());
-        this.getRootPanel().setBorder(BorderFactory.createTitledBorder(new MatteBorder(2,0,0,0, JBColor.YELLOW), interfaceXItem.getInterfaceXItemCategoryEnum().name()));
+        this.handlerTxt.setText(interfaceItem.getUrl());
+        this.getRootPanel().setBorder(BorderFactory.createTitledBorder(new MatteBorder(2,0,0,0, JBColor.YELLOW), interfaceItem.getInterfaceItemCategoryEnum().name()));
         reqBtn.addActionListener(new XXLJobActionListener(this));
     }
 
@@ -40,12 +40,12 @@ public class XXLJobForm implements InterfaceXForm {
     }
 
     @Override
-    public void flush(InterfaceXItem interfaceXItem) {
-        this.handlerTxt.setText(interfaceXItem.getUrl());
+    public void flush(InterfaceItem interfaceItem) {
+        this.handlerTxt.setText(interfaceItem.getUrl());
     }
 
     @Override
-    public InterfaceXItemCategoryEnum getInterfaceXEnum() {
-        return InterfaceXItemCategoryEnum.XXLJob;
+    public InterfaceItemCategoryEnum getInterfaceXEnum() {
+        return InterfaceItemCategoryEnum.XXLJob;
     }
 }
