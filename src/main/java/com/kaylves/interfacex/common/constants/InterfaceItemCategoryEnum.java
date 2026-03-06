@@ -11,8 +11,12 @@ import com.kaylves.interfacex.module.spring.SpringControllerStrategyExport;
 import com.kaylves.interfacex.module.xxljob.XXLJobExportServiceStrategy;
 import lombok.Getter;
 
+/**
+ * @author kaylves
+ */
+
 @Getter
-public enum InterfaceXItemCategoryEnum {
+public enum InterfaceItemCategoryEnum {
 
     RocketMQProducer(RocketProducerExportServiceStrategy.class),
 
@@ -32,18 +36,21 @@ public enum InterfaceXItemCategoryEnum {
 
     Mission(MissionStrategyExport.class);
 
-    private final Class<?> strategy;
+    /**
+     * export strategy class
+     */
+    private final Class<?> exportStrategy;
 
-    InterfaceXItemCategoryEnum(Class<?> strategy) {
-        this.strategy = strategy;
+    InterfaceItemCategoryEnum(Class<?> exportStrategy) {
+        this.exportStrategy = exportStrategy;
     }
 
-    public static InterfaceXItemCategoryEnum getUniqueEnum(InterfaceXItemCategoryEnum interfaceXItemCategoryEnum) {
-        if (interfaceXItemCategoryEnum == InterfaceXItemCategoryEnum.RocketMQProducer || interfaceXItemCategoryEnum == InterfaceXItemCategoryEnum.RocketMQDeliver) {
+    public static InterfaceItemCategoryEnum getUniqueEnum(InterfaceItemCategoryEnum interfaceItemCategoryEnum) {
+        if (interfaceItemCategoryEnum == InterfaceItemCategoryEnum.RocketMQProducer || interfaceItemCategoryEnum == InterfaceItemCategoryEnum.RocketMQDeliver) {
             return RocketMQProducer;
         }
 
-        return interfaceXItemCategoryEnum;
+        return interfaceItemCategoryEnum;
     }
 
 }

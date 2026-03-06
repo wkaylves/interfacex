@@ -3,21 +3,29 @@ package com.kaylves.interfacex.ui.form;
 import com.kaylves.interfacex.ui.navigator.InterfaceXForm;
 import com.kaylves.interfacex.ui.navigator.InterfaceXSimpleTreeStructure;
 
+/**
+ * @author kaylves
+ */
 public class InterfaceXFormFactory {
 
-    public static InterfaceXForm createInterfaceXForm(InterfaceXSimpleTreeStructure.ServiceNode serviceNode) {
+    /**
+     *
+     * @param serviceNode serviceNode
+     * @return InterfaceXForm
+     */
+    public static InterfaceXForm createInterfaceForm(InterfaceXSimpleTreeStructure.ServiceNode serviceNode) {
 
-        InterfaceXForm interfaceXForm = null;
-        switch (serviceNode.myInterfaceXItem.getInterfaceXItemCategoryEnum()) {
+        InterfaceXForm xForm = null;
+        switch (serviceNode.interfaceItem.getInterfaceItemCategoryEnum()) {
             case XXLJob:
-                interfaceXForm = new XXLJobForm(serviceNode.myInterfaceXItem);
+                xForm = new XXLJobForm(serviceNode.interfaceItem);
                 break;
             case RocketMQDeliver:
             case RocketMQProducer:
-                interfaceXForm = new RocketMQForm(serviceNode.myInterfaceXItem);
+                xForm = new RocketMQForm(serviceNode.interfaceItem);
                 break;
         }
 
-        return interfaceXForm;
+        return xForm;
     }
 }

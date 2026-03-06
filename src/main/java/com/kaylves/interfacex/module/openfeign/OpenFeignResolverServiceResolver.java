@@ -1,12 +1,12 @@
 package com.kaylves.interfacex.module.openfeign;
 
-import com.kaylves.interfacex.common.constants.InterfaceXItemCategoryEnum;
+import com.kaylves.interfacex.common.constants.InterfaceItemCategoryEnum;
 import com.kaylves.interfacex.module.http.SpringHttpRequestAnnotation;
 import com.kaylves.interfacex.module.resolver.BaseServiceResolver;
 import com.kaylves.interfacex.utils.PsiAnnotationHelper;
 import com.kaylves.interfacex.module.spring.RequestMappingAnnotationHelper;
 import com.kaylves.interfacex.module.http.method.RequestPath;
-import com.kaylves.interfacex.common.InterfaceXItem;
+import com.kaylves.interfacex.common.InterfaceItem;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
@@ -19,15 +19,15 @@ import java.util.Collection;
 import java.util.List;
 
 @Slf4j
-public class OpenFeignResolver extends BaseServiceResolver {
+public class OpenFeignResolverServiceResolver extends BaseServiceResolver {
 
-    public OpenFeignResolver(Module module) {
+    public OpenFeignResolverServiceResolver(Module module) {
         this.module = module;
     }
 
     @Override
-    public List<InterfaceXItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
-        List<InterfaceXItem> itemList = new ArrayList<>();
+    public List<InterfaceItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
+        List<InterfaceItem> itemList = new ArrayList<>();
         Collection<PsiAnnotation> psiAnnotations = JavaAnnotationIndex.getInstance().get(SpringHttpRequestAnnotation.FEIGN_CLIENT.getShortName(), project, globalSearchScope);
 
         for (PsiAnnotation psiAnnotation : psiAnnotations) {
@@ -41,18 +41,18 @@ public class OpenFeignResolver extends BaseServiceResolver {
                 continue;
             }
 
-            itemList.addAll(getServiceItemList(psiClass));
+            itemList.addAll(getServiceItemList(psiClass,globalSearchScope));
         }
 
         return itemList;
     }
 
-    protected List<InterfaceXItem> getServiceItemList(PsiClass psiClass) {
+    protected List<InterfaceItem> getServiceItemList(PsiClass psiClass, GlobalSearchScope globalSearchScope) {
 
         List<RequestPath> classRequestPaths = RequestMappingAnnotationHelper.getSpringAnnotationRequestPaths(psiClass);
 
         PsiMethod[] psiMethods = psiClass.getMethods();
-        List<InterfaceXItem> itemList = new ArrayList<>();
+        List<InterfaceItem> itemList = new ArrayList<>();
 
         for (PsiMethod psiMethod : psiMethods) {
             RequestPath[] methodRequestPaths = RequestMappingAnnotationHelper.getSpringAnnotationRequestPaths(psiMethod);
@@ -62,7 +62,11 @@ public class OpenFeignResolver extends BaseServiceResolver {
 
                 for (RequestPath methodRequestPath : methodRequestPaths) {
                     String path = classRequestPath.getPath();
-                    InterfaceXItem item = createRestServiceItem(psiMethod, InterfaceXItemCategoryEnum.OpenFeign,path, methodRequestPath);
+                    InterfaceItem item = createRestServiceItem(psiMethod, InterfaceItemCategoryEnum.OpenFeign,path, methodRequestPath);
+
+//                    Boolean result = ReferencesSearch.search(psiMethod, globalSearchScope).findFirst() != null;
+//                    item.setUseAble(result);
+
                     itemList.add(item);
                 }
             }

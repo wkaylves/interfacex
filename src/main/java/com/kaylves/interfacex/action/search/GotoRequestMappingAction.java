@@ -1,7 +1,7 @@
 package com.kaylves.interfacex.action.search;
 
-import com.kaylves.interfacex.common.constants.InterfaceXItemCategoryEnum;
-import com.kaylves.interfacex.common.InterfaceXItem;
+import com.kaylves.interfacex.common.constants.InterfaceItemCategoryEnum;
+import com.kaylves.interfacex.common.InterfaceItem;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.ide.actions.GotoActionBase;
 import com.intellij.ide.util.gotoByName.ChooseByNameFilter;
@@ -43,16 +43,16 @@ public class GotoRequestMappingAction extends GotoActionBase implements DumbAwar
 
         final GotoRequestMappingModel model = new GotoRequestMappingModel(project, chooseByNameContributors);
 
-        GotoActionCallback<InterfaceXItemCategoryEnum> callback = new GotoActionCallback<>() {
+        GotoActionCallback<InterfaceItemCategoryEnum> callback = new GotoActionCallback<>() {
             @Override
-            protected ChooseByNameFilter<InterfaceXItemCategoryEnum> createFilter(@NotNull ChooseByNamePopup popup) {
+            protected ChooseByNameFilter<InterfaceItemCategoryEnum> createFilter(@NotNull ChooseByNamePopup popup) {
                 return new GotoRequestMappingFilter(popup, model, project);
             }
 
             @Override
             public void elementChosen(ChooseByNamePopup chooseByNamePopup, Object element) {
-                if (element instanceof InterfaceXItem) {
-                    InterfaceXItem navigationItem = (InterfaceXItem) element;
+                if (element instanceof InterfaceItem) {
+                    InterfaceItem navigationItem = (InterfaceItem) element;
                     if (navigationItem.canNavigate()) {
                         navigationItem.navigate(true);
                     }
@@ -94,7 +94,7 @@ public class GotoRequestMappingAction extends GotoActionBase implements DumbAwar
         return null;
     }
 
-    protected static class GotoRequestMappingFilter extends ChooseByNameFilter<InterfaceXItemCategoryEnum> {
+    protected static class GotoRequestMappingFilter extends ChooseByNameFilter<InterfaceItemCategoryEnum> {
 
         GotoRequestMappingFilter(final ChooseByNamePopup popup, GotoRequestMappingModel model, final Project project) {
             super(popup, model, GotoRequestMappingConfiguration.getInstance(project), project);
@@ -106,17 +106,17 @@ public class GotoRequestMappingAction extends GotoActionBase implements DumbAwar
          */
         @Override
         @NotNull
-        protected List<InterfaceXItemCategoryEnum> getAllFilterValues() {
-            return Arrays.asList(InterfaceXItemCategoryEnum.values());
+        protected List<InterfaceItemCategoryEnum> getAllFilterValues() {
+            return Arrays.asList(InterfaceItemCategoryEnum.values());
         }
 
         @Override
-        protected String textForFilterValue(@NotNull InterfaceXItemCategoryEnum value) {
+        protected String textForFilterValue(@NotNull InterfaceItemCategoryEnum value) {
             return value.name();
         }
 
         @Override
-        protected Icon iconForFilterValue(@NotNull InterfaceXItemCategoryEnum value) {
+        protected Icon iconForFilterValue(@NotNull InterfaceItemCategoryEnum value) {
             return null;
         }
     }

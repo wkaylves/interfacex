@@ -40,5 +40,11 @@ public enum InterfaceXItemEnum {
     /**
      * Mission
      */
-    Mission;
+    Mission,
+
+    /**
+     * XXLJOB
+     */
+    XXLJOB;
+
 }

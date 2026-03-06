@@ -1,11 +1,11 @@
 package com.kaylves.interfacex.module.rabbitmq.impl;
 
-import com.kaylves.interfacex.common.constants.InterfaceXItemCategoryEnum;
+import com.kaylves.interfacex.common.constants.InterfaceItemCategoryEnum;
 import com.kaylves.interfacex.common.constants.HttpMethod;
 import com.kaylves.interfacex.module.rabbitmq.RabbitMQAnnotation;
 import com.kaylves.interfacex.module.rabbitmq.RabbitMQItem;
 import com.kaylves.interfacex.module.resolver.BaseServiceResolver;
-import com.kaylves.interfacex.common.InterfaceXItem;
+import com.kaylves.interfacex.common.InterfaceItem;
 import com.kaylves.interfacex.utils.PsiAnnotationHelper;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
@@ -19,15 +19,15 @@ import java.text.MessageFormat;
 import java.util.*;
 
 @Slf4j
-public class RabbitMQListenerResolver extends BaseServiceResolver {
+public class RabbitMQListenerResolverServiceResolver extends BaseServiceResolver {
 
-    public RabbitMQListenerResolver(Module module) {
+    public RabbitMQListenerResolverServiceResolver(Module module) {
         this.module = module;
     }
 
     @Override
-    public List<InterfaceXItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
-        List<InterfaceXItem> itemList = new ArrayList<>();
+    public List<InterfaceItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
+        List<InterfaceItem> itemList = new ArrayList<>();
         Collection<PsiAnnotation> psiAnnotations = JavaAnnotationIndex.getInstance().get(RabbitMQAnnotation.PATH.getShortName(), project, globalSearchScope);
 
         for (PsiAnnotation psiAnnotation : psiAnnotations) {
@@ -56,7 +56,7 @@ public class RabbitMQListenerResolver extends BaseServiceResolver {
                         .queueName(path)
                         .build();
 
-                InterfaceXItem item = new InterfaceXItem(psiMethod, InterfaceXItemCategoryEnum.RabbitMQListener,requestMethod, rabbitMQItem, false);
+                InterfaceItem item = new InterfaceItem(psiMethod, InterfaceItemCategoryEnum.RabbitMQListener,requestMethod, rabbitMQItem, false);
                 itemList.add(item);
             }
         }

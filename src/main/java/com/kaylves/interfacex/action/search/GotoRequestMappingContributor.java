@@ -1,6 +1,8 @@
 package com.kaylves.interfacex.action.search;
 
-import com.kaylves.interfacex.common.InterfaceXItem;
+import com.kaylves.interfacex.common.InterfaceItem;
+import com.kaylves.interfacex.service.InterfaceXNavigator;
+import com.kaylves.interfacex.ui.navigator.InterfaceXNavigatorState;
 import com.kaylves.interfacex.utils.InterfaceXHelper;
 import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.NavigationItem;
@@ -14,7 +16,7 @@ public class GotoRequestMappingContributor implements ChooseByNameContributor {
 
     Module myModule;
 
-    private List<InterfaceXItem> navItem;
+    private List<InterfaceItem> navItem;
 
     public GotoRequestMappingContributor(Module myModule) {
         this.myModule = myModule;
@@ -24,12 +26,15 @@ public class GotoRequestMappingContributor implements ChooseByNameContributor {
     @Override
     public String[] getNames(Project project, boolean onlyThisModuleChecked) {
         String[] names = null;
-        List<InterfaceXItem> itemList;
+        List<InterfaceItem> itemList;
         ///todo find all rest url file in project
+
+        InterfaceXNavigatorState xNavigatorState = InterfaceXNavigator.getInstance(project).getXNavigatorState();
+
         if (onlyThisModuleChecked && myModule != null) {
-            itemList = InterfaceXHelper.buildRestServiceItemListUsingResolver(myModule);
+            itemList = InterfaceXHelper.buildInterfaceItemUsingResolver(myModule,xNavigatorState);
         } else {
-            itemList = InterfaceXHelper.buildRestServiceItemListUsingResolver(project);
+            itemList = InterfaceXHelper.buildInterfaceItemUsingResolver(project);
         }
 
         navItem = itemList;
@@ -37,7 +42,7 @@ public class GotoRequestMappingContributor implements ChooseByNameContributor {
         names = new String[itemList.size()];
 
         for (int i = 0; i < itemList.size(); i++) {
-            InterfaceXItem requestMappingNavigationItem = itemList.get(i);
+            InterfaceItem requestMappingNavigationItem = itemList.get(i);
             names[i] = requestMappingNavigationItem.getName();
         }
 

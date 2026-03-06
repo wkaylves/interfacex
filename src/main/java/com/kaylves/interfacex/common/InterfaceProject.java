@@ -6,16 +6,19 @@ import lombok.Getter;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author kaylves
+ */
 @Getter
-public class InterfaceXProject {
+public class InterfaceProject {
 
     private final String moduleName;
 
-    public List<InterfaceXItem> interfaceXItems;
+    public List<InterfaceItem> interfaceItems;
 
-    private final Map<String,List<InterfaceXItem>> serviceItemMap;
+    private final Map<String,List<InterfaceItem>> serviceItemMap;
 
-    public InterfaceXProject(Module module, Map<String,List<InterfaceXItem>> serviceItemMap) {
+    public InterfaceProject(Module module, Map<String,List<InterfaceItem>> serviceItemMap) {
         this.moduleName = module.getName();
         this.serviceItemMap = serviceItemMap;
     }
@@ -28,8 +31,8 @@ public class InterfaceXProject {
     @Override
     public boolean equals(Object obj) {
 
-        if(obj instanceof InterfaceXProject){
-            return this.moduleName.equals(((InterfaceXProject)obj).moduleName);
+        if(obj instanceof InterfaceProject){
+            return this.moduleName.equals(((InterfaceProject)obj).moduleName);
         }
 
         return false;

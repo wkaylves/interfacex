@@ -32,13 +32,6 @@
     </projectListeners>
 
     <actions>
-        <action id="com.kaylves.interfacex.action.toolbar.NavigatorInterfaceExportAction"
-                class="com.kaylves.interfacex.action.toolbar.NavigatorInterfaceExportAction"
-                description="NavigatorExportAction"
-                text="导出Excel文件"
-                icon="AllIcons.Actions.Download">
-        </action>
-
         <action id="com.kaylves.interfacex.action.toolbar.RefreshProjectAction"
                 class="com.kaylves.interfacex.action.toolbar.RefreshProjectAction"
                 description="RefreshProjectAction"
@@ -55,6 +48,20 @@
             <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt B"/>
         </action>
 
+        <action id="com.kaylves.interfacex.action.toolbar.NavigatorInterfaceExportAction"
+                class="com.kaylves.interfacex.action.toolbar.NavigatorInterfaceExportAction"
+                description="NavigatorExportAction"
+                text="导出接口"
+                icon="AllIcons.Actions.Download">
+        </action>
+
+        <action id="com.kaylves.interfacex.action.toolbar.RocketMQProducerExportAction"
+                class="com.kaylves.interfacex.action.toolbar.RocketMQProducerExportAction"
+                description="导出RocketMQ"
+                text="导出RocketMQ"
+                icon="AllIcons.Actions.Download">
+        </action>
+
         <action id="com.kaylves.interfacex.action.toolbar.ProjectInternationalizationExportAction"
                 class="com.kaylves.interfacex.action.toolbar.ProjectInternationalizationExportAction"
                 description="导出国际化文件"
@@ -62,11 +69,11 @@
                 icon="AllIcons.Actions.Download">
         </action>
 
-        <action id="com.kaylves.interfacex.action.toolbar.RocketMQProducerExportAction"
-                class="com.kaylves.interfacex.action.toolbar.RocketMQProducerExportAction"
-                description="导出MQ生产者"
-                text="导出MQ生产者"
-                icon="AllIcons.Actions.Download">
+        <action id="com.kaylves.interfacex.action.toolbar.SettingProjectAction"
+                class="com.kaylves.interfacex.action.toolbar.SettingProjectAction"
+                description="设置"
+                text="设置"
+                icon="AllIcons.General.Settings">
         </action>
 
         <!-- 注册action group -->
@@ -74,8 +81,9 @@
             <reference id="com.kaylves.interfacex.action.toolbar.RefreshProjectAction"/>
             <reference id="com.kaylves.interfacex.action.search.GotoRequestMappingAction"/>
             <reference id="com.kaylves.interfacex.action.toolbar.NavigatorInterfaceExportAction"/>
-            <reference id="com.kaylves.interfacex.action.toolbar.ProjectInternationalizationExportAction"/>
             <reference id="com.kaylves.interfacex.action.toolbar.RocketMQProducerExportAction"/>
+            <reference id="com.kaylves.interfacex.action.toolbar.ProjectInternationalizationExportAction"/>
+            <reference id="com.kaylves.interfacex.action.toolbar.SettingProjectAction"/>
         </group>
 
     </actions>
@@ -87,7 +95,6 @@
         <toolWindow id="InterfaceX"
                     factoryClass="com.kaylves.interfacex.ui.toolwindow.InterfaceXToolWindow"
                     anchor="right" icon="com.kaylves.interfacex.common.ToolkitIcons.SERVICE"/>
-
     </extensions>
 
 </idea-plugin>

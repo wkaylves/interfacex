@@ -1,7 +1,10 @@
 package com.kaylves.interfacex.common;
 
+/**
+ * @author kaylves
+ */
 @FunctionalInterface
-public interface InterfaceXUrl {
+public interface InterfaceUrl {
 
     /**
      * 获取接口URL

@@ -111,4 +111,24 @@ public class IdeaPluginUtils {
 
     }
 
+    public static Boolean getUseAbleOnClassOrMethod(PsiClass psiClass, PsiMethod psiMethod) {
+
+        if(psiMethod==null || psiClass==null){
+            return Boolean.TRUE;
+        }
+
+        String annotation = "java.lang.Deprecated";
+
+        if (psiMethod.hasAnnotation(annotation)) {
+            return Boolean.FALSE;
+        }else{
+
+            if(psiClass.hasAnnotation(annotation)){
+                return Boolean.FALSE;
+            }
+        }
+
+        return Boolean.TRUE;
+    }
+
 }

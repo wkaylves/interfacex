@@ -1,12 +1,12 @@
 package com.kaylves.interfacex.module.rocketmq.impl;
 
-import com.kaylves.interfacex.common.constants.InterfaceXItemCategoryEnum;
+import com.kaylves.interfacex.common.constants.InterfaceItemCategoryEnum;
 import com.kaylves.interfacex.module.resolver.BaseServiceResolver;
 import com.kaylves.interfacex.module.rocketmq.RocketMQDeliverAnnotation;
 import com.kaylves.interfacex.module.rocketmq.RocketMQItem;
 import com.kaylves.interfacex.utils.PsiAnnotationHelper;
 import com.kaylves.interfacex.common.constants.HttpMethod;
-import com.kaylves.interfacex.common.InterfaceXItem;
+import com.kaylves.interfacex.common.InterfaceItem;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
@@ -20,15 +20,15 @@ import java.util.Collection;
 import java.util.List;
 
 @Slf4j
-public class RocketMQDeliverResolver extends BaseServiceResolver {
+public class RocketMQDeliverResolverServiceResolver extends BaseServiceResolver {
 
-    public RocketMQDeliverResolver(Module module) {
+    public RocketMQDeliverResolverServiceResolver(Module module) {
         this.module = module;
     }
 
     @Override
-    public List<InterfaceXItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
-        List<InterfaceXItem> itemList = new ArrayList<>();
+    public List<InterfaceItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
+        List<InterfaceItem> itemList = new ArrayList<>();
         Collection<PsiAnnotation> psiAnnotations = JavaAnnotationIndex.getInstance().get(RocketMQDeliverAnnotation.PATH.getShortName(), project, globalSearchScope);
 
         for (PsiAnnotation psiAnnotation : psiAnnotations) {
@@ -61,7 +61,7 @@ public class RocketMQDeliverResolver extends BaseServiceResolver {
 
                 RocketMQItem rocketMQItem = RocketMQItem.builder().tag(tags).topic(topic).keys(keys).build();
 
-                InterfaceXItem item = new InterfaceXItem(psiMethod, InterfaceXItemCategoryEnum.RocketMQDeliver, requestMethod, rocketMQItem, false);
+                InterfaceItem item = new InterfaceItem(psiMethod, InterfaceItemCategoryEnum.RocketMQDeliver, requestMethod, rocketMQItem, false);
                 itemList.add(item);
             }
         }

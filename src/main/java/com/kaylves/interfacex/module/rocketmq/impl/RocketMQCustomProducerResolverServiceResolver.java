@@ -1,12 +1,12 @@
 package com.kaylves.interfacex.module.rocketmq.impl;
 
-import com.kaylves.interfacex.common.constants.InterfaceXItemCategoryEnum;
+import com.kaylves.interfacex.common.constants.InterfaceItemCategoryEnum;
 import com.kaylves.interfacex.module.resolver.BaseServiceResolver;
 import com.kaylves.interfacex.module.rocketmq.RocketMQItem;
 import com.kaylves.interfacex.module.rocketmq.RocketMQProducerAnnotation;
 import com.kaylves.interfacex.utils.PsiAnnotationHelper;
 import com.kaylves.interfacex.common.constants.HttpMethod;
-import com.kaylves.interfacex.common.InterfaceXItem;
+import com.kaylves.interfacex.common.InterfaceItem;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
@@ -15,21 +15,20 @@ import com.intellij.psi.search.GlobalSearchScope;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 @Slf4j
-public class RocketMQCustomProducerResolver extends BaseServiceResolver {
+public class RocketMQCustomProducerResolverServiceResolver extends BaseServiceResolver {
 
-    public RocketMQCustomProducerResolver(Module module) {
+    public RocketMQCustomProducerResolverServiceResolver(Module module) {
         this.module = module;
     }
 
     @Override
-    public List<InterfaceXItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
-        List<InterfaceXItem> itemList = new ArrayList<>();
+    public List<InterfaceItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
+        List<InterfaceItem> itemList = new ArrayList<>();
         Collection<PsiAnnotation> psiAnnotations = JavaAnnotationIndex.getInstance().get(RocketMQProducerAnnotation.ClassAnnotation.getShortName(), project, globalSearchScope);
 
         RocketMQProducerAnnotation[] pathArray = RocketMQProducerAnnotation.getPathArray();
@@ -59,7 +58,7 @@ public class RocketMQCustomProducerResolver extends BaseServiceResolver {
         return itemList;
     }
 
-    private static void processElement(PsiMethod psiMethod, RocketMQProducerAnnotation pathAnnotation, List<InterfaceXItem> itemList) {
+    private static void processElement(PsiMethod psiMethod, RocketMQProducerAnnotation pathAnnotation, List<InterfaceItem> itemList) {
         PsiAnnotation psiMethodAnnotation = psiMethod.getAnnotation(pathAnnotation.getQualifiedName());
 
         if (psiMethodAnnotation == null) {
@@ -84,7 +83,7 @@ public class RocketMQCustomProducerResolver extends BaseServiceResolver {
 
                 RocketMQItem rocketMQItem = RocketMQItem.builder().topic(topic).tag(tags).build();
 
-                InterfaceXItem item = new InterfaceXItem(psiMethod, InterfaceXItemCategoryEnum.RocketMQProducer, requestMethod, rocketMQItem, false);
+                InterfaceItem item = new InterfaceItem(psiMethod, InterfaceItemCategoryEnum.RocketMQProducer, requestMethod, rocketMQItem, false);
                 itemList.add(item);
             }
         }

@@ -1,9 +1,9 @@
 package com.kaylves.interfacex.module.mission;
 
-import com.kaylves.interfacex.common.constants.InterfaceXItemCategoryEnum;
+import com.kaylves.interfacex.common.constants.InterfaceItemCategoryEnum;
 import com.kaylves.interfacex.module.http.method.RequestPath;
 import com.kaylves.interfacex.module.resolver.BaseServiceResolver;
-import com.kaylves.interfacex.common.InterfaceXItem;
+import com.kaylves.interfacex.common.InterfaceItem;
 import com.kaylves.interfacex.utils.PsiAnnotationHelper;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
@@ -17,21 +17,21 @@ import java.util.Collection;
 import java.util.List;
 
 @Slf4j
-public class MissionResolver extends BaseServiceResolver {
+public class MissionResolverServiceResolver extends BaseServiceResolver {
 
     /**
      * 构造函数，用于初始化任务解析器
      *
      * @param module 模块对象，用于初始化任务解析器的模块属性
      */
-    public MissionResolver(Module module) {
+    public MissionResolverServiceResolver(Module module) {
         // 使用传入的module参数初始化对象的module属性
         this.module = module;
     }
 
     @Override
-    public List<InterfaceXItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
-        List<InterfaceXItem> itemList = new ArrayList<>();
+    public List<InterfaceItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
+        List<InterfaceItem> itemList = new ArrayList<>();
         Collection<PsiAnnotation> psiAnnotations = JavaAnnotationIndex.getInstance().get(MissionClientAnnotation.MISSION_CLIENT_ANNOTATION.getShortName(), project, globalSearchScope);
 
         for (PsiAnnotation psiAnnotation : psiAnnotations) {
@@ -51,10 +51,10 @@ public class MissionResolver extends BaseServiceResolver {
         return itemList;
     }
 
-    protected List<InterfaceXItem> getServiceItemList(PsiClass psiClass) {
+    protected List<InterfaceItem> getServiceItemList(PsiClass psiClass) {
         PsiMethod[] psiMethods = psiClass.getMethods();
 
-        List<InterfaceXItem> itemList = new ArrayList<>();
+        List<InterfaceItem> itemList = new ArrayList<>();
 
         for (PsiMethod psiMethod : psiMethods) {
 
@@ -64,7 +64,7 @@ public class MissionResolver extends BaseServiceResolver {
                 for (MissionClientMethodAnnotation mappingAnnotation : MissionClientMethodAnnotation.values()) {
 
                     if (mappingAnnotation.getQualifiedName().equals(annotation.getQualifiedName())) {
-                        PsiAnnotationHelper.getAnnotationAttributeValues(annotation, "path").forEach(path -> itemList.add(createRestServiceItem(psiMethod, InterfaceXItemCategoryEnum.Mission,"", new RequestPath(path, "POST"))));
+                        PsiAnnotationHelper.getAnnotationAttributeValues(annotation, "path").forEach(path -> itemList.add(createRestServiceItem(psiMethod, InterfaceItemCategoryEnum.Mission,"", new RequestPath(path, "POST"))));
                     }
                 }
             }

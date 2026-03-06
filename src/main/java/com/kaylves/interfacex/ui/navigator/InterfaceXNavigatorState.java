@@ -1,9 +1,15 @@
 package com.kaylves.interfacex.ui.navigator;
 
 import com.intellij.util.xmlb.annotations.Tag;
+import com.kaylves.interfacex.entity.InterfaceItemConfigEntity;
 import lombok.Data;
 import org.jdom.Element;
 
+import java.util.List;
+
+/**
+ * @author kaylves
+ */
 @Data
 public class InterfaceXNavigatorState {
 
@@ -12,9 +18,6 @@ public class InterfaceXNavigatorState {
     @Tag("treeState")
     public Element treeState;
 
-    /**
-     * 是否控制显示未使用
-     */
-    private final boolean displayUseAble=false;
 
+    private List<InterfaceItemConfigEntity> interfaceItemConfigEntities;
 }

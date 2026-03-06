@@ -1,11 +1,12 @@
 package com.kaylves.interfacex.module.rocketmq.impl;
 
-import com.kaylves.interfacex.common.constants.InterfaceXItemCategoryEnum;
+import com.kaylves.interfacex.common.constants.InterfaceItemCategoryEnum;
 import com.kaylves.interfacex.module.resolver.BaseServiceResolver;
 import com.kaylves.interfacex.common.constants.HttpMethod;
-import com.kaylves.interfacex.common.InterfaceXItem;
+import com.kaylves.interfacex.common.InterfaceItem;
 import com.kaylves.interfacex.module.rocketmq.RocketMQAnnotation;
 import com.kaylves.interfacex.module.rocketmq.RocketMQItem;
+import com.kaylves.interfacex.utils.IdeaPluginUtils;
 import com.kaylves.interfacex.utils.PsiAnnotationHelper;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
@@ -17,13 +18,16 @@ import org.apache.commons.lang3.StringUtils;
 import java.text.MessageFormat;
 import java.util.*;
 
+/**
+ * @author kaylves
+ */
 @Slf4j
-public abstract class AbstractRocketMQListenerResolver extends BaseServiceResolver {
+public abstract class AbstractRocketMQListenerResolverServiceResolver extends BaseServiceResolver {
 
 
     @Override
-    public List<InterfaceXItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
-        List<InterfaceXItem> itemList = new ArrayList<>();
+    public List<InterfaceItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
+        List<InterfaceItem> itemList = new ArrayList<>();
 
         Collection<PsiAnnotation> psiAnnotations = JavaAnnotationIndex.getInstance().get(getRocketMQAnnotation().getShortName(),project, globalSearchScope);
 
@@ -46,7 +50,8 @@ public abstract class AbstractRocketMQListenerResolver extends BaseServiceResolv
 
                 RocketMQItem rocketMQItem = RocketMQItem.builder().tag(path).build();
 
-                InterfaceXItem item = new InterfaceXItem(psiMethod, InterfaceXItemCategoryEnum.RocketMQListener, requestMethod, rocketMQItem, false);
+                InterfaceItem item = new InterfaceItem(psiMethod, InterfaceItemCategoryEnum.RocketMQListener, requestMethod, rocketMQItem, false);
+                item.setUseAble(IdeaPluginUtils.getUseAbleOnClassOrMethod(psiClass, psiMethod));
                 itemList.add(item);
             });
 

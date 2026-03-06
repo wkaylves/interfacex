@@ -5,19 +5,20 @@ import com.kaylves.interfacex.module.rocketmq.RocketMQAnnotation;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class ShardThreadPoolRocketMqListenerResolver extends AbstractRocketMQListenerResolver {
+public class RocketMQListenerResolverServiceResolver extends AbstractRocketMQListenerResolverServiceResolver {
 
-    public ShardThreadPoolRocketMqListenerResolver(Module module) {
+    public RocketMQListenerResolverServiceResolver(Module module) {
         this.module = module;
     }
 
+
     @Override
     public RocketMQAnnotation getRocketMQAnnotation() {
-        return RocketMQAnnotation.SharedThreadPoolRocketMQMessageListener;
+        return RocketMQAnnotation.RocketMQMessageListener;
     }
 
     @Override
     public String getServiceItemCategory() {
-        return "ShardRocketMqListener";
+        return "RocketMqListener";
     }
 }

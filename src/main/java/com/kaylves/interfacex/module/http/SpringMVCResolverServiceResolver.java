@@ -1,10 +1,10 @@
 package com.kaylves.interfacex.module.http;
 
-import com.kaylves.interfacex.common.constants.InterfaceXItemCategoryEnum;
+import com.kaylves.interfacex.common.constants.InterfaceItemCategoryEnum;
 import com.kaylves.interfacex.module.resolver.BaseServiceResolver;
 import com.kaylves.interfacex.module.spring.RequestMappingAnnotationHelper;
 import com.kaylves.interfacex.module.http.method.RequestPath;
-import com.kaylves.interfacex.common.InterfaceXItem;
+import com.kaylves.interfacex.common.InterfaceItem;
 import com.kaylves.interfacex.utils.PropertiesHandler;
 import com.kaylves.interfacex.utils.PsiAnnotationHelper;
 import com.intellij.openapi.module.Module;
@@ -19,18 +19,18 @@ import java.util.Collection;
 import java.util.List;
 
 @Slf4j
-public class SpringMVCResolver extends BaseServiceResolver {
+public class SpringMVCResolverServiceResolver extends BaseServiceResolver {
 
     PropertiesHandler propertiesHandler;
 
-    public SpringMVCResolver(Module module) {
+    public SpringMVCResolverServiceResolver(Module module) {
         this.module = module;
         propertiesHandler = new PropertiesHandler(module);
     }
 
     @Override
-    public List<InterfaceXItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
-        List<InterfaceXItem> itemList = new ArrayList<>();
+    public List<InterfaceItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
+        List<InterfaceItem> itemList = new ArrayList<>();
 
         SpringControllerAnnotation[] supportedAnnotations = SpringControllerAnnotation.values();
         for (PathMappingAnnotation controllerAnnotation : supportedAnnotations) {
@@ -39,7 +39,7 @@ public class SpringMVCResolver extends BaseServiceResolver {
         return itemList;
     }
 
-    private void filterSpringList(Project project, GlobalSearchScope globalSearchScope, PathMappingAnnotation controllerAnnotation, List<InterfaceXItem> itemList) {
+    private void filterSpringList(Project project, GlobalSearchScope globalSearchScope, PathMappingAnnotation controllerAnnotation, List<InterfaceItem> itemList) {
         // java:
         Collection<PsiAnnotation> psiAnnotations = JavaAnnotationIndex.getInstance().get(controllerAnnotation.getShortName(), project, globalSearchScope);
 
@@ -57,10 +57,10 @@ public class SpringMVCResolver extends BaseServiceResolver {
         }
     }
 
-    protected List<InterfaceXItem> getServiceItemList(PsiClass psiClass) {
+    protected List<InterfaceItem> getServiceItemList(PsiClass psiClass) {
         PsiMethod[] psiMethods = psiClass.getMethods();
 
-        List<InterfaceXItem> itemList = new ArrayList<>();
+        List<InterfaceItem> itemList = new ArrayList<>();
         List<RequestPath> classRequestPaths = RequestMappingAnnotationHelper.getSpringAnnotationRequestPaths(psiClass);
 
         for (PsiMethod psiMethod : psiMethods) {
@@ -73,7 +73,7 @@ public class SpringMVCResolver extends BaseServiceResolver {
 
                 for (RequestPath methodRequestPath : methodRequestPaths) {
                     String path = classRequestPath.getPath();
-                    InterfaceXItem item = createRestServiceItem(psiMethod, InterfaceXItemCategoryEnum.HTTP, path, methodRequestPath);
+                    InterfaceItem item = createRestServiceItem(psiMethod, InterfaceItemCategoryEnum.HTTP, path, methodRequestPath);
                     itemList.add(item);
                 }
             }

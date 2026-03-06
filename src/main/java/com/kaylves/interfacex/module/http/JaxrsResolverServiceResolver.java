@@ -1,10 +1,10 @@
 package com.kaylves.interfacex.module.http;
 
-import com.kaylves.interfacex.common.constants.InterfaceXItemCategoryEnum;
-import com.kaylves.interfacex.module.http.jakarta.JakartaAnnotationHelper;
+import com.kaylves.interfacex.common.constants.InterfaceItemCategoryEnum;
+import com.kaylves.interfacex.module.http.jaxrs.JaxrsAnnotationHelper;
 import com.kaylves.interfacex.module.http.method.RequestPath;
 import com.kaylves.interfacex.module.resolver.BaseServiceResolver;
-import com.kaylves.interfacex.common.InterfaceXItem;
+import com.kaylves.interfacex.common.InterfaceItem;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
@@ -15,20 +15,20 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class JakartaResolver extends BaseServiceResolver {
+public class JaxrsResolverServiceResolver extends BaseServiceResolver {
 
-    public JakartaResolver(Module module) {
+    public JaxrsResolverServiceResolver(Module module) {
         this.module = module;
     }
 
-    public JakartaResolver(Project project) {
+    public JaxrsResolverServiceResolver(Project project) {
         this.project = project;
     }
 
     @Override
-    public List<InterfaceXItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
-        List<InterfaceXItem> itemList = new ArrayList<>();
-        Collection<PsiAnnotation> psiAnnotations = JavaAnnotationIndex.getInstance().get(JakartaPathAnnotation.PATH.getShortName(), project, globalSearchScope);
+    public List<InterfaceItem> getRestServiceItemList(Project project, GlobalSearchScope globalSearchScope) {
+        List<InterfaceItem> itemList = new ArrayList<>();
+        Collection<PsiAnnotation> psiAnnotations = JavaAnnotationIndex.getInstance().get(JaxrsPathAnnotation.PATH.getShortName(), project, globalSearchScope);
 
         for (PsiAnnotation psiAnnotation : psiAnnotations) {
             PsiModifierList psiModifierList = (PsiModifierList) psiAnnotation.getParent();
@@ -39,16 +39,15 @@ public class JakartaResolver extends BaseServiceResolver {
             }
 
             PsiClass psiClass = (PsiClass) psiElement;
-
             PsiMethod[] psiMethods = psiClass.getMethods();
 
-            String classUriPath = JakartaAnnotationHelper.getClassUriPath(psiClass);
+            String classUriPath = JaxrsAnnotationHelper.getClassUriPath(psiClass);
 
             for (PsiMethod psiMethod : psiMethods) {
-                RequestPath[] methodUriPaths = JakartaAnnotationHelper.getRequestPaths(psiMethod);
+                RequestPath[] methodUriPaths = JaxrsAnnotationHelper.getRequestPaths(psiMethod);
 
                 for (RequestPath methodUriPath : methodUriPaths) {
-                    InterfaceXItem item = createRestServiceItem(psiMethod, InterfaceXItemCategoryEnum.HTTP, classUriPath, methodUriPath, false);
+                    InterfaceItem item = createRestServiceItem(psiMethod, InterfaceItemCategoryEnum.HTTP,classUriPath, methodUriPath);
                     itemList.add(item);
                 }
             }
@@ -58,6 +57,6 @@ public class JakartaResolver extends BaseServiceResolver {
 
     @Override
     public String getServiceItemCategory() {
-        return "Jakarta";
+        return "Jaxrs";
     }
 }
