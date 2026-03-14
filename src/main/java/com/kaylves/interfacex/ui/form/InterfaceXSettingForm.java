@@ -30,6 +30,8 @@ public class InterfaceXSettingForm {
     private JPanel rootPanel;
 
     private JCheckBox XXLJOBCheckBox;
+    private JCheckBox rabbitMQTemplateCheckBox;
+    private JCheckBox rocketMQTemplateCheckBox;
 
     public void setUI(List<InterfaceItemConfigEntity> interfaceItemConfigEntities) {
 
@@ -68,6 +70,14 @@ public class InterfaceXSettingForm {
             if(XXLJOBCheckBox.getText().equals(interfaceItemConfigEntity.getItemCategory())){
                 XXLJOBCheckBox.setSelected(true);
             }
+
+            if(rabbitMQTemplateCheckBox.getText().equals(interfaceItemConfigEntity.getItemCategory())){
+                rabbitMQTemplateCheckBox.setSelected(true);
+            }
+
+            if(rocketMQTemplateCheckBox.getText().equals(interfaceItemConfigEntity.getItemCategory())){
+                rocketMQTemplateCheckBox.setSelected(true);
+            }
         });
     }
 
@@ -103,6 +113,12 @@ public class InterfaceXSettingForm {
         }
         if (XXLJOBCheckBox.isSelected()) {
             entityList.add(createEntityForCategory(XXLJOBCheckBox.getText()));
+        }
+        if (rabbitMQTemplateCheckBox.isSelected()) {
+            entityList.add(createEntityForCategory(rabbitMQTemplateCheckBox.getText()));
+        }
+        if (rocketMQTemplateCheckBox.isSelected()) {
+            entityList.add(createEntityForCategory(rocketMQTemplateCheckBox.getText()));
         }
 
         return entityList;

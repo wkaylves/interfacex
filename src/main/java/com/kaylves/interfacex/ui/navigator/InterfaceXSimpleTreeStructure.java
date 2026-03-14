@@ -2,13 +2,11 @@ package com.kaylves.interfacex.ui.navigator;
 
 import com.intellij.ide.DefaultTreeExpander;
 import com.intellij.ide.todo.TodoTreeBuilder;
-import com.intellij.ide.util.treeView.TreeState;
 import com.intellij.lang.java.JavaLanguage;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
 import com.intellij.ui.tree.AsyncTreeModel;
@@ -18,13 +16,11 @@ import com.intellij.ui.treeStructure.SimpleNode;
 import com.intellij.ui.treeStructure.SimpleTree;
 import com.intellij.ui.treeStructure.SimpleTreeStructure;
 import com.intellij.util.OpenSourceUtil;
-import com.kaylves.interfacex.common.InterfaceProject;
 import com.kaylves.interfacex.common.InterfaceItem;
+import com.kaylves.interfacex.common.InterfaceProject;
 import com.kaylves.interfacex.common.ToolkitIcons;
-import com.kaylves.interfacex.service.InterfaceXNavigator;
 import com.kaylves.interfacex.service.ProjectInitService;
 import lombok.extern.slf4j.Slf4j;
-import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -430,23 +426,6 @@ public class InterfaceXSimpleTreeStructure extends SimpleTreeStructure {
 
         if (simpleTree == null || simpleTree.getRowCount() == 0) {
             return; // 树为空，跳过
-        }
-
-        try {
-            Element newState = new Element("root");
-            TreeState.createOn(simpleTree).writeExternal(newState);
-            InterfaceXNavigatorState interfaceXNavigatorState = InterfaceXNavigator.getInstance(project).getXNavigatorState();
-
-            // 调试：验证是否写入内容
-            if (newState.getChildren().isEmpty() && newState.getAttributes().isEmpty()) {
-                log.warn("TreeState generated empty XML - tree may not be expanded");
-            } else {
-                log.info("TreeState saved with " + newState.getChildren().size() + " elements");
-            }
-
-            interfaceXNavigatorState.treeState = newState;
-        } catch (WriteExternalException e) {
-            log.warn("Failed to save tree state", e);
         }
     }
 }

@@ -71,12 +71,10 @@ public class InterfaceXHelper {
 
         // 1. 将用户启用的类别转换为 Set，以便高效查找
         Set<String> enabledCategories = new HashSet<>();
-        if (configEntities != null) {
-            for (InterfaceItemConfigEntity entity : configEntities) {
-                // 假设实体的 isEnabled() 方法表示该项是否被勾选
-                if (entity.getEnabled()) {
-                    enabledCategories.add(entity.getItemCategory());
-                }
+        for (InterfaceItemConfigEntity entity : configEntities) {
+            // 假设实体的 isEnabled() 方法表示该项是否被勾选
+            if (entity.getEnabled()) {
+                enabledCategories.add(entity.getItemCategory());
             }
         }
 
@@ -99,9 +97,8 @@ public class InterfaceXHelper {
             serviceResolvers.add(new OpenFeignResolverServiceResolver(module));
         }
 
-        // RocketMQ Producer (Template-based and Custom)
+        // RocketMQ Producer (Custom)
         if (enabledCategories.contains(InterfaceXItemEnum.RocketMQProducer.name())) {
-            serviceResolvers.add(new RocketMQTemplateProducerResolverServiceResolver(module));
             serviceResolvers.add(new RocketMQCustomProducerResolverServiceResolver(module));
         }
 
@@ -116,9 +113,14 @@ public class InterfaceXHelper {
             serviceResolvers.add(new RabbitMQListenerResolverServiceResolver(module));
         }
 
-        // RabbitMQ
-        if (enabledCategories.contains(InterfaceXItemEnum.RabbitMQProducer.name())) {
+        // RabbitMQTemplate
+        if (enabledCategories.contains(InterfaceXItemEnum.RabbitMQTemplate.name())) {
             serviceResolvers.add(new RabbitMQProducerResolverServiceResolver(module));
+        }
+
+        // RocketMQTemplate
+        if (enabledCategories.contains(InterfaceXItemEnum.RocketMQTemplate.name())) {
+            serviceResolvers.add(new RocketMQTemplateProducerServiceResolver(module));
         }
 
         // XXL Job
@@ -134,7 +136,7 @@ public class InterfaceXHelper {
         List<IServiceResolver> serviceResolvers = new ArrayList<>();
 
         //rocketmq
-        serviceResolvers.add(new RocketMQTemplateProducerResolverServiceResolver(module));
+        serviceResolvers.add(new RocketMQTemplateProducerServiceResolver(module));
         serviceResolvers.add(new RocketMQDeliverResolverServiceResolver(module));
         serviceResolvers.add(new RocketMQCustomProducerResolverServiceResolver(module));
 

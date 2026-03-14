@@ -17,6 +17,7 @@ import com.kaylves.interfacex.ui.navigator.InterfaceXSimpleTreeStructure;
 import com.kaylves.interfacex.utils.ToolkitUtil;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.tree.TreeSelectionModel;
@@ -42,7 +43,7 @@ public final class InterfaceXNavigator implements PersistentStateComponent<Inter
     InterfaceXNavigatorState xNavigatorState = new InterfaceXNavigatorState();
 
     @Getter
-    private Map<InterfaceItemCategoryEnum, InterfaceXForm> formCache = new ConcurrentHashMap<>();
+    private final Map<InterfaceItemCategoryEnum, InterfaceXForm> formConcurrentHashMap = new ConcurrentHashMap<>();
 
     public static final String TOOL_WINDOW_ID = "InterfaceX";
 
@@ -56,7 +57,7 @@ public final class InterfaceXNavigator implements PersistentStateComponent<Inter
     InterfaceXNavigatorPanel rootPanel;
 
     @Getter
-    InterfaceXSimpleTreeStructure interfaceXSimpleTreeStructure;
+    InterfaceXSimpleTreeStructure simpleTreeStructure;
 
     public InterfaceXNavigator(Project project) {
         this.project = project;
@@ -98,7 +99,7 @@ public final class InterfaceXNavigator implements PersistentStateComponent<Inter
     }
 
     public void scheduleStructureUpdate(boolean needRefresh) {
-        scheduleStructureRequest(() -> interfaceXSimpleTreeStructure.update(needRefresh));
+        scheduleStructureRequest(() -> simpleTreeStructure.update(needRefresh));
     }
 
     private void scheduleStructureRequest(final Runnable runnable) {
@@ -112,22 +113,22 @@ public final class InterfaceXNavigator implements PersistentStateComponent<Inter
                 return;
             }
 
-            boolean shouldCreate = interfaceXSimpleTreeStructure == null;
+            boolean shouldCreate = simpleTreeStructure == null;
             if (shouldCreate) {
                 initStructure();
             }
 
 //             fixme: compat
-            if(shouldCreate){
-                TreeState.createFrom(xNavigatorState.treeState).applyTo(simpleTree);
-            }
+//            if(shouldCreate){
+//                TreeState.createFrom(xNavigatorState.treeState).applyTo(simpleTree);
+//            }
 
             runnable.run();
         });
     }
 
     private void initStructure() {
-        interfaceXSimpleTreeStructure = new InterfaceXSimpleTreeStructure(project, simpleTree);
+        simpleTreeStructure = new InterfaceXSimpleTreeStructure(project, simpleTree);
     }
 
 
@@ -138,7 +139,7 @@ public final class InterfaceXNavigator implements PersistentStateComponent<Inter
     }
 
     @Override
-    public void loadState(InterfaceXNavigatorState state) {
+    public void loadState(@NotNull InterfaceXNavigatorState state) {
         this.xNavigatorState = state;
         scheduleStructureUpdate();
     }

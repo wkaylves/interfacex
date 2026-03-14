@@ -112,18 +112,18 @@ public class InterfaceXPopupMenu {
 
         InterfaceItemCategoryEnum triggerInterfaceItemCategoryEnum = InterfaceItemCategoryEnum.getUniqueEnum(serviceNode.interfaceItem.getInterfaceItemCategoryEnum());
 
-        InterfaceXForm interfaceXForm = servicesNavigator.getFormCache().get(triggerInterfaceItemCategoryEnum);
+        InterfaceXForm form = servicesNavigator.getFormConcurrentHashMap().get(triggerInterfaceItemCategoryEnum);
 
-        if (interfaceXForm == null) {
-            interfaceXForm = InterfaceXFormFactory.createInterfaceForm(serviceNode);
-            interfaceXNavigatorPanel.setBottomComponent(interfaceXForm);
-            servicesNavigator.getFormCache().put(interfaceXForm.getInterfaceXEnum(), interfaceXForm);
+        if (form == null) {
+            form = InterfaceXFormFactory.createInterfaceForm(serviceNode);
+            interfaceXNavigatorPanel.setBottomComponent(form);
+            servicesNavigator.getFormConcurrentHashMap().put(form.getInterfaceXEnum(), form);
             return;
         }
 
         //刷新
-        interfaceXForm.flush(serviceNode.interfaceItem);
-        servicesNavigator.getFormCache().put(interfaceXForm.getInterfaceXEnum(), interfaceXForm);
-        interfaceXNavigatorPanel.setBottomComponent(interfaceXForm);
+        form.flush(serviceNode.interfaceItem);
+        servicesNavigator.getFormConcurrentHashMap().put(form.getInterfaceXEnum(), form);
+        interfaceXNavigatorPanel.setBottomComponent(form);
     }
 }

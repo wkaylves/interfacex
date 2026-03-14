@@ -19,10 +19,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * @author kaylves
+ */
 @Slf4j
-public class RocketMQTemplateProducerResolverServiceResolver extends BaseServiceResolver {
+public class RocketMQTemplateProducerServiceResolver extends BaseServiceResolver {
 
-    public RocketMQTemplateProducerResolverServiceResolver(Module module) {
+    public RocketMQTemplateProducerServiceResolver(Module module) {
         this.module = module;
     }
 

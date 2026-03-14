@@ -45,6 +45,16 @@ public enum InterfaceXItemEnum {
     /**
      * XXLJOB
      */
-    XXLJOB;
+    XXLJOB,
+
+    /**
+     * RabbitMQTemplate
+     */
+    RabbitMQTemplate,
+
+    /**
+     * RocketMQTemplate
+     */
+    RocketMQTemplate;
 
 }
