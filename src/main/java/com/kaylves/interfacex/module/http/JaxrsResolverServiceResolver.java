@@ -1,6 +1,7 @@
 package com.kaylves.interfacex.module.http;
 
 import com.kaylves.interfacex.common.constants.InterfaceItemCategoryEnum;
+import com.kaylves.interfacex.module.http.jakarta.annotation.JaxrsPathAnnotation;
 import com.kaylves.interfacex.module.http.jaxrs.JaxrsAnnotationHelper;
 import com.kaylves.interfacex.module.http.method.RequestPath;
 import com.kaylves.interfacex.module.resolver.BaseServiceResolver;

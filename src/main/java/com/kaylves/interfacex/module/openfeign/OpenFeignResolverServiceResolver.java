@@ -1,7 +1,7 @@
 package com.kaylves.interfacex.module.openfeign;
 
 import com.kaylves.interfacex.common.constants.InterfaceItemCategoryEnum;
-import com.kaylves.interfacex.module.http.SpringHttpRequestAnnotation;
+import com.kaylves.interfacex.module.http.springmvc.SpringHttpRequestAnnotation;
 import com.kaylves.interfacex.module.resolver.BaseServiceResolver;
 import com.kaylves.interfacex.utils.PsiAnnotationHelper;
 import com.kaylves.interfacex.module.spring.RequestMappingAnnotationHelper;

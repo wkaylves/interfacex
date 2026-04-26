@@ -1,4 +1,6 @@
-package com.kaylves.interfacex.module.http;
+package com.kaylves.interfacex.module.http.springmvc;
+
+import com.kaylves.interfacex.module.http.PathMappingAnnotation;
 
 public enum SpringControllerAnnotation implements PathMappingAnnotation {
 

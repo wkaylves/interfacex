@@ -2,7 +2,7 @@ package com.kaylves.interfacex.utils;
 
 import com.kaylves.interfacex.common.ExportServiceStrategy;
 import com.kaylves.interfacex.common.constants.InterfaceItemCategoryEnum;
-import com.kaylves.interfacex.module.http.SpringHttpRequestAnnotation;
+import com.kaylves.interfacex.module.http.springmvc.SpringHttpRequestAnnotation;
 import com.kaylves.interfacex.bean.RocketMQProducerExportBean;
 import com.kaylves.interfacex.bean.ServiceExportBean;
 import com.kaylves.interfacex.bean.ModulePropertiesExportBean;

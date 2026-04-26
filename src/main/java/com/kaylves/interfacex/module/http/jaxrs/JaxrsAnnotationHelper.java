@@ -1,7 +1,7 @@
 package com.kaylves.interfacex.module.http.jaxrs;
 
-import com.kaylves.interfacex.module.http.JaxrsHttpMethodAnnotation;
-import com.kaylves.interfacex.module.http.JaxrsPathAnnotation;
+import com.kaylves.interfacex.module.http.jakarta.annotation.JaxrsHttpMethodAnnotation;
+import com.kaylves.interfacex.module.http.jakarta.annotation.JaxrsPathAnnotation;
 import com.kaylves.interfacex.utils.PsiAnnotationHelper;
 import com.kaylves.interfacex.module.http.method.RequestPath;
 import com.intellij.psi.PsiAnnotation;

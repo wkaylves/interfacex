@@ -1,0 +1,41 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- 方案 1: 小蜜蜂 K - 勤劳的编码小蜜蜂 -->
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FFA500;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- 圆形背景 -->
+  <circle cx="64" cy="64" r="60" fill="url(#grad1)"/>
+  
+  <!-- 小蜜蜂身体 -->
+  <ellipse cx="64" cy="70" rx="25" ry="18" fill="#2D3748"/>
+  <ellipse cx="64" cy="70" rx="25" ry="18" fill="url(#grad1)" opacity="0.3"/>
+  
+  <!-- 蜜蜂条纹 -->
+  <rect x="52" y="62" width="24" height="4" rx="2" fill="#2D3748"/>
+  <rect x="50" y="70" width="28" height="4" rx="2" fill="#2D3748"/>
+  <rect x="52" y="78" width="24" height="4" rx="2" fill="#2D3748"/>
+  
+  <!-- 翅膀 (半透明) -->
+  <ellipse cx="45" cy="58" rx="12" ry="8" fill="rgba(255,255,255,0.7)" stroke="#E2E8F0" stroke-width="1"/>
+  <ellipse cx="83" cy="58" rx="12" ry="8" fill="rgba(255,255,255,0.7)" stroke="#E2E8F0" stroke-width="1"/>
+  
+  <!-- 字母 K (作为蜜蜂头部) -->
+  <circle cx="64" cy="52" r="16" fill="#2D3748"/>
+  <text x="64" y="56" 
+        font-family="Arial, sans-serif" 
+        font-size="20" 
+        font-weight="bold"
+        fill="#FFD700" 
+        text-anchor="middle" 
+        dominant-baseline="middle">K</text>
+  
+  <!-- 小触角 -->
+  <line x1="56" y1="40" x2="52" y2="32" stroke="#2D3748" stroke-width="2" stroke-linecap="round"/>
+  <line x1="72" y1="40" x2="76" y2="32" stroke="#2D3748" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="52" cy="30" r="3" fill="#2D3748"/>
+  <circle cx="76" cy="30" r="3" fill="#2D3748"/>
+</svg>

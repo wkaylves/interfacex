@@ -1,4 +1,4 @@
-package com.kaylves.interfacex.module.http;
+package com.kaylves.interfacex.module.http.jakarta.annotation;
 
 public enum JaxrsRequestParamAnnotation {
     /**
