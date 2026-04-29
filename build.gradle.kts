@@ -42,6 +42,9 @@ dependencies {
 
   implementation("org.xerial:sqlite-jdbc:3.45.1.0")
 
+  // JDOM2 for XML handling (used by IntelliJ Platform)
+  implementation("org.jdom:jdom2:2.0.6.1")
+
   annotationProcessor("org.projectlombok:lombok:1.18.40");
   compileOnly("org.projectlombok:lombok:1.18.40")
   testAnnotationProcessor("org.projectlombok:lombok:1.18.40");

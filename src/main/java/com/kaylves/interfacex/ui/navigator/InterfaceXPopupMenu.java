@@ -14,9 +14,8 @@ import com.intellij.ui.treeStructure.SimpleTree;
 import com.kaylves.interfacex.common.InterfaceItem;
 import com.kaylves.interfacex.common.ToolkitIcons;
 import com.kaylves.interfacex.common.constants.InterfaceItemCategoryEnum;
-import com.kaylves.interfacex.db.InterfaceXDatabaseService;
-import com.kaylves.interfacex.db.dao.TagDao;
 import com.kaylves.interfacex.db.model.TagEntity;
+import com.kaylves.interfacex.db.storage.StorageAdapter;
 import com.kaylves.interfacex.service.InterfaceXNavigator;
 import com.kaylves.interfacex.ui.form.InterfaceXFormFactory;
 import com.kaylves.interfacex.utils.PsiMethodHelper;
@@ -26,7 +25,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -121,55 +119,48 @@ public class InterfaceXPopupMenu {
         }
         
         InterfaceItem item = serviceNode.interfaceItem;
+        StorageAdapter adapter = StorageAdapter.getInstance();
+        String projectPath = project.getBasePath();
         
-        try {
-            InterfaceXDatabaseService dbService = InterfaceXDatabaseService.getInstance();
-            TagDao tagDao = dbService.getTagDao();
-            String projectPath = project.getBasePath();
-            
-            // 获取所有已有标签
-            List<String> existingTags = tagDao.findAllTagNames(projectPath);
-            
-            if (existingTags.isEmpty()) {
-                // 如果没有标签,则手动输入
-                String tagName = JOptionPane.showInputDialog(null, "请输入新标签名称:", "添加标签", JOptionPane.PLAIN_MESSAGE);
-                if (tagName == null || tagName.trim().isEmpty()) {
-                    return;
-                }
-                saveTag(item, projectPath, tagName.trim());
-            } else {
-                // 显示下拉选择框
-                JPanel panel = new JPanel(new BorderLayout(10, 10));
-                JComboBox<String> tagComboBox = new JComboBox<>(existingTags.toArray(new String[0]));
-                tagComboBox.setEditable(true);
-                tagComboBox.setSelectedIndex(-1);
-                
-                panel.add(new JLabel("选择或输入标签:"), BorderLayout.NORTH);
-                panel.add(tagComboBox, BorderLayout.CENTER);
-                
-                int result = JOptionPane.showConfirmDialog(null, panel, "添加标签", 
-                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-                
-                if (result != JOptionPane.OK_OPTION) {
-                    return;
-                }
-                
-                String tagName = (String) tagComboBox.getSelectedItem();
-                if (tagName == null || tagName.trim().isEmpty()) {
-                    return;
-                }
-                
-                saveTag(item, projectPath, tagName.trim());
+        List<TagEntity> allTags = adapter.loadTags(projectPath);
+        List<String> existingTags = allTags.stream()
+                .map(TagEntity::getTagName)
+                .distinct()
+                .toList();
+        
+        if (existingTags.isEmpty()) {
+            String tagName = JOptionPane.showInputDialog(null, "请输入新标签名称:", "添加标签", JOptionPane.PLAIN_MESSAGE);
+            if (tagName == null || tagName.trim().isEmpty()) {
+                return;
             }
-        } catch (SQLException e) {
-            log.error("Failed to add tag", e);
-            JOptionPane.showMessageDialog(null, "添加标签失败: " + e.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
+            saveTag(item, projectPath, tagName.trim());
+        } else {
+            JPanel panel = new JPanel(new BorderLayout(10, 10));
+            JComboBox<String> tagComboBox = new JComboBox<>(existingTags.toArray(new String[0]));
+            tagComboBox.setEditable(true);
+            tagComboBox.setSelectedIndex(-1);
+            
+            panel.add(new JLabel("选择或输入标签:"), BorderLayout.NORTH);
+            panel.add(tagComboBox, BorderLayout.CENTER);
+            
+            int result = JOptionPane.showConfirmDialog(null, panel, "添加标签", 
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+            
+            if (result != JOptionPane.OK_OPTION) {
+                return;
+            }
+            
+            String tagName = (String) tagComboBox.getSelectedItem();
+            if (tagName == null || tagName.trim().isEmpty()) {
+                return;
+            }
+            
+            saveTag(item, projectPath, tagName.trim());
         }
     }
     
-    private void saveTag(InterfaceItem item, String projectPath, String tagName) throws SQLException {
-        InterfaceXDatabaseService dbService = InterfaceXDatabaseService.getInstance();
-        TagDao tagDao = dbService.getTagDao();
+    private void saveTag(InterfaceItem item, String projectPath, String tagName) {
+        StorageAdapter adapter = StorageAdapter.getInstance();
         
         TagEntity tagEntity = TagEntity.builder()
             .projectPath(projectPath)
@@ -183,10 +174,9 @@ public class InterfaceXPopupMenu {
             .updatedTime(System.currentTimeMillis())
             .build();
         
-        tagDao.insert(tagEntity);
+        adapter.saveTag(tagEntity);
         JOptionPane.showMessageDialog(null, "标签添加成功!", "成功", JOptionPane.INFORMATION_MESSAGE);
         
-        // 刷新树结构
         InterfaceXNavigator.getInstance(project).scheduleStructureUpdate();
     }
 
@@ -210,54 +200,46 @@ public class InterfaceXPopupMenu {
         }
         
         InterfaceItem item = serviceNode.interfaceItem;
+        StorageAdapter adapter = StorageAdapter.getInstance();
+        String projectPath = project.getBasePath();
         
-        try {
-            InterfaceXDatabaseService dbService = InterfaceXDatabaseService.getInstance();
-            TagDao tagDao = dbService.getTagDao();
-            String projectPath = project.getBasePath();
-            
-            List<TagEntity> tags = tagDao.findByInterface(
-                projectPath,
-                item.getModule() != null ? item.getModule().getName() : "",
-                item.getInterfaceItemCategoryEnum().name(),
-                item.getUrl(),
-                item.getMethod() != null ? item.getMethod().name() : null,
-                item.getPsiMethod() != null ? item.getPsiMethod().getName() : ""
-            );
-            
-            if (tags.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "当前接口没有标签", "提示", JOptionPane.INFORMATION_MESSAGE);
-                return;
-            }
-            
-            String[] tagNames = tags.stream().map(TagEntity::getTagName).toArray(String[]::new);
-            String selected = (String) JOptionPane.showInputDialog(
-                null, "选择要移除的标签:", "移除标签",
-                JOptionPane.PLAIN_MESSAGE, null, tagNames, tagNames[0]
-            );
-            
-            if (selected == null) {
-                return;
-            }
-            
-            tagDao.delete(
-                projectPath,
-                item.getModule() != null ? item.getModule().getName() : "",
-                item.getInterfaceItemCategoryEnum().name(),
-                item.getUrl(),
-                item.getMethod() != null ? item.getMethod().name() : null,
-                item.getPsiMethod() != null ? item.getPsiMethod().getName() : "",
-                selected
-            );
-            
-            JOptionPane.showMessageDialog(null, "标签移除成功!", "成功", JOptionPane.INFORMATION_MESSAGE);
-            
-            // 刷新树结构
-            InterfaceXNavigator.getInstance(project).scheduleStructureUpdate();
-        } catch (SQLException e) {
-            log.error("Failed to remove tag", e);
-            JOptionPane.showMessageDialog(null, "移除标签失败: " + e.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
+        List<TagEntity> tags = adapter.loadTagsByInterface(
+            projectPath,
+            item.getModule() != null ? item.getModule().getName() : "",
+            item.getInterfaceItemCategoryEnum().name(),
+            item.getUrl(),
+            item.getMethod() != null ? item.getMethod().name() : null,
+            item.getPsiMethod() != null ? item.getPsiMethod().getName() : ""
+        );
+        
+        if (tags.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "当前接口没有标签", "提示", JOptionPane.INFORMATION_MESSAGE);
+            return;
         }
+        
+        String[] tagNames = tags.stream().map(TagEntity::getTagName).toArray(String[]::new);
+        String selected = (String) JOptionPane.showInputDialog(
+            null, "选择要移除的标签:", "移除标签",
+            JOptionPane.PLAIN_MESSAGE, null, tagNames, tagNames[0]
+        );
+        
+        if (selected == null) {
+            return;
+        }
+        
+        adapter.deleteTag(
+            projectPath,
+            item.getModule() != null ? item.getModule().getName() : "",
+            item.getInterfaceItemCategoryEnum().name(),
+            item.getUrl(),
+            item.getMethod() != null ? item.getMethod().name() : null,
+            item.getPsiMethod() != null ? item.getPsiMethod().getName() : "",
+            selected
+        );
+        
+        JOptionPane.showMessageDialog(null, "标签移除成功!", "成功", JOptionPane.INFORMATION_MESSAGE);
+        
+        InterfaceXNavigator.getInstance(project).scheduleStructureUpdate();
     }
 
 

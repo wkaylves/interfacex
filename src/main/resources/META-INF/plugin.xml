@@ -91,6 +91,7 @@
     <extensions defaultExtensionNs="com.intellij">
 
         <applicationService serviceImplementation="com.kaylves.interfacex.db.InterfaceXDatabaseService"/>
+        <applicationService serviceImplementation="com.kaylves.interfacex.db.storage.StorageAdapter"/>
 
         <notificationGroup id="com.kaylves.plugin.interfacex.notification"      displayType="BALLOON"/>
 

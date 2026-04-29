@@ -19,9 +19,8 @@ import com.intellij.util.OpenSourceUtil;
 import com.kaylves.interfacex.common.InterfaceItem;
 import com.kaylves.interfacex.common.InterfaceProject;
 import com.kaylves.interfacex.common.ToolkitIcons;
-import com.kaylves.interfacex.db.InterfaceXDatabaseService;
-import com.kaylves.interfacex.db.dao.TagDao;
 import com.kaylves.interfacex.db.model.TagEntity;
+import com.kaylves.interfacex.db.storage.StorageAdapter;
 import com.kaylves.interfacex.service.ProjectInitService;
 import com.intellij.icons.AllIcons;
 import lombok.extern.slf4j.Slf4j;
@@ -334,8 +333,7 @@ public class InterfaceXSimpleTreeStructure extends SimpleTreeStructure {
         protected SimpleNode[] buildChildren() {
             // 按标签分组接口
             try {
-                InterfaceXDatabaseService dbService = InterfaceXDatabaseService.getInstance();
-                TagDao tagDao = dbService.getTagDao();
+                StorageAdapter adapter = StorageAdapter.getInstance();
                 String projectPath = InterfaceXSimpleTreeStructure.this.project.getBasePath();
                 
                 // 查询该 Category 下所有接口的标签
@@ -344,7 +342,7 @@ public class InterfaceXSimpleTreeStructure extends SimpleTreeStructure {
                 
                 for (ServiceNode serviceNode : serviceNodes) {
                     InterfaceItem item = serviceNode.interfaceItem;
-                    List<TagEntity> tags = tagDao.findByInterface(
+                    List<TagEntity> tags = adapter.loadTagsByInterface(
                             projectPath,
                             item.getModule() != null ? item.getModule().getName() : "",
                             item.getInterfaceItemCategoryEnum().name(),
@@ -479,7 +477,7 @@ public class InterfaceXSimpleTreeStructure extends SimpleTreeStructure {
             super(parent);
             this.interfaceItem = interfaceItem;
 
-            Icon icon = ToolkitIcons.METHOD.get(interfaceItem.getMethod(), interfaceItem.getUseAble());
+            Icon icon = ToolkitIcons.METHOD.get(interfaceItem.getMethod(), interfaceItem.getUsable());
             if (icon != null) {
                 getTemplatePresentation().setIcon(icon);
                 setIcon(icon); //兼容 IDEA 2016

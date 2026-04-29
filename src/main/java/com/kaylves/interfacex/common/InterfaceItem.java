@@ -46,7 +46,7 @@ public class InterfaceItem implements NavigationItem, InterfaceUrl {
 
     @Setter
     @Getter
-    private Boolean useAble=true;
+    private Boolean usable=true;
     
     // 用于从缓存加载时智能查找 PsiMethod
     @Setter
@@ -210,7 +210,7 @@ public class InterfaceItem implements NavigationItem, InterfaceUrl {
         @Nullable
         @Override
         public Icon getIcon(boolean unused) {
-            return ToolkitIcons.METHOD.get(method,useAble);
+            return ToolkitIcons.METHOD.get(method,usable);
         }
     }
 }

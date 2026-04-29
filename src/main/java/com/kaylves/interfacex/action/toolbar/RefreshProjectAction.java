@@ -37,7 +37,7 @@ public class RefreshProjectAction extends AnAction {
 
 
         if (projects != null && !projects.isEmpty()) {
-            InterfaceXHelper.saveScanResultsToDatabase(project, projects);
+            InterfaceXHelper.saveScanResultsToStorage(project, projects);
         }
 
         servicesNavigator.scheduleStructureUpdate(true);

@@ -1,20 +1,12 @@
-/*
- * *
- *  * @author Kaylves
- *  * @date ${date}
- *  * @description TODO
- *
- */
-
 package com.kaylves.interfacex.ui.form;
 
+import com.kaylves.interfacex.db.storage.StorageType;
 import com.kaylves.interfacex.entity.InterfaceItemConfigEntity;
 import lombok.Getter;
 
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class InterfaceXSettingForm {
     private JCheckBox HTTPCheckBox;
@@ -32,79 +24,98 @@ public class InterfaceXSettingForm {
     private JCheckBox XXLJOBCheckBox;
     private JCheckBox rabbitMQTemplateCheckBox;
     private JCheckBox rocketMQTemplateCheckBox;
+    private JComboBox<StorageType> storageTypeComboBox;
+
+    public InterfaceXSettingForm() {
+        storageTypeComboBox.setModel(new DefaultComboBoxModel<>(StorageType.values()));
+        storageTypeComboBox.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public JLabel getListCellRendererComponent(JList<?> list, Object value, int index,
+                                                       boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof StorageType) {
+                    StorageType type = (StorageType) value;
+                    switch (type) {
+                        case SQLITE:
+                            setText("SQLite (推荐)");
+                            break;
+                        case XML:
+                            setText("XML");
+                            break;
+                        default:
+                            setText(type.name());
+                    }
+                }
+                return this;
+            }
+        });
+    }
 
     public void setUI(List<InterfaceItemConfigEntity> interfaceItemConfigEntities) {
-
-        if(interfaceItemConfigEntities==null){
+        if (interfaceItemConfigEntities == null) {
             return;
         }
 
-        interfaceItemConfigEntities.forEach(interfaceItemConfigEntity -> {
-            if(HTTPCheckBox.getText().equals(interfaceItemConfigEntity.getItemCategory())){
+        interfaceItemConfigEntities.forEach(entity -> {
+            if (HTTPCheckBox.getText().equals(entity.getItemCategory())) {
                 HTTPCheckBox.setSelected(true);
             }
-
-            if(rocketMQProducerCheckBox.getText().equals(interfaceItemConfigEntity.getItemCategory())){
+            if (rocketMQProducerCheckBox.getText().equals(entity.getItemCategory())) {
                 rocketMQProducerCheckBox.setSelected(true);
             }
-
-            if(rabbitMQListenerCheckBox.getText().equals(interfaceItemConfigEntity.getItemCategory())){
+            if (rabbitMQListenerCheckBox.getText().equals(entity.getItemCategory())) {
                 rabbitMQListenerCheckBox.setSelected(true);
             }
-
-            if(rabbitMQProducerCheckBox.getText().equals(interfaceItemConfigEntity.getItemCategory())){
+            if (rabbitMQProducerCheckBox.getText().equals(entity.getItemCategory())) {
                 rabbitMQProducerCheckBox.setSelected(true);
             }
-
-            if(rocketMQLisntenerCheckBox.getText().equals(interfaceItemConfigEntity.getItemCategory())){
+            if (rocketMQLisntenerCheckBox.getText().equals(entity.getItemCategory())) {
                 rocketMQLisntenerCheckBox.setSelected(true);
             }
-
-            if(openFeignCheckBox.getText().equals(interfaceItemConfigEntity.getItemCategory())){
+            if (openFeignCheckBox.getText().equals(entity.getItemCategory())) {
                 openFeignCheckBox.setSelected(true);
             }
-            if(missionCheckBox.getText().equals(interfaceItemConfigEntity.getItemCategory())){
+            if (missionCheckBox.getText().equals(entity.getItemCategory())) {
                 missionCheckBox.setSelected(true);
             }
-
-            if(XXLJOBCheckBox.getText().equals(interfaceItemConfigEntity.getItemCategory())){
+            if (XXLJOBCheckBox.getText().equals(entity.getItemCategory())) {
                 XXLJOBCheckBox.setSelected(true);
             }
-
-            if(rabbitMQTemplateCheckBox.getText().equals(interfaceItemConfigEntity.getItemCategory())){
+            if (rabbitMQTemplateCheckBox.getText().equals(entity.getItemCategory())) {
                 rabbitMQTemplateCheckBox.setSelected(true);
             }
-
-            if(rocketMQTemplateCheckBox.getText().equals(interfaceItemConfigEntity.getItemCategory())){
+            if (rocketMQTemplateCheckBox.getText().equals(entity.getItemCategory())) {
                 rocketMQTemplateCheckBox.setSelected(true);
             }
         });
     }
 
-    public List<InterfaceItemConfigEntity> getInterfaceItemConfigEntities(){
+    public void setStorageType(StorageType type) {
+        storageTypeComboBox.setSelectedItem(type);
+    }
+
+    public StorageType getStorageType() {
+        return (StorageType) storageTypeComboBox.getSelectedItem();
+    }
+
+    public List<InterfaceItemConfigEntity> getInterfaceItemConfigEntities() {
         List<InterfaceItemConfigEntity> entityList = new ArrayList<>();
 
-        // 检查每一个复选框，如果被选中，就创建一个对应的实体并添加到列表中
         if (HTTPCheckBox.isSelected()) {
             entityList.add(createEntityForCategory(HTTPCheckBox.getText()));
         }
-
         if (rocketMQProducerCheckBox.isSelected()) {
             entityList.add(createEntityForCategory(rocketMQProducerCheckBox.getText()));
         }
-
         if (rabbitMQListenerCheckBox.isSelected()) {
             entityList.add(createEntityForCategory(rabbitMQListenerCheckBox.getText()));
         }
-
         if (rabbitMQProducerCheckBox.isSelected()) {
             entityList.add(createEntityForCategory(rabbitMQProducerCheckBox.getText()));
         }
-
         if (rocketMQLisntenerCheckBox.isSelected()) {
             entityList.add(createEntityForCategory(rocketMQLisntenerCheckBox.getText()));
         }
-
         if (openFeignCheckBox.isSelected()) {
             entityList.add(createEntityForCategory(openFeignCheckBox.getText()));
         }
@@ -124,14 +135,6 @@ public class InterfaceXSettingForm {
         return entityList;
     }
 
-    /**
-     * 辅助方法，根据分类名称创建一个 InterfaceItemConfigEntity 对象。
-     * 这里假设 InterfaceItemConfigEntity 有一个接受 itemCategory 的构造函数，
-     * 或者有对应的 setter 方法。
-     *
-     * @param category 项目分类名称
-     * @return 构建好的实体对象
-     */
     private InterfaceItemConfigEntity createEntityForCategory(String category) {
         InterfaceItemConfigEntity entity = new InterfaceItemConfigEntity();
         entity.setItemCategory(category);

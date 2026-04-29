@@ -1,6 +1,5 @@
 package com.kaylves.interfacex.service;
 
-import com.intellij.ide.util.treeView.TreeState;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
@@ -10,8 +9,9 @@ import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.treeStructure.SimpleTree;
 import com.kaylves.interfacex.common.constants.InterfaceItemCategoryEnum;
-import com.kaylves.interfacex.db.InterfaceXDatabaseService;
-import com.kaylves.interfacex.db.migration.XmlToSqliteMigrator;
+import com.kaylves.interfacex.db.storage.StorageAdapter;
+import com.kaylves.interfacex.db.storage.StorageMigrator;
+import com.kaylves.interfacex.db.storage.StorageType;
 import com.kaylves.interfacex.ui.navigator.InterfaceXForm;
 import com.kaylves.interfacex.ui.navigator.InterfaceXNavigatorPanel;
 import com.kaylves.interfacex.ui.navigator.InterfaceXNavigatorState;
@@ -26,16 +26,6 @@ import javax.swing.tree.TreeSelectionModel;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-
-/**
- * InterfaceXNavigator
- * <p>
- * 使用Service注解，不需要在plugin.xml中注册service节点了
- * 该注解可以自动注入Project对象
- *
- * @author kaylves
- * @since 1.0
- */
 @Service(Service.Level.PROJECT)
 @State(name = "InterfaceXNavigator", storages = {@Storage("InterfaceX.xml")})
 @Slf4j
@@ -65,28 +55,19 @@ public final class InterfaceXNavigator implements PersistentStateComponent<Inter
         this.project = project;
 
         String projectPath = project.getBasePath();
-        InterfaceXDatabaseService.getInstance().initialize();
 
-        if (XmlToSqliteMigrator.needsMigration(projectPath)) {
-            XmlToSqliteMigrator.migrate(projectPath, xNavigatorState.isShowPort(),
-                    xNavigatorState.getInterfaceItemConfigEntities());
-        }
-
-        xNavigatorState.loadFromDatabase(projectPath);
+        xNavigatorState.loadFromStorage(projectPath);
     }
-
 
     public static InterfaceXNavigator getInstance(Project project) {
         return project.getService(InterfaceXNavigator.class);
     }
-
 
     private void createSimpleTree() {
         simpleTree = new SimpleTree();
         simpleTree.getEmptyText().clear();
         simpleTree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
     }
-
 
     public void initToolWindow(ToolWindow toolWindow) {
         log.info("initToolWindow>>>>>>>>>");
@@ -115,7 +96,6 @@ public final class InterfaceXNavigator implements PersistentStateComponent<Inter
     }
 
     private void scheduleStructureRequest(final Runnable runnable) {
-
         if (myToolWindow == null) {
             return;
         }
@@ -130,11 +110,6 @@ public final class InterfaceXNavigator implements PersistentStateComponent<Inter
                 initStructure();
             }
 
-//             fixme: compat
-//            if(shouldCreate){
-//                TreeState.createFrom(xNavigatorState.treeState).applyTo(simpleTree);
-//            }
-
             runnable.run();
         });
     }
@@ -142,25 +117,38 @@ public final class InterfaceXNavigator implements PersistentStateComponent<Inter
     private void initStructure() {
         simpleTreeStructure = new InterfaceXSimpleTreeStructure(project, simpleTree);
     }
-    
-    /**
-     * 应用标签过滤
-     */
+
     public void applyTagFilter(String tagName) {
         if (simpleTreeStructure != null) {
             simpleTreeStructure.applyTagFilter(tagName);
         }
     }
-    
-    /**
-     * 清除标签过滤
-     */
+
     public void clearTagFilter() {
         if (simpleTreeStructure != null) {
             simpleTreeStructure.clearTagFilter();
         }
     }
 
+    public void switchStorageType(StorageType newType) {
+        StorageAdapter adapter = StorageAdapter.getInstance();
+        StorageType oldType = adapter.getStorageType();
+
+        if (oldType == newType) {
+            return;
+        }
+
+        String projectPath = project.getBasePath();
+        boolean success = StorageMigrator.migrate(oldType, newType, projectPath);
+
+        if (success) {
+            adapter.setStorageType(newType);
+            adapter.resetBackend();
+            log.info("Storage type switched from {} to {}", oldType, newType);
+        } else {
+            log.error("Failed to switch storage type from {} to {}", oldType, newType);
+        }
+    }
 
     @Nullable
     @Override
@@ -171,7 +159,7 @@ public final class InterfaceXNavigator implements PersistentStateComponent<Inter
     @Override
     public void loadState(@NotNull InterfaceXNavigatorState state) {
         this.xNavigatorState = state;
-        xNavigatorState.loadFromDatabase(project.getBasePath());
+        xNavigatorState.loadFromStorage(project.getBasePath());
         scheduleStructureUpdate();
     }
 }

@@ -51,7 +51,7 @@ public abstract class AbstractRocketMQListenerResolverServiceResolver extends Ba
                 RocketMQItem rocketMQItem = RocketMQItem.builder().tag(path).build();
 
                 InterfaceItem item = new InterfaceItem(psiMethod, InterfaceItemCategoryEnum.RocketMQListener, requestMethod, rocketMQItem, false);
-                item.setUseAble(IdeaPluginUtils.getUseAbleOnClassOrMethod(psiClass, psiMethod));
+                item.setUsable(IdeaPluginUtils.getUseAbleOnClassOrMethod(psiClass, psiMethod));
                 itemList.add(item);
             });
 

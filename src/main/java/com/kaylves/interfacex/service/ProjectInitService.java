@@ -35,7 +35,7 @@ public final class ProjectInitService implements Disposable {
                         InterfaceXHelper.getInterfaceProjectUsingResolver(project, navigator.xNavigatorState)
                 );
 
-        InterfaceXHelper.saveScanResultsToDatabase(project, projects);
+        InterfaceXHelper.saveScanResultsToStorage(project, projects);
 
         return projects;
     }
