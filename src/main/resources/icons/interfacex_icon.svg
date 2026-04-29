@@ -1,0 +1,60 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- InterfaceX 主图标 - 接口连接器 -->
+  <defs>
+    <!-- 渐变定义 -->
+    <linearGradient id="primaryGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4A90E2;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#357ABD;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="secondaryGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#5BA3F5;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4A90E2;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- 阴影滤镜 -->
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+  
+  <!-- 圆角背景 -->
+  <rect x="8" y="8" width="112" height="112" rx="24" ry="24" 
+        fill="url(#primaryGradient)" filter="url(#shadow)"/>
+  
+  <!-- 内部装饰圆环 -->
+  <circle cx="64" cy="64" r="48" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+  
+  <!-- 中心 X 符号 (代表 InterfaceX) -->
+  <g transform="translate(64, 64)">
+    <!-- X 的左斜线 -->
+    <line x1="-28" y1="-28" x2="28" y2="28" 
+          stroke="#FFFFFF" stroke-width="8" stroke-linecap="round"/>
+    
+    <!-- X 的右斜线 -->
+    <line x1="28" y1="-28" x2="-28" y2="28" 
+          stroke="#FFFFFF" stroke-width="8" stroke-linecap="round"/>
+    
+    <!-- X 的中心点 -->
+    <circle cx="0" cy="0" r="6" fill="#FFFFFF"/>
+  </g>
+  
+  <!-- 四个角的连接点 (象征接口连接) -->
+  <circle cx="32" cy="32" r="5" fill="#FFFFFF" opacity="0.9"/>
+  <circle cx="96" cy="32" r="5" fill="#FFFFFF" opacity="0.9"/>
+  <circle cx="32" cy="96" r="5" fill="#FFFFFF" opacity="0.9"/>
+  <circle cx="96" cy="96" r="5" fill="#FFFFFF" opacity="0.9"/>
+  
+  <!-- 连接线 (表示接口间的连接关系) -->
+  <line x1="32" y1="32" x2="52" y2="52" 
+        stroke="#FFFFFF" stroke-width="2" opacity="0.6" stroke-dasharray="4,3"/>
+  <line x1="96" y1="32" x2="76" y2="52" 
+        stroke="#FFFFFF" stroke-width="2" opacity="0.6" stroke-dasharray="4,3"/>
+  <line x1="32" y1="96" x2="52" y2="76" 
+        stroke="#FFFFFF" stroke-width="2" opacity="0.6" stroke-dasharray="4,3"/>
+  <line x1="96" y1="96" x2="76" y2="76" 
+        stroke="#FFFFFF" stroke-width="2" opacity="0.6" stroke-dasharray="4,3"/>
+  
+  <!-- 顶部小箭头 (表示导航/定位功能) -->
+  <path d="M 64 20 L 68 28 L 60 28 Z" fill="#FFFFFF" opacity="0.8"/>
+</svg>

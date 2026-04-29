@@ -10,6 +10,8 @@ import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.treeStructure.SimpleTree;
 import com.kaylves.interfacex.common.constants.InterfaceItemCategoryEnum;
+import com.kaylves.interfacex.db.InterfaceXDatabaseService;
+import com.kaylves.interfacex.db.migration.XmlToSqliteMigrator;
 import com.kaylves.interfacex.ui.navigator.InterfaceXForm;
 import com.kaylves.interfacex.ui.navigator.InterfaceXNavigatorPanel;
 import com.kaylves.interfacex.ui.navigator.InterfaceXNavigatorState;
@@ -61,6 +63,16 @@ public final class InterfaceXNavigator implements PersistentStateComponent<Inter
 
     public InterfaceXNavigator(Project project) {
         this.project = project;
+
+        String projectPath = project.getBasePath();
+        InterfaceXDatabaseService.getInstance().initialize();
+
+        if (XmlToSqliteMigrator.needsMigration(projectPath)) {
+            XmlToSqliteMigrator.migrate(projectPath, xNavigatorState.isShowPort(),
+                    xNavigatorState.getInterfaceItemConfigEntities());
+        }
+
+        xNavigatorState.loadFromDatabase(projectPath);
     }
 
 
@@ -130,6 +142,24 @@ public final class InterfaceXNavigator implements PersistentStateComponent<Inter
     private void initStructure() {
         simpleTreeStructure = new InterfaceXSimpleTreeStructure(project, simpleTree);
     }
+    
+    /**
+     * 应用标签过滤
+     */
+    public void applyTagFilter(String tagName) {
+        if (simpleTreeStructure != null) {
+            simpleTreeStructure.applyTagFilter(tagName);
+        }
+    }
+    
+    /**
+     * 清除标签过滤
+     */
+    public void clearTagFilter() {
+        if (simpleTreeStructure != null) {
+            simpleTreeStructure.clearTagFilter();
+        }
+    }
 
 
     @Nullable
@@ -141,6 +171,7 @@ public final class InterfaceXNavigator implements PersistentStateComponent<Inter
     @Override
     public void loadState(@NotNull InterfaceXNavigatorState state) {
         this.xNavigatorState = state;
+        xNavigatorState.loadFromDatabase(project.getBasePath());
         scheduleStructureUpdate();
     }
 }

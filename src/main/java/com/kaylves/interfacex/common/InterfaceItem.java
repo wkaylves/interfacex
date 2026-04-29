@@ -47,6 +47,15 @@ public class InterfaceItem implements NavigationItem, InterfaceUrl {
     @Setter
     @Getter
     private Boolean useAble=true;
+    
+    // 用于从缓存加载时智能查找 PsiMethod
+    @Setter
+    @Getter
+    private String cachedClassName;
+    
+    @Setter
+    @Getter
+    private String cachedMethodName;
 
     public InterfaceItem(PsiElement psiElement, InterfaceItemCategoryEnum interfaceItemCategoryEnum, String requestMethod, InterfaceUrl url, Boolean isUrlWithoutReqMethod) {
         this.psiElement = psiElement;

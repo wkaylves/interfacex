@@ -90,11 +90,22 @@
 
     <extensions defaultExtensionNs="com.intellij">
 
+        <applicationService serviceImplementation="com.kaylves.interfacex.db.InterfaceXDatabaseService"/>
+
         <notificationGroup id="com.kaylves.plugin.interfacex.notification"      displayType="BALLOON"/>
 
         <toolWindow id="InterfaceX"
                     factoryClass="com.kaylves.interfacex.ui.toolwindow.InterfaceXToolWindow"
-                    anchor="right" icon="com.kaylves.interfacex.common.ToolkitIcons.SERVICE"/>
+                    anchor="right" icon="com.kaylves.interfacex.common.ToolkitIcons.INTERFACE_X"/>
+
+        <codeInsight.lineMarkerProvider language="JAVA"
+                                        implementationClass="com.kaylves.interfacex.marker.FeignLineMarkerProvider"/>
+        <codeInsight.lineMarkerProvider language="JAVA"
+                                        implementationClass="com.kaylves.interfacex.marker.ControllerLineMarkerProvider"/>
+        <codeInsight.lineMarkerProvider language="JAVA"
+                                        implementationClass="com.kaylves.interfacex.marker.RocketMQProducerLineMarkerProvider"/>
+        <codeInsight.lineMarkerProvider language="JAVA"
+                                        implementationClass="com.kaylves.interfacex.marker.RocketMQListenerLineMarkerProvider"/>
     </extensions>
 
 </idea-plugin>

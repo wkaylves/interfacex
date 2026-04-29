@@ -5,8 +5,14 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.kaylves.interfacex.common.InterfaceItem;
 import com.kaylves.interfacex.common.InterfaceProject;
+import com.kaylves.interfacex.common.constants.InterfaceItemCategoryEnum;
 import com.kaylves.interfacex.common.constants.InterfaceXItemEnum;
+import com.kaylves.interfacex.db.InterfaceXDatabaseService;
+import com.kaylves.interfacex.db.dao.ScanMetaDao;
+import com.kaylves.interfacex.db.dao.ScanResultDao;
+import com.kaylves.interfacex.db.model.ScanResultEntity;
 import com.kaylves.interfacex.entity.InterfaceItemConfigEntity;
+import com.kaylves.interfacex.module.http.HttpItem;
 import com.kaylves.interfacex.module.http.SpringMVCResolverServiceResolver;
 import com.kaylves.interfacex.module.mission.MissionResolverServiceResolver;
 import com.kaylves.interfacex.module.openfeign.OpenFeignResolverServiceResolver;
@@ -20,6 +26,7 @@ import com.kaylves.interfacex.ui.navigator.InterfaceXNavigatorState;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 
+import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -258,6 +265,209 @@ public class InterfaceXHelper {
 
         com.intellij.psi.javadoc.PsiDocTagValue psiDocTagValue = partnerTag.getValueElement();
         return psiDocTagValue != null ? psiDocTagValue.getText() : null;
+    }
+
+    /**
+     * 将数据库中的 category 字符串转换为枚举
+     * 处理历史数据兼容性问题(如 "Spring-MVC" -> HTTP)
+     */
+    private static InterfaceItemCategoryEnum parseCategoryEnum(String category) {
+        if (category == null || category.isEmpty()) {
+            return null;
+        }
+        
+        // 处理历史数据映射
+        switch (category) {
+            case "Spring-MVC":
+            case "Jakarta":
+            case "Jaxrs":
+            case "RestTemplate":
+                return InterfaceItemCategoryEnum.HTTP;
+            
+            case "RabbitMQ-Listener":
+                return InterfaceItemCategoryEnum.RabbitMQListener;
+            
+            case "RabbitMQ-Producer":
+                return InterfaceItemCategoryEnum.RabbitMQProducer;
+            
+            case "RocketMQ-Producer":
+            case "RocketMQTemplate-Producer":
+                return InterfaceItemCategoryEnum.RocketMQProducer;
+            
+            case "RocketMQ-Deliver":
+                return InterfaceItemCategoryEnum.RocketMQDeliver;
+            
+            case "RocketMqListener":
+            case "ShardRocketMqListener":
+                return InterfaceItemCategoryEnum.RocketMQListener;
+            
+            case "MissionClient":
+                return InterfaceItemCategoryEnum.Mission;
+            
+            default:
+                try {
+                    return InterfaceItemCategoryEnum.valueOf(category);
+                } catch (IllegalArgumentException e) {
+                    log.warn("Unknown category: {}, defaulting to HTTP", category);
+                    return InterfaceItemCategoryEnum.HTTP;
+                }
+        }
+    }
+
+    public static List<InterfaceProject> getInterfaceProjectFromCache(Project project, InterfaceXNavigatorState navigatorState) {
+        InterfaceXDatabaseService dbService = InterfaceXDatabaseService.getInstance();
+        dbService.initialize();
+        ScanResultDao scanResultDao = dbService.getScanResultDao();
+        ScanMetaDao scanMetaDao = dbService.getScanMetaDao();
+
+        String projectPath = project.getBasePath();
+
+        try {
+            Long lastScanTime = scanMetaDao.getLastScanTime(projectPath);
+            if (lastScanTime == null) {
+                return null;
+            }
+
+            List<ScanResultEntity> cachedResults = scanResultDao.findByProjectPath(projectPath);
+            if (cachedResults.isEmpty()) {
+                return null;
+            }
+
+            Map<String, List<ScanResultEntity>> groupedByModule = new LinkedHashMap<>();
+            for (ScanResultEntity entity : cachedResults) {
+                groupedByModule.computeIfAbsent(entity.getModuleName(), k -> new ArrayList<>()).add(entity);
+            }
+
+            List<InterfaceProject> projects = new ArrayList<>();
+            Module[] modules = ModuleManager.getInstance(project).getModules();
+
+            for (Module module : modules) {
+                List<ScanResultEntity> moduleResults = groupedByModule.get(module.getName());
+                if (moduleResults == null || moduleResults.isEmpty()) {
+                    continue;
+                }
+
+                Map<String, List<InterfaceItem>> moduleServiceMap = new LinkedHashMap<>();
+                for (ScanResultEntity entity : moduleResults) {
+                    HttpItem httpItem = HttpItem.builder().url(entity.getUrl()).build();
+                    InterfaceItemCategoryEnum categoryEnum = parseCategoryEnum(entity.getCategory());
+                    
+                    // 从缓存加载时,PsiElement 为 null,需要在双击时重新查找
+                    InterfaceItem item = new InterfaceItem(
+                            null,  // psiMethod 为 null
+                            categoryEnum,
+                            entity.getHttpMethod(),
+                            httpItem,
+                            true
+                    );
+                    item.setModule(module);
+                    
+                    // 存储 className 和 methodName,用于智能查找
+                    if (entity.getClassName() != null && entity.getMethodName() != null) {
+                        item.setCachedClassName(entity.getClassName());
+                        item.setCachedMethodName(entity.getMethodName());
+                        log.info("Loaded from cache: {}.{}", entity.getClassName(), entity.getMethodName());
+                    } else {
+                        log.warn("Cache data missing className/methodName for URL: {}, className={}, methodName={}", 
+                                entity.getUrl(), entity.getClassName(), entity.getMethodName());
+                    }
+                    
+                    moduleServiceMap.computeIfAbsent(entity.getCategory(), k -> new ArrayList<>()).add(item);
+                }
+
+                projects.add(new InterfaceProject(module, moduleServiceMap));
+            }
+
+            return projects;
+        } catch (SQLException e) {
+            log.error("Failed to load from SQLite cache", e);
+            return null;
+        }
+    }
+
+    public static void saveScanResultsToDatabase(Project project, List<InterfaceProject> projects) {
+        InterfaceXDatabaseService dbService = InterfaceXDatabaseService.getInstance();
+        dbService.initialize();
+        ScanResultDao scanResultDao = dbService.getScanResultDao();
+        ScanMetaDao scanMetaDao = dbService.getScanMetaDao();
+
+        String projectPath = project.getBasePath();
+        long scanTime = System.currentTimeMillis();
+
+        try {
+            // 记录扫描结果总数
+            int totalProjects = projects != null ? projects.size() : 0;
+            int totalEntities = 0;
+            
+            log.info("Starting to save scan results for project: {}, total projects: {}", projectPath, totalProjects);
+            
+            scanResultDao.deleteByProjectPath(projectPath);
+
+            if (projects != null) {
+                for (InterfaceProject interfaceProject : projects) {
+                    List<ScanResultEntity> entities = new ArrayList<>();
+                    Map<String, List<InterfaceItem>> serviceItemMap = interfaceProject.getServiceItemMap();
+
+                    log.debug("Processing module: {}, service categories: {}", 
+                            interfaceProject.getModuleName(), 
+                            serviceItemMap != null ? serviceItemMap.keySet() : "null");
+
+                    if (serviceItemMap != null) {
+                        for (Map.Entry<String, List<InterfaceItem>> entry : serviceItemMap.entrySet()) {
+                            String category = entry.getKey();
+                            List<InterfaceItem> items = entry.getValue();
+                            
+                            log.debug("Category: {}, items count: {}", category, items != null ? items.size() : 0);
+                            
+                            if (items != null) {
+                                for (InterfaceItem item : items) {
+                                    String className = null;
+                                    String methodName = null;
+                                    
+                                    if (item.getPsiMethod() != null && item.getPsiMethod().getContainingClass() != null) {
+                                        className = item.getPsiMethod().getContainingClass().getQualifiedName();
+                                        methodName = item.getPsiMethod().getName();
+                                    } else if (item.getCachedClassName() != null && item.getCachedMethodName() != null) {
+                                        className = item.getCachedClassName();
+                                        methodName = item.getCachedMethodName();
+                                    }
+
+                                    log.debug("ClassName: {}, methodName: {}", className, methodName);
+
+                                    ScanResultEntity entity = ScanResultEntity.builder()
+                                            .projectPath(projectPath)
+                                            .moduleName(interfaceProject.getModuleName())
+                                            .category(category)
+                                            .url(item.getUrl())
+                                            .httpMethod(item.getMethod() != null ? item.getMethod().name() : null)
+                                            .className(className)
+                                            .methodName(methodName)
+                                            .psiElementHash(item.getPsiElement() != null ? item.getPsiElement().hashCode() : 0)
+                                            .partner(null)
+                                            .scanTime(scanTime)
+                                            .build();
+                                    entities.add(entity);
+                                }
+                            }
+                        }
+                    }
+
+                    if (!entities.isEmpty()) {
+                        log.info("Batch inserting {} entities for module: {}", entities.size(), interfaceProject.getModuleName());
+                        scanResultDao.batchUpsert(projectPath, entities);
+                        totalEntities += entities.size();
+                    } else {
+                        log.warn("No entities to insert for module: {}", interfaceProject.getModuleName());
+                    }
+                }
+            }
+
+            scanMetaDao.updateScanTime(projectPath, scanTime);
+            log.info("Saved {} scan results to SQLite for project: {}", totalEntities, projectPath);
+        } catch (SQLException e) {
+            log.error("Failed to save scan results to SQLite for project: " + projectPath, e);
+            throw new RuntimeException("Failed to save scan results", e);
+        }
     }
 
 }

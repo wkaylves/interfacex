@@ -13,6 +13,10 @@ public class ToolkitIcons {
     public static final Icon Refresh = AllIcons.Actions.Refresh; // 16x16
 
     public static final Icon SERVICE = IconLoader.getIcon("/icons/service.png",ToolkitIcons.class.getClassLoader()); // 16x16
+    
+    public static final Icon INTERFACE_X = IconLoader.getIcon("/icons/interfacex_icon_16.png",ToolkitIcons.class.getClassLoader()); // 16x16
+
+    public static final Icon TAG = IconLoader.getIcon("/icons/tag.svg", ToolkitIcons.class.getClassLoader()); // 16x16
 
     public static class METHOD {
 

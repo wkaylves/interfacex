@@ -27,13 +27,17 @@ public final class ProjectInitService implements Disposable {
 
     public List<InterfaceProject> getServiceProjects() {
 
-        InterfaceXNavigator navigator =InterfaceXNavigator.getInstance(project);
+        InterfaceXNavigator navigator = InterfaceXNavigator.getInstance(project);
 
-        return DumbService
+        List<InterfaceProject> projects = DumbService
                 .getInstance(project)
                 .runReadActionInSmartMode(() ->
-                        InterfaceXHelper.getInterfaceProjectUsingResolver(project,navigator.xNavigatorState)
+                        InterfaceXHelper.getInterfaceProjectUsingResolver(project, navigator.xNavigatorState)
                 );
+
+        InterfaceXHelper.saveScanResultsToDatabase(project, projects);
+
+        return projects;
     }
 
     @Override
