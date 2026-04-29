@@ -9,9 +9,27 @@ import java.io.File;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * 存储迁移工具
+ * <p>支持在 XML 和 SQLite 两种存储后端之间进行数据迁移</p>
+ * <p>迁移流程：</p>
+ * <ol>
+ *   <li>从源后端读取所有数据（扫描结果、标签、配置、元数据）</li>
+ *   <li>将数据写入目标后端</li>
+ *   <li>清理源后端数据</li>
+ * </ol>
+ */
 @Slf4j
 public class StorageMigrator {
 
+    /**
+     * 执行存储迁移
+     *
+     * @param from        源存储类型
+     * @param to          目标存储类型
+     * @param projectPath 项目路径
+     * @return true 迁移成功，false 迁移失败
+     */
     public static boolean migrate(StorageType from, StorageType to, String projectPath) {
         if (from == to) {
             log.info("Storage type unchanged, skipping migration");
@@ -42,6 +60,9 @@ public class StorageMigrator {
         }
     }
 
+    /**
+     * 根据存储类型创建后端实例
+     */
     private static StorageBackend createBackend(StorageType type, String projectPath) {
         switch (type) {
             case XML:
@@ -52,6 +73,9 @@ public class StorageMigrator {
         }
     }
 
+    /**
+     * 迁移扫描结果
+     */
     private static void migrateScanResults(StorageBackend source, StorageBackend target,
                                             String projectPath) throws SQLException {
         List<ScanResultEntity> results = source.loadScanResults(projectPath);
@@ -61,6 +85,9 @@ public class StorageMigrator {
         }
     }
 
+    /**
+     * 迁移标签
+     */
     private static void migrateTags(StorageBackend source, StorageBackend target,
                                      String projectPath) throws SQLException {
         List<TagEntity> tags = source.loadTags(projectPath);
@@ -72,6 +99,9 @@ public class StorageMigrator {
         }
     }
 
+    /**
+     * 迁移配置项
+     */
     private static void migrateConfigs(StorageBackend source, StorageBackend target,
                                         String projectPath) throws SQLException {
         List<ConfigEntity> configs = source.loadConfigs(projectPath);
@@ -83,6 +113,9 @@ public class StorageMigrator {
         }
     }
 
+    /**
+     * 迁移扫描元数据
+     */
     private static void migrateScanMeta(StorageBackend source, StorageBackend target,
                                          String projectPath) throws SQLException {
         Long lastScanTime = source.loadLastScanTime(projectPath);
@@ -92,6 +125,11 @@ public class StorageMigrator {
         }
     }
 
+    /**
+     * 迁移完成后清理源后端数据
+     * <p>XML: 删除数据文件和配置文件</p>
+     * <p>SQLite: 删除该项目的扫描结果</p>
+     */
     private static void cleanupSource(StorageType from, String projectPath) {
         if (from == StorageType.XML) {
             File xmlFile = new File(projectPath, ".idea/InterfaceX-data.xml");
@@ -109,7 +147,11 @@ public class StorageMigrator {
                 SqliteStorageBackend sqliteBackend = new SqliteStorageBackend();
                 sqliteBackend.initialize();
                 sqliteBackend.deleteScanResults(projectPath);
-                log.info("Cleaned up SQLite scan results for project: {}", projectPath);
+                for (TagEntity tag : sqliteBackend.loadTags(projectPath)) {
+                    sqliteBackend.deleteTag(tag.getProjectPath(), tag.getModuleName(), tag.getCategory(),
+                            tag.getUrl(), tag.getHttpMethod(), tag.getMethodName(), tag.getTagName());
+                }
+                log.info("Cleaned up SQLite data for project: {}", projectPath);
             } catch (SQLException e) {
                 log.warn("Failed to clean up SQLite data after migration", e);
             }

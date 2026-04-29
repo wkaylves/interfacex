@@ -16,34 +16,62 @@ import org.jetbrains.annotations.Nullable;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * 存储适配器（应用级单例 + 持久化配置）
+ * <p>作为存储子系统的统一入口，封装了以下职责：</p>
+ * <ul>
+ *   <li>存储类型配置的持久化（通过 IntelliJ PersistentStateComponent）</li>
+ *   <li>根据配置动态切换存储后端（SQLite / XML）</li>
+ *   <li>统一异常处理，将 SQLException 转换为日志输出和默认返回值</li>
+ * </ul>
+ * <p>配置文件位置: ~/.config/JetBrains/interfacex-storage.xml</p>
+ */
 @Service(Service.Level.APP)
 @State(name = "InterfaceXStorageConfig", storages = {@Storage("interfacex-storage.xml")})
 @Slf4j
 public class StorageAdapter implements PersistentStateComponent<StorageAdapter.State> {
 
+    /**
+     * 持久化状态 Bean
+     * <p>仅保存 storageType 字段，由 IntelliJ 平台自动序列化/反序列化</p>
+     */
     @Getter
     @Setter
     static class State {
+        /** 当前存储类型名称，默认 SQLITE */
         private String storageType = StorageType.SQLITE.name();
 
         public State() {
         }
     }
 
+    /** 当前存储类型 */
     @Getter
     private StorageType storageType = StorageType.SQLITE;
 
+    /** 当前活跃的存储后端实例，volatile 保证多线程可见性 */
     private volatile StorageBackend currentBackend;
 
+    /**
+     * 获取存储适配器单例
+     */
     public static StorageAdapter getInstance() {
         return ApplicationManager.getApplication().getService(StorageAdapter.class);
     }
 
+    /**
+     * 切换存储类型
+     * <p>切换后需要调用 {@link #resetBackend()} 或下次 {@link #getBackend()} 时自动重建</p>
+     */
     public void setStorageType(StorageType type) {
         this.storageType = type;
         this.currentBackend = null;
     }
 
+    /**
+     * 获取当前存储后端实例
+     * <p>使用双重检查锁定（DCL）保证线程安全的懒初始化</p>
+     */
     public StorageBackend getBackend() {
         if (currentBackend == null) {
             synchronized (this) {
@@ -56,10 +84,16 @@ public class StorageAdapter implements PersistentStateComponent<StorageAdapter.S
         return currentBackend;
     }
 
+    /**
+     * 重置后端实例，下次访问时重新创建
+     */
     public void resetBackend() {
         this.currentBackend = null;
     }
 
+    /**
+     * 根据存储类型创建对应的后端实例
+     */
     private StorageBackend createBackend(StorageType type) {
         switch (type) {
             case XML:

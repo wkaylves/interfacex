@@ -6,6 +6,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 扫描结果数据访问对象
+ * <p>提供 scan_result 表的 CRUD 操作，支持批量插入和按项目路径查询</p>
+ */
 public class ScanResultDao {
 
     private final Connection connection;
@@ -14,6 +18,13 @@ public class ScanResultDao {
         this.connection = connection;
     }
 
+    /**
+     * 批量插入或替换扫描结果
+     * <p>使用 INSERT OR REPLACE 语义，基于联合唯一约束去重</p>
+     *
+     * @param projectPath 项目路径（冗余参数，实际从 entity 获取）
+     * @param entities    待持久化的扫描结果列表
+     */
     public void batchUpsert(String projectPath, List<ScanResultEntity> entities) throws SQLException {
         String sql = "INSERT OR REPLACE INTO scan_result "
                 + "(project_path, module_name, category, url, http_method, class_name, method_name, psi_element_hash, partner, scan_time) "
@@ -36,6 +47,9 @@ public class ScanResultDao {
         }
     }
 
+    /**
+     * 按项目路径删除所有扫描结果
+     */
     public void deleteByProjectPath(String projectPath) throws SQLException {
         String sql = "DELETE FROM scan_result WHERE project_path = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -44,6 +58,9 @@ public class ScanResultDao {
         }
     }
 
+    /**
+     * 按项目路径查询所有扫描结果
+     */
     public List<ScanResultEntity> findByProjectPath(String projectPath) throws SQLException {
         String sql = "SELECT * FROM scan_result WHERE project_path = ?";
         List<ScanResultEntity> results = new ArrayList<>();
@@ -58,6 +75,9 @@ public class ScanResultDao {
         return results;
     }
 
+    /**
+     * 将 ResultSet 行映射为 ScanResultEntity
+     */
     private ScanResultEntity mapRow(ResultSet rs) throws SQLException {
         return ScanResultEntity.builder()
                 .id(rs.getLong("id"))

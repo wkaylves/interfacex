@@ -14,6 +14,11 @@ import org.jetbrains.annotations.Nullable;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * SQLite 存储后端实现
+ * <p>通过 {@link InterfaceXDatabaseService} 获取 DAO 实例，委托给各 DAO 完成数据操作</p>
+ * <p>数据库文件位置: ~/.interfacex/interfacex.db</p>
+ */
 @Slf4j
 public class SqliteStorageBackend implements StorageBackend {
 

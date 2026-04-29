@@ -21,6 +21,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * XML 文件存储后端实现
+ * <p>将数据以 XML 格式存储在项目 .idea/InterfaceX-data.xml 文件中</p>
+ * <p>每个方法通过 projectPath 参数定位对应的 XML 文件，无需在构造时指定</p>
+ */
 @Slf4j
 public class XmlStorageBackend implements StorageBackend {
 
@@ -63,7 +68,9 @@ public class XmlStorageBackend implements StorageBackend {
                 parentDir.mkdirs();
             }
             XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
-            outputter.output(doc, new FileOutputStream(file));
+            try (FileOutputStream fos = new FileOutputStream(file)) {
+                outputter.output(doc, fos);
+            }
         } catch (IOException e) {
             LOG.error("Failed to save XML data file", e);
         }
@@ -360,7 +367,14 @@ public class XmlStorageBackend implements StorageBackend {
         }
 
         String timeStr = metaElement.getAttributeValue("lastScanTime");
-        return parseLongSafe(timeStr);
+        if (timeStr == null || timeStr.isEmpty()) {
+            return null;
+        }
+        try {
+            return Long.parseLong(timeStr);
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 
     private TagEntity mapTagElement(Element tagElement) {
