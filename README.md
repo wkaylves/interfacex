@@ -90,12 +90,139 @@ InterfaceX 是您在大型项目中的得力助手，它能自动扫描并清晰
 *   **扫描规则**: 自动扫描被 `com.xxl.job.core.handler.annotation.JobHandler` 注解标记的类。
 *   **核心优势**: **本地调试** - 在开发环境即可直接运行任务，无需部署到调度中心，极大简化了调试流程。
 
+### **💾 SQLite 持久化存储**
+采用高性能 SQLite 数据库替代传统 XML 配置，实现数据的持久化存储和快速检索。
+
+*   **智能迁移**: 自动将现有 XML 配置迁移到 SQLite 数据库，无缝升级。
+*   **双模支持**: 支持 SQLite 和 XML 两种存储方式动态切换，灵活适配不同场景。
+*   **性能优化**: 大幅提升数据加载速度，特别是在大型项目中表现优异。
+*   **统一管理**: 集中存储扫描结果、标签信息和项目配置，数据结构更清晰。
+
+### **🏷️ 专业标签管理系统**
+参考专业 IDEA 插件交互设计，提供强大的接口分类和管理能力。
+
+*   **快速标签选择器**:
+    - 彩色便签条样式展示，视觉识别度高
+    - 一键移除标签（点击 × 按钮）
+    - 快速添加标签（支持选择已有或新建）
+    - 基于标签名自动生成独特颜色，美观且易于区分
+    
+*   **专业标签管理对话框**:
+    - **搜索过滤**: 顶部搜索框支持实时过滤标签，快速定位
+    - **表格展示**: 清晰展示标签名、使用次数、操作按钮
+    - **一键应用**: 快速将标签应用到当前接口
+    - **查看详情**: 列出所有使用该标签的接口，全局视角掌握使用情况
+    - **删除标签**: 全局删除标签（影响所有接口）
+    - **按标签过滤视图**: 快速筛选特定标签下的所有接口
+    
+*   **丰富的使用场景**:
+    - 📊 **接口分类管理**: 按业务线打标签（如：用户模块、订单模块）
+    - 🔗 **合作渠道标记**: 按渠道打标签（如：支付宝、网商）
+    - 🚦 **状态标记**: 标记接口状态（如：待测试、开发中、已废弃）
+    - ⚙️ **功能特性组织**: 按技术特性打标签（如：需要鉴权、异步接口、高并发）
+    - 📝 **文档整理**: 辅助团队进行接口文档治理和维护
+    - 👤 **负责人标记**: 明确接口归属和职责分工
+    - 🎯 **快速批量操作**: 按标签过滤视图，快速定位相关接口进行批量处理
+
+### **🔗 智能行标记导航（Line Marker）**
+在代码编辑器侧边栏提供智能导航图标，实现组件间的快速跳转。
+
+*   **Controller 行标记**: 从 HTTP Controller 方法跳转到对应的 Feign 客户端或服务实现。
+*   **Feign 行标记**: 从 Feign 接口方法跳转到服务端的具体实现，快速追溯调用链路。
+*   **RocketMQ 消费者行标记**: 从消息生产者（`RocketMQTemplate`）跳转到对应的消费者监听器，完整追踪消息流向。
+*   **RocketMQ 生产者行标记**: 从消费者监听器反向跳转到消息生产者，快速定位消息来源。
+*   **核心价值**: 打破代码孤岛，建立组件间的可视化连接，让微服务架构的调用关系一目了然。
+
 ---
 <div align="center">
     <p>让 InterfaceX 成为您代码世界的指南针，从此告别迷航！</p>
 </div>
 
 # 变更历史
+
+## [1.3.0]
+### 中文
+* **SQLite 持久化存储系统**
+    - 新增 SQLite 数据库支持，用于存储扫描结果、标签和配置
+    - 添加数据库迁移工具，将现有 XML 配置迁移到 SQLite
+    - 实现存储适配器模式，支持 SQLite 和 XML 两种存储方式动态切换
+    - 新增 StorageMigrator 用于不同存储类型间的数据迁移
+    - 重构项目初始化服务，支持从数据库加载扫描结果
+
+* **标签管理系统重新设计（参考专业 IDEA 插件交互）**
+    - 数据结构保持不变，只优化 UI 交互
+    - 新增快速标签选择器组件（TagQuickSelectorPanel）
+        - 采用彩色便签条样式展示标签
+        - 支持一键移除标签（点击 × 按钮）
+        - 快速添加标签（支持选择已有标签或新建）
+        - 标签颜色基于标签名自动生成独特颜色
+    - 新增专业标签管理对话框（TagManagerDialog）
+        - 搜索过滤：顶部搜索框支持实时过滤标签
+        - 表格展示：清晰展示标签名、使用次数、操作按钮
+        - 一键应用：快速将标签应用到当前接口
+        - 查看详情：列出所有使用该标签的接口
+        - 删除标签：全局删除标签（所有接口）
+        - 按标签过滤视图
+    - 优化右键菜单交互
+        - 改进标签添加对话框，显示更友好
+        - 集成新的专业标签管理对话框
+
+* **标签使用场景**
+
+- 接口分类管理：将不同业务线接口打上不同标签（如：用户模块、订单模块）
+    - 按接口合作渠道标记 ：按渠道打标签（如：支付宝、网商）
+    - 接口状态标记：标记接口状态（如：待测试、开发中、已废弃）
+    - 按功能特性组织：按技术特性打标签（如：需要鉴权、异步接口、高并发）
+    - 接口文档整理：辅助团队进行接口文档治理
+    - 按负责人标记：明确接口归属和职责
+    - 快速批量操作：按标签过滤视图，快速定位相关接口
+
+* **行标记功能（Line Marker）**
+    - 新增 Controller 行标记，支持从 HTTP Controller 跳转到对应实现
+    - 新增 Feign 行标记，支持从 Feign 接口跳转到服务端实现
+    - 新增 RocketMQ 消费者行标记，支持从消息生产者跳转到消费者
+    - 新增 RocketMQ 生产者行标记，支持从消费者跳转到生产者
+
+### English
+* **SQLite Persistent Storage System**
+    * New SQLite database support for storing scan results, tags and configurations
+    * Added database migration tool to migrate existing XML configuration to SQLite
+    * Implemented storage adapter pattern supporting dynamic switching between SQLite and XML
+    * New StorageMigrator for data migration between different storage types
+    * Refactored project initialization service to support loading scan results from database
+
+* **Redesign tag management system (referencing professional IDEA plugin interaction)**
+    * Data structure unchanged, only UI interaction optimized
+    * New quick tag selector component (TagQuickSelectorPanel)
+        - Display tags with colorful label style
+        - One-click remove tag (click × button)
+        - Quick add tags (support select existing or create new)
+        - Tag colors auto-generated based on tag name
+    * New professional tag manager dialog (TagManagerDialog)
+        - Search filter: real-time tag filtering via top search box
+        - Table display: clearly show tag name, usage count, action buttons
+        - One-click apply: quickly apply tag to current interface
+        - View details: list all interfaces using the tag
+        - Delete tag: global delete (all interfaces)
+        - Filter view by tag
+    * Optimized right-click menu interaction
+        - Improved tag add dialog, more user-friendly
+        - Integrated new professional tag manager dialog
+
+* **Tag Use Cases**
+    * Interface classification: tag interfaces by business lines (e.g., user module, order module)
+    * Status marking: tag interface status (e.g., testing, developing, deprecated)
+    * Feature organization: tag by technical features (e.g., need auth, async, high concurrency)
+    * Documentation management: assist team in interface documentation governance
+    * Owner tagging: clarify interface ownership and responsibilities
+    * Quick batch operations: filter view by tag, quickly locate related interfaces
+
+* **Line Marker**
+    * New Controller line marker, support navigation from HTTP Controller to implementation
+    * New Feign line marker, support navigation from Feign interface to server implementation
+    * New RocketMQ consumer line marker, support navigation from message producer to consumer
+    * New RocketMQ producer line marker, support navigation from consumer to producer
+
 ## [1.2.0]
 ### Added
 * add rocketmq send message support
