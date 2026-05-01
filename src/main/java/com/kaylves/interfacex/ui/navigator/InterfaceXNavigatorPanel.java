@@ -9,6 +9,7 @@ import com.intellij.openapi.ui.Splitter;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.treeStructure.SimpleTree;
+import com.kaylves.interfacex.ui.components.InterfaceDetailPanel;
 import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,8 +27,12 @@ public class InterfaceXNavigatorPanel extends SimpleToolWindowPanel {
     SimpleTree simpleTree;
 
     Splitter rootSplitter;
+    
+    Splitter detailSplitter;
 
     private InterfaceXForm interfaceXForm;
+    
+    private InterfaceDetailPanel interfaceDetailPanel;
 
     public InterfaceXNavigatorPanel(Project project,SimpleTree simpleTree) {
         super(true, true);
@@ -42,7 +47,7 @@ public class InterfaceXNavigatorPanel extends SimpleToolWindowPanel {
         assert interfaceXForm != null;
         this.interfaceXForm = interfaceXForm;
         JScrollPane scrollPane = ScrollPaneFactory.createScrollPane(interfaceXForm.getPanel());
-        rootSplitter.setSecondComponent(scrollPane);
+        detailSplitter.setSecondComponent(scrollPane);
     }
 
     private void initSimpleTree(SimpleTree simpleTree) {

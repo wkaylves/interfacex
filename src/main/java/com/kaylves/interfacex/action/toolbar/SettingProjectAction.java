@@ -13,9 +13,13 @@ import com.kaylves.interfacex.db.storage.StorageType;
 import com.kaylves.interfacex.entity.InterfaceItemConfigEntity;
 import com.kaylves.interfacex.service.InterfaceXNavigator;
 import com.kaylves.interfacex.ui.form.InterfaceXSettingForm;
-import com.kaylves.interfacex.ui.navigator.InterfaceXNavigatorState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class SettingProjectAction extends AnAction {
 
@@ -35,13 +39,41 @@ public class SettingProjectAction extends AnAction {
         InterfaceXSettingForm settingForm = new InterfaceXSettingForm();
         assert project != null;
         InterfaceXNavigator xNavigator = InterfaceXNavigator.getInstance(project);
-        settingForm.setUI(xNavigator.getXNavigatorState().getInterfaceItemConfigEntities());
 
         StorageAdapter adapter = StorageAdapter.getInstance();
+
         settingForm.setStorageType(adapter.getStorageType());
+        settingForm.setUI(loadEnabledCategories(adapter));
 
         DialogBuilder dialogBuilder = getDialogBuilder(project, settingForm, xNavigator);
         dialogBuilder.show();
+    }
+
+    /**
+     * 从 StorageAdapter 的 XML 持久化中加载已启用的接口类型
+     */
+    private static List<InterfaceItemConfigEntity> loadEnabledCategories(StorageAdapter adapter) {
+        String enabledCategories = adapter.getEnabledCategories();
+        if (enabledCategories == null || enabledCategories.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return Arrays.stream(enabledCategories.split(","))
+                .filter(s -> !s.isEmpty())
+                .map(category -> new InterfaceItemConfigEntity(category, true))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 将已启用的接口类型列表转换为逗号分隔字符串
+     */
+    private static String toEnabledCategoriesString(List<InterfaceItemConfigEntity> entities) {
+        if (entities == null || entities.isEmpty()) {
+            return "";
+        }
+        return entities.stream()
+                .filter(InterfaceItemConfigEntity::getEnabled)
+                .map(InterfaceItemConfigEntity::getItemCategory)
+                .collect(Collectors.joining(","));
     }
 
     private static @NotNull DialogBuilder getDialogBuilder(Project project, InterfaceXSettingForm settingForm, InterfaceXNavigator xNavigator) {
@@ -50,9 +82,6 @@ public class SettingProjectAction extends AnAction {
         dialogBuilder.setTitle("设置");
 
         dialogBuilder.setOkOperation(() -> {
-            InterfaceXNavigatorState xNavigatorState = xNavigator.getXNavigatorState();
-            xNavigatorState.setInterfaceItemConfigEntities(settingForm.getInterfaceItemConfigEntities());
-
             StorageAdapter adapter = StorageAdapter.getInstance();
             String projectPath = project.getBasePath();
 
@@ -63,21 +92,17 @@ public class SettingProjectAction extends AnAction {
                 xNavigator.switchStorageType(newStorageType);
             }
 
+            List<InterfaceItemConfigEntity> selectedEntities = settingForm.getInterfaceItemConfigEntities();
+            adapter.setEnabledCategories(toEnabledCategoriesString(selectedEntities));
+
+            xNavigator.getXNavigatorState().setInterfaceItemConfigEntities(selectedEntities);
+
             adapter.saveConfig(ConfigEntity.builder()
                     .projectPath(projectPath)
                     .configKey("showPort")
-                    .configValue(String.valueOf(xNavigatorState.isShowPort()))
+                    .configValue(String.valueOf(xNavigator.getXNavigatorState().isShowPort()))
                     .updatedTime(System.currentTimeMillis())
                     .build());
-
-            for (InterfaceItemConfigEntity entity : xNavigatorState.getInterfaceItemConfigEntities()) {
-                adapter.saveConfig(ConfigEntity.builder()
-                        .projectPath(projectPath)
-                        .configKey("itemCategory." + entity.getItemCategory())
-                        .configValue(String.valueOf(entity.getEnabled()))
-                        .updatedTime(System.currentTimeMillis())
-                        .build());
-            }
 
             dialogBuilder.getDialogWrapper().doCancelAction();
         });

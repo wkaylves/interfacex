@@ -33,13 +33,20 @@ public class StorageAdapter implements PersistentStateComponent<StorageAdapter.S
 
     /**
      * 持久化状态 Bean
-     * <p>仅保存 storageType 字段，由 IntelliJ 平台自动序列化/反序列化</p>
+     * <p>由 IntelliJ 平台自动序列化/反序列化到 interfacex-storage.xml</p>
+     * <p>包含：</p>
+     * <ul>
+     *   <li>storageType - 存储方式（SQLITE/XML）</li>
+     *   <li>enabledCategories - 已启用的接口类型，逗号分隔（如 "HTTP,OpenFeign,RocketMQListener"）</li>
+     * </ul>
      */
     @Getter
     @Setter
     static class State {
         /** 当前存储类型名称，默认 SQLITE */
         private String storageType = StorageType.SQLITE.name();
+        /** 已启用的接口类型，逗号分隔；空字符串表示全部未启用 */
+        private String enabledCategories = "";
 
         public State() {
         }
@@ -48,6 +55,10 @@ public class StorageAdapter implements PersistentStateComponent<StorageAdapter.S
     /** 当前存储类型 */
     @Getter
     private StorageType storageType = StorageType.SQLITE;
+
+    /** 已启用的接口类型，逗号分隔 */
+    @Getter
+    private String enabledCategories = "";
 
     /** 当前活跃的存储后端实例，volatile 保证多线程可见性 */
     private volatile StorageBackend currentBackend;
@@ -66,6 +77,15 @@ public class StorageAdapter implements PersistentStateComponent<StorageAdapter.S
     public void setStorageType(StorageType type) {
         this.storageType = type;
         this.currentBackend = null;
+    }
+
+    /**
+     * 设置已启用的接口类型
+     *
+     * @param categories 逗号分隔的接口类型名称
+     */
+    public void setEnabledCategories(String categories) {
+        this.enabledCategories = categories != null ? categories : "";
     }
 
     /**
@@ -224,11 +244,13 @@ public class StorageAdapter implements PersistentStateComponent<StorageAdapter.S
     public State getState() {
         State state = new State();
         state.setStorageType(storageType.name());
+        state.setEnabledCategories(enabledCategories);
         return state;
     }
 
     @Override
     public void loadState(State state) {
         this.storageType = StorageType.fromString(state.getStorageType());
+        this.enabledCategories = state.getEnabledCategories() != null ? state.getEnabledCategories() : "";
     }
 }

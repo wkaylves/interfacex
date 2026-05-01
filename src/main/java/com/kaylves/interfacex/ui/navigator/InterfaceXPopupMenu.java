@@ -71,34 +71,13 @@ public class InterfaceXPopupMenu {
 
         popupGroup.addSeparator();
 
-        // 标签操作子菜单
-        DefaultActionGroup tagGroup = new DefaultActionGroup("标签", true);
-        tagGroup.getTemplatePresentation().setIcon(ToolkitIcons.TAG);
-        
-        tagGroup.addAction(new AnAction("添加标签...") {
+        // 标签操作 - 统一入口
+        popupGroup.addAction(new AnAction("标签...") {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
-                quickAddTag();
+                openTagDialog();
             }
         });
-        
-        tagGroup.addAction(new AnAction("移除标签...") {
-            @Override
-            public void actionPerformed(@NotNull AnActionEvent e) {
-                quickRemoveTag();
-            }
-        });
-        
-        tagGroup.addSeparator();
-        
-        tagGroup.addAction(new AnAction("标签管理...") {
-            @Override
-            public void actionPerformed(@NotNull AnActionEvent e) {
-                manageTagAction();
-            }
-        });
-        
-        popupGroup.add(tagGroup);
         
         popupGroup.addSeparator();
         
@@ -112,75 +91,7 @@ public class InterfaceXPopupMenu {
         PopupHandler.installPopupMenu(simpleTree, popupGroup, "MyTreePopup");
     }
 
-    private void quickAddTag() {
-        SimpleNode simpleNode = simpleTree.getSelectedNode();
-        if (!(simpleNode instanceof InterfaceXSimpleTreeStructure.ServiceNode serviceNode)) {
-            return;
-        }
-        
-        InterfaceItem item = serviceNode.interfaceItem;
-        StorageAdapter adapter = StorageAdapter.getInstance();
-        String projectPath = project.getBasePath();
-        
-        List<TagEntity> allTags = adapter.loadTags(projectPath);
-        List<String> existingTags = allTags.stream()
-                .map(TagEntity::getTagName)
-                .distinct()
-                .toList();
-        
-        if (existingTags.isEmpty()) {
-            String tagName = JOptionPane.showInputDialog(null, "请输入新标签名称:", "添加标签", JOptionPane.PLAIN_MESSAGE);
-            if (tagName == null || tagName.trim().isEmpty()) {
-                return;
-            }
-            saveTag(item, projectPath, tagName.trim());
-        } else {
-            JPanel panel = new JPanel(new BorderLayout(10, 10));
-            JComboBox<String> tagComboBox = new JComboBox<>(existingTags.toArray(new String[0]));
-            tagComboBox.setEditable(true);
-            tagComboBox.setSelectedIndex(-1);
-            
-            panel.add(new JLabel("选择或输入标签:"), BorderLayout.NORTH);
-            panel.add(tagComboBox, BorderLayout.CENTER);
-            
-            int result = JOptionPane.showConfirmDialog(null, panel, "添加标签", 
-                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-            
-            if (result != JOptionPane.OK_OPTION) {
-                return;
-            }
-            
-            String tagName = (String) tagComboBox.getSelectedItem();
-            if (tagName == null || tagName.trim().isEmpty()) {
-                return;
-            }
-            
-            saveTag(item, projectPath, tagName.trim());
-        }
-    }
-    
-    private void saveTag(InterfaceItem item, String projectPath, String tagName) {
-        StorageAdapter adapter = StorageAdapter.getInstance();
-        
-        TagEntity tagEntity = TagEntity.builder()
-            .projectPath(projectPath)
-            .moduleName(item.getModule() != null ? item.getModule().getName() : "")
-            .category(item.getInterfaceItemCategoryEnum().name())
-            .url(item.getUrl())
-            .httpMethod(item.getMethod() != null ? item.getMethod().name() : null)
-            .methodName(item.getPsiMethod() != null ? item.getPsiMethod().getName() : "")
-            .tagName(tagName)
-            .createdTime(System.currentTimeMillis())
-            .updatedTime(System.currentTimeMillis())
-            .build();
-        
-        adapter.saveTag(tagEntity);
-        JOptionPane.showMessageDialog(null, "标签添加成功!", "成功", JOptionPane.INFORMATION_MESSAGE);
-        
-        InterfaceXNavigator.getInstance(project).scheduleStructureUpdate();
-    }
-
-    private void manageTagAction() {
+    private void openTagDialog() {
         SimpleNode simpleNode = simpleTree.getSelectedNode();
         InterfaceItem currentItem = null;
         
@@ -188,58 +99,8 @@ public class InterfaceXPopupMenu {
             currentItem = serviceNode.interfaceItem;
         }
         
-        // 打开统一标签管理器
-        UnifiedTagManagerDialog dialog = new UnifiedTagManagerDialog(project, simpleTree, currentItem);
-        dialog.setVisible(true);
-    }
-
-    private void quickRemoveTag() {
-        SimpleNode simpleNode = simpleTree.getSelectedNode();
-        if (!(simpleNode instanceof InterfaceXSimpleTreeStructure.ServiceNode serviceNode)) {
-            return;
-        }
-        
-        InterfaceItem item = serviceNode.interfaceItem;
-        StorageAdapter adapter = StorageAdapter.getInstance();
-        String projectPath = project.getBasePath();
-        
-        List<TagEntity> tags = adapter.loadTagsByInterface(
-            projectPath,
-            item.getModule() != null ? item.getModule().getName() : "",
-            item.getInterfaceItemCategoryEnum().name(),
-            item.getUrl(),
-            item.getMethod() != null ? item.getMethod().name() : null,
-            item.getPsiMethod() != null ? item.getPsiMethod().getName() : ""
-        );
-        
-        if (tags.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "当前接口没有标签", "提示", JOptionPane.INFORMATION_MESSAGE);
-            return;
-        }
-        
-        String[] tagNames = tags.stream().map(TagEntity::getTagName).toArray(String[]::new);
-        String selected = (String) JOptionPane.showInputDialog(
-            null, "选择要移除的标签:", "移除标签",
-            JOptionPane.PLAIN_MESSAGE, null, tagNames, tagNames[0]
-        );
-        
-        if (selected == null) {
-            return;
-        }
-        
-        adapter.deleteTag(
-            projectPath,
-            item.getModule() != null ? item.getModule().getName() : "",
-            item.getInterfaceItemCategoryEnum().name(),
-            item.getUrl(),
-            item.getMethod() != null ? item.getMethod().name() : null,
-            item.getPsiMethod() != null ? item.getPsiMethod().getName() : "",
-            selected
-        );
-        
-        JOptionPane.showMessageDialog(null, "标签移除成功!", "成功", JOptionPane.INFORMATION_MESSAGE);
-        
-        InterfaceXNavigator.getInstance(project).scheduleStructureUpdate();
+        TagOperationDialog dialog = new TagOperationDialog(project, simpleTree, currentItem);
+        dialog.showDialog();
     }
 
 
