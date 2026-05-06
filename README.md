@@ -140,6 +140,17 @@ InterfaceX 是您在大型项目中的得力助手，它能自动扫描并清晰
 
 # 变更历史
 
+## [1.3.1]
+### 中文
+* **SQLite 持久化存储**：新增 SQLite 数据库支持，替代 XML 配置存储，支持动态切换和自动迁移
+* **标签管理系统重构**：优化 UI 交互体验，新增快速标签选择器和专业标签管理对话框，支持搜索、过滤、批量操作
+* **代码导航增强**：新增 Controller、Feign、RocketMQ 行标记功能，支持双向跳转导航
+
+### English
+* **SQLite Persistent Storage**: New SQLite database support replacing XML configuration, with dynamic switching and auto-migration
+* **Tag Management System Refactor**: Optimized UI interaction with quick tag selector and professional tag manager dialog, supporting search, filter, and batch operations
+* **Enhanced Code Navigation**: New line markers for Controller, Feign, and RocketMQ with bidirectional navigation support
+
 ## [1.3.0]
 ### 中文
 * **SQLite 持久化存储系统**
