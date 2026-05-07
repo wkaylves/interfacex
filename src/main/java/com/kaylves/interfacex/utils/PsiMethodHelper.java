@@ -1,8 +1,8 @@
 package com.kaylves.interfacex.utils;
 
-import com.kaylves.interfacex.module.http.JaxrsRequestAnnotation;
-import com.kaylves.interfacex.module.http.SpringControllerAnnotation;
-import com.kaylves.interfacex.module.http.SpringRequestParamAnnotations;
+import com.kaylves.interfacex.module.http.jakarta.annotation.JaxrsRequestAnnotation;
+import com.kaylves.interfacex.module.http.springmvc.SpringControllerAnnotation;
+import com.kaylves.interfacex.module.http.springmvc.SpringRequestParamAnnotations;
 import com.kaylves.interfacex.module.http.jaxrs.JaxrsAnnotationHelper;
 import com.kaylves.interfacex.module.spring.RequestMappingAnnotationHelper;
 import com.kaylves.interfacex.module.http.method.Parameter;

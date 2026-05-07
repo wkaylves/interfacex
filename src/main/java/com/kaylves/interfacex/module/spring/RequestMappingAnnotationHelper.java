@@ -1,7 +1,7 @@
 package com.kaylves.interfacex.module.spring;
 
 import com.intellij.psi.*;
-import com.kaylves.interfacex.module.http.SpringRequestMethodAnnotation;
+import com.kaylves.interfacex.module.http.springmvc.SpringRequestMethodAnnotation;
 import com.kaylves.interfacex.module.http.method.RequestPath;
 import com.kaylves.interfacex.module.mission.MissionClientMethodAnnotation;
 import com.kaylves.interfacex.utils.PsiAnnotationHelper;

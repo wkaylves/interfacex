@@ -1,6 +1,7 @@
 package com.kaylves.interfacex.module.http;
 
 import com.kaylves.interfacex.common.constants.InterfaceItemCategoryEnum;
+import com.kaylves.interfacex.module.http.springmvc.SpringControllerAnnotation;
 import com.kaylves.interfacex.module.resolver.BaseServiceResolver;
 import com.kaylves.interfacex.module.spring.RequestMappingAnnotationHelper;
 import com.kaylves.interfacex.module.http.method.RequestPath;
@@ -18,6 +19,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * @author kaylves
+ */
 @Slf4j
 public class SpringMVCResolverServiceResolver extends BaseServiceResolver {
 

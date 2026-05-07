@@ -465,7 +465,6 @@ public class PsiClassHelper {
                         continue;
                     }
 
-                    // TODO TODO TODO .................
                     if (parameter instanceof PsiClassReferenceType) {
                         if (parameter.getPresentableText().contains("<")) {
                             continue;

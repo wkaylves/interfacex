@@ -66,7 +66,7 @@ public class XXLJobResolverServiceResolver extends BaseServiceResolver {
 
         XXLJobItem xxlJobItem = XXLJobItem.builder().jobName(methodUriPath.getPath()).build();
         InterfaceItem item = new InterfaceItem(psiMethod, InterfaceItemCategoryEnum.XXLJob, requestMethod, xxlJobItem, false);
-        item.setUseAble(IdeaPluginUtils.getUseAbleOnClassOrMethod(psiClass, psiMethod));
+        item.setUsable(IdeaPluginUtils.getUseAbleOnClassOrMethod(psiClass, psiMethod));
         return item;
     }
 

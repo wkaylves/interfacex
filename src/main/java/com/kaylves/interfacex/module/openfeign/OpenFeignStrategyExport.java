@@ -1,7 +1,7 @@
 package com.kaylves.interfacex.module.openfeign;
 
 import com.kaylves.interfacex.common.ExportServiceStrategy;
-import com.kaylves.interfacex.module.http.SpringHttpRequestAnnotation;
+import com.kaylves.interfacex.module.http.springmvc.SpringHttpRequestAnnotation;
 import com.kaylves.interfacex.bean.ServiceExportBean;
 import com.kaylves.interfacex.utils.PsiAnnotationHelper;
 import com.kaylves.interfacex.module.spring.RequestMappingAnnotationHelper;

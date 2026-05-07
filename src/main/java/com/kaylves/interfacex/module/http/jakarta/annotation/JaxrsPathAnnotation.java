@@ -1,4 +1,6 @@
-package com.kaylves.interfacex.module.http;
+package com.kaylves.interfacex.module.http.jakarta.annotation;
+
+import com.kaylves.interfacex.module.http.PathMappingAnnotation;
 
 public enum JaxrsPathAnnotation implements PathMappingAnnotation {
     /**

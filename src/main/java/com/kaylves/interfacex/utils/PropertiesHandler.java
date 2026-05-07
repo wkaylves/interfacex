@@ -4,6 +4,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.yaml.snakeyaml.Yaml;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.*;
 
+@Slf4j
 public class PropertiesHandler {
 
     public List<String> CONFIG_FILES = Arrays.asList("application", "bootstrap");
@@ -128,7 +130,7 @@ public class PropertiesHandler {
         try {
             prop.load(new StringReader(text));
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Failed to load properties from text", e);
         }
         return prop;
     }
@@ -183,9 +185,7 @@ public class PropertiesHandler {
                 Map<String, Object> ymlPropertiesMap = (Map<String, Object>) yaml.load(yamlText);
                 return getFlattenedMap(ymlPropertiesMap);
             } catch (Exception e) {
-                // FIXME: spring When configuring multiple environments in the same file;
-                //  yaml formatting is not standardized, e.g., contains "--"
-                e.printStackTrace();
+                log.warn("Failed to parse YAML file: {}, formatting may not be standardized", configFile, e);
                 return null;
             }
         }

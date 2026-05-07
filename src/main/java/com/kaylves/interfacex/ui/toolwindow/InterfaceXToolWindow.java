@@ -1,8 +1,6 @@
 package com.kaylves.interfacex.ui.toolwindow;
 
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
@@ -10,6 +8,9 @@ import com.kaylves.interfacex.service.InterfaceXNavigator;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * @author kaylves
+ */
 @Slf4j
 public class InterfaceXToolWindow implements ToolWindowFactory {
 
@@ -21,25 +22,14 @@ public class InterfaceXToolWindow implements ToolWindowFactory {
             return;
         }
 
-        // 监听索引完成
-        DumbService.getInstance(project).runWhenSmart(() -> {
+        ApplicationManager.getApplication().invokeLater(() -> {
+            InterfaceXNavigator navigator = InterfaceXNavigator.getInstance(project);
 
-            ApplicationManager.getApplication().executeOnPooledThread(() -> {
-                ReadAction.run(() -> {
+            if (project.isDisposed()) {
+                return;
+            }
 
-                    ApplicationManager.getApplication().invokeLater(() -> {
-                        InterfaceXNavigator interfaceXNavigator = InterfaceXNavigator.getInstance(project);
-
-                        if (project.isDisposed()) {
-                            return;
-                        }
-
-                        interfaceXNavigator.initToolWindow(toolWindow);
-                    });
-                });
-            });
-
+            navigator.initToolWindow(toolWindow);
         });
-
     }
 }

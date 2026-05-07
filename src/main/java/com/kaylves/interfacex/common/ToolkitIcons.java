@@ -13,6 +13,10 @@ public class ToolkitIcons {
     public static final Icon Refresh = AllIcons.Actions.Refresh; // 16x16
 
     public static final Icon SERVICE = IconLoader.getIcon("/icons/service.png",ToolkitIcons.class.getClassLoader()); // 16x16
+    
+    public static final Icon INTERFACE_X = IconLoader.getIcon("/icons/interfacex_icon_16.png",ToolkitIcons.class.getClassLoader()); // 16x16
+
+    public static final Icon TAG = IconLoader.getIcon("/icons/tag.svg", ToolkitIcons.class.getClassLoader()); // 16x16
 
     public static class METHOD {
 
@@ -95,7 +99,7 @@ public class ToolkitIcons {
         }
         // OPTIONS HEAD
 
-        public static Icon get(HttpMethod method,Boolean useAble) {
+        public static Icon get(HttpMethod method,Boolean usable) {
             if (method == null) {
                 return UNDEFINED;
             }
@@ -108,17 +112,17 @@ public class ToolkitIcons {
             } else if (method.equals(HttpMethod.DELETE)) {
                 return METHOD.DELETE;
             }else if (method.equals(HttpMethod.PRODUCE)) {
-                if(!useAble){
+                if(!usable){
                     return METHOD.PRODUCE_GRAY;
                 }
                 return METHOD.PRODUCE;
             }else if (method.equals(HttpMethod.CONSUME)) {
-                if(!useAble){
+                if(!usable){
                     return METHOD.CONSUME_GRAY;
                 }
                 return METHOD.CONSUME;
             }else if (method.equals(HttpMethod.EXECUTE)) {
-                if(!useAble){
+                if(!usable){
                     return METHOD.EXECUTE_GRAY;
                 }
                 return METHOD.EXECUTE;

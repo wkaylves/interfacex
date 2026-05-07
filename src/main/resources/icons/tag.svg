@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+  <!-- 背景圆角矩形 -->
+  <rect x="1" y="1" width="14" height="14" rx="2" ry="2" 
+        fill="#4A90E2" stroke="#2E5C8A" stroke-width="0.5"/>
+  
+  <!-- 字母 T -->
+  <text x="8" y="12" 
+        font-family="Arial, sans-serif" 
+        font-size="10" 
+        font-weight="bold"
+        fill="#FFFFFF"
+        text-anchor="middle"
+        dominant-baseline="middle">T</text>
+</svg>
