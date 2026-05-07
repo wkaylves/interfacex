@@ -163,7 +163,7 @@ public class InterfaceDetailPanel extends JPanel implements TreeSelectionListene
         classNameLabel.setText(item.getCachedClassName() != null ? item.getCachedClassName() : "-");
         methodNameLabel.setText(item.getCachedMethodName() != null ? item.getCachedMethodName() : "-");
         
-        tagSelectorPanel.loadTags();
+        tagSelectorPanel.setCurrentItem(item);
         
         revalidate();
         repaint();
@@ -175,7 +175,7 @@ public class InterfaceDetailPanel extends JPanel implements TreeSelectionListene
         methodLabel.setForeground(UIManager.getColor("Label.foreground"));
         classNameLabel.setText("-");
         methodNameLabel.setText("-");
-        tagSelectorPanel.loadTags();
+        tagSelectorPanel.setCurrentItem(null);
     }
 
     private Color getMethodColor(String method) {
