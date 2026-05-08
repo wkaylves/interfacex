@@ -7,7 +7,9 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiModifierList;
 import com.kaylves.interfacex.finder.ControllerTargetFinder;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -50,11 +52,15 @@ public class ControllerLineMarkerProvider implements LineMarkerProvider {
     }
 
     private boolean hasControllerAnnotation(PsiClass psiClass) {
-        com.intellij.psi.PsiAnnotation[] annotations = psiClass.getModifierList().getAnnotations();
+        PsiModifierList modifierList = psiClass.getModifierList();
+        if (modifierList == null) {
+            return false;
+        }
+        PsiAnnotation[] annotations = modifierList.getAnnotations();
         if (annotations == null) {
             return false;
         }
-        for (com.intellij.psi.PsiAnnotation annotation : annotations) {
+        for (PsiAnnotation annotation : annotations) {
             String name = annotation.getQualifiedName();
             if (name != null) {
                 if (name.endsWith("RestController") ||
