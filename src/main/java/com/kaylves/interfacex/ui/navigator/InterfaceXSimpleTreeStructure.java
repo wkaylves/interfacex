@@ -32,9 +32,12 @@ import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -53,8 +56,8 @@ public class InterfaceXSimpleTreeStructure extends SimpleTreeStructure {
 
     StructureTreeModel<?> structureTreeModel;
     
-    // 标签过滤状态
-    private String activeTagFilter = null;
+    // 标签过滤状态（多标签组合过滤，AND 语义）
+    private final LinkedHashSet<String> activeTagFilters = new LinkedHashSet<>();
 
     public InterfaceXSimpleTreeStructure(Project project, SimpleTree simpleTree) {
         this.project = project;
@@ -352,40 +355,77 @@ public class InterfaceXSimpleTreeStructure extends SimpleTreeStructure {
                     );
                     
                     if (!tags.isEmpty()) {
-                        // 取第一个标签作为分组依据
-                        String firstTag = tags.get(0).getTagName();
-                        tagToServicesMap.computeIfAbsent(firstTag, k -> new ArrayList<>()).add(serviceNode);
+                        // 将接口添加到每个标签节点下（多标签交叉显示）
+                        for (TagEntity tag : tags) {
+                            tagToServicesMap.computeIfAbsent(tag.getTagName(), k -> new ArrayList<>()).add(serviceNode);
+                        }
                     } else {
                         untaggedServices.add(serviceNode);
                     }
                 }
                 
+                // 收集每个标签的 sortOrder（取最小值）
+                Map<String, Integer> tagSortOrder = new LinkedHashMap<>();
+                for (String tagName : tagToServicesMap.keySet()) {
+                    List<TagEntity> tagEntities = adapter.loadTagsByTagName(projectPath, tagName);
+                    int minOrder = tagEntities.stream()
+                            .map(t -> t.getSortOrder() != null ? t.getSortOrder() : 0)
+                            .min(Integer::compareTo)
+                            .orElse(0);
+                    tagSortOrder.put(tagName, minOrder);
+                }
+
+                // 按 sortOrder 排序标签名
+                List<String> sortedTagNames = new ArrayList<>(tagToServicesMap.keySet());
+                sortedTagNames.sort((a, b) -> {
+                    int orderA = tagSortOrder.getOrDefault(a, 0);
+                    int orderB = tagSortOrder.getOrDefault(b, 0);
+                    return Integer.compare(orderA, orderB);
+                });
+
                 // 构建 TagNode 列表
                 List<TagNode> tagNodes = new ArrayList<>();
-                
-                // 如果有活跃的标签过滤，只显示匹配的标签
-                String activeFilter = InterfaceXSimpleTreeStructure.this.getActiveTagFilter();
-                if (activeFilter != null && !activeFilter.isEmpty()) {
-                    // 只显示匹配的标签节点
-                    if (tagToServicesMap.containsKey(activeFilter)) {
-                        TagNode tagNode = new TagNode(activeFilter, this, myProject);
-                        for (ServiceNode serviceNode : tagToServicesMap.get(activeFilter)) {
-                            tagNode.addServiceNode(serviceNode);
-                        }
-                        tagNodes.add(tagNode);
+                Set<String> activeFilters = InterfaceXSimpleTreeStructure.this.getActiveTagFilters();
+
+                if (!activeFilters.isEmpty()) {
+                    // 多标签组合过滤（AND 语义）：只显示同时拥有所有选中标签的接口
+                    // 1. 收集满足每个过滤标签的服务列表
+                    List<Set<ServiceNode>> filterSets = new ArrayList<>();
+                    for (String filter : activeFilters) {
+                        List<ServiceNode> nodes = tagToServicesMap.getOrDefault(filter, Collections.emptyList());
+                        filterSets.add(new LinkedHashSet<>(nodes));
                     }
-                    // 如果过滤标签不存在于当前 Category，返回空数组
+
+                    // 2. 取交集（AND 语义）
+                    Set<ServiceNode> intersection = new LinkedHashSet<>(filterSets.get(0));
+                    for (int i = 1; i < filterSets.size(); i++) {
+                        intersection.retainAll(filterSets.get(i));
+                    }
+
+                    // 3. 按标签节点展示交集结果
+                    for (String filterTag : activeFilters) {
+                        if (tagToServicesMap.containsKey(filterTag)) {
+                            TagNode tagNode = new TagNode(filterTag, this, myProject);
+                            for (ServiceNode serviceNode : tagToServicesMap.get(filterTag)) {
+                                if (intersection.contains(serviceNode)) {
+                                    tagNode.addServiceNode(serviceNode);
+                                }
+                            }
+                            if (!tagNode.serviceNodes.isEmpty()) {
+                                tagNodes.add(tagNode);
+                            }
+                        }
+                    }
                 } else {
-                    // 没有过滤，显示所有标签
-                    // 有标签的节点
-                    for (Map.Entry<String, List<ServiceNode>> entry : tagToServicesMap.entrySet()) {
-                        TagNode tagNode = new TagNode(entry.getKey(), this, myProject);
-                        for (ServiceNode serviceNode : entry.getValue()) {
+                    // 没有过滤，按 sortOrder 排序显示所有标签
+                    for (String tagName : sortedTagNames) {
+                        TagNode tagNode = new TagNode(tagName, this, myProject);
+                        for (ServiceNode serviceNode : tagToServicesMap.get(tagName)) {
                             tagNode.addServiceNode(serviceNode);
                         }
                         tagNodes.add(tagNode);
                     }
-                    
+
                     // 未分类节点
                     if (!untaggedServices.isEmpty()) {
                         TagNode untaggedNode = new TagNode("默认", this, myProject);
@@ -638,36 +678,53 @@ public class InterfaceXSimpleTreeStructure extends SimpleTreeStructure {
     }
     
     /**
-     * 应用标签过滤
+     * 切换标签过滤（多标签组合，AND 语义）
+     * <p>标签存在则移除，不存在则添加；空集合时等同清除过滤</p>
+     */
+    public void toggleTagFilter(String tagName) {
+        if (activeTagFilters.contains(tagName)) {
+            activeTagFilters.remove(tagName);
+        } else {
+            activeTagFilters.add(tagName);
+        }
+        log.info("Toggle tag filter: {}, active filters: {}", tagName, activeTagFilters);
+
+        if (structureTreeModel != null) {
+            structureTreeModel.invalidate();
+        }
+    }
+
+    /**
+     * 应用标签过滤（兼容旧接口，内部调用 toggleTagFilter）
      */
     public void applyTagFilter(String tagName) {
-        this.activeTagFilter = tagName;
-        log.info("Applying tag filter: {}", tagName);
-        
-        // 刷新树结构
-        if (structureTreeModel != null) {
-            structureTreeModel.invalidate();
-        }
+        toggleTagFilter(tagName);
     }
-    
+
     /**
-     * 清除标签过滤
+     * 清除所有标签过滤
      */
     public void clearTagFilter() {
-        this.activeTagFilter = null;
-        log.info("Clearing tag filter");
-        
-        // 刷新树结构
+        this.activeTagFilters.clear();
+        log.info("Clearing all tag filters");
+
         if (structureTreeModel != null) {
             structureTreeModel.invalidate();
         }
     }
-    
+
     /**
-     * 获取当前活动的标签过滤
+     * 获取当前活动的标签过滤集合
+     */
+    public Set<String> getActiveTagFilters() {
+        return Collections.unmodifiableSet(activeTagFilters);
+    }
+
+    /**
+     * 获取当前活动的标签过滤（兼容旧接口，返回第一个或 null）
      */
     public String getActiveTagFilter() {
-        return activeTagFilter;
+        return activeTagFilters.isEmpty() ? null : activeTagFilters.iterator().next();
     }
 }
 

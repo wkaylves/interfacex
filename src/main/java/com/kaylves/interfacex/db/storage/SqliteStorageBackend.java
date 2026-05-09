@@ -95,6 +95,11 @@ public class SqliteStorageBackend implements StorageBackend {
     }
 
     @Override
+    public void updateTagSortOrder(String projectPath, String tagName, int sortOrder) throws SQLException {
+        tagDao().updateSortOrder(projectPath, tagName, sortOrder);
+    }
+
+    @Override
     public void saveConfig(ConfigEntity entity) throws SQLException {
         configDao().upsert(entity);
     }

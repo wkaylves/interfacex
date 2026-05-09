@@ -107,7 +107,6 @@ public class InterfaceDetailPanel extends JPanel implements TreeSelectionListene
 
         JPanel tagPanel = new JPanel(new BorderLayout(5, 5));
         tagPanel.setBorder(new EmptyBorder(10, 0, 10, 0));
-        tagPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
         
         tagSelectorPanel = new TagQuickSelectorPanel(project, null, this::onTagChanged);
         tagPanel.add(tagSelectorPanel, BorderLayout.CENTER);

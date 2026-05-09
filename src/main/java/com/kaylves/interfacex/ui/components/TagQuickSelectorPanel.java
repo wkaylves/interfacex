@@ -1,6 +1,7 @@
 package com.kaylves.interfacex.ui.components;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBScrollPane;
@@ -31,13 +32,16 @@ public class TagQuickSelectorPanel extends JPanel {
             new JBColor(new Color(0xEC, 0x40, 0x7A), new Color(0xD8, 0x1B, 0x60)),
     };
 
+    private static final int MAX_TAG_DISPLAY_LEN = 16;
+
     private final Project project;
     private InterfaceItem currentItem;
     private final Runnable onTagChanged;
 
     private JPanel tagsPanel;
     private JLabel noTagsLabel;
-    private JComboBox<String> addComboBox;
+    private JTextField addField;
+    private JPopupMenu addPopup;
     private JPanel addPanel;
 
     public TagQuickSelectorPanel(Project project, InterfaceItem currentItem, Runnable onTagChanged) {
@@ -61,46 +65,54 @@ public class TagQuickSelectorPanel extends JPanel {
         JBLabel titleLabel = new JBLabel("标签:");
         titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD));
         titleLabel.setBorder(new EmptyBorder(0, 0, 0, 4));
+        titleLabel.setLabelFor(addField);
 
-        tagsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 2));
+        tagsPanel = new JPanel(new WrapLayout(FlowLayout.LEFT, 4, 2));
         tagsPanel.setOpaque(false);
 
         noTagsLabel = new JBLabel("暂无标签");
         noTagsLabel.setForeground(JBColor.GRAY);
         noTagsLabel.setFont(noTagsLabel.getFont().deriveFont(Font.PLAIN, 11));
 
-        addComboBox = new JComboBox<>();
-        addComboBox.setEditable(true);
-        addComboBox.setPreferredSize(new Dimension(120, 28));
-        addComboBox.setFont(addComboBox.getFont().deriveFont(Font.PLAIN, 11));
-        addComboBox.putClientProperty("JComponent.placeholderText", "输入标签名...");
-        addComboBox.setMaximumRowCount(8);
-        addComboBox.addActionListener(e -> {
-            if ("comboBoxChanged".equals(e.getActionCommand())) {
-                Object selected = addComboBox.getSelectedItem();
-                if (selected != null && !selected.toString().trim().isEmpty()) {
-                    addTagToCurrent(selected.toString().trim());
-                    addComboBox.setSelectedItem(null);
-                }
+        addField = new JTextField(10);
+        addField.setFont(addField.getFont().deriveFont(Font.PLAIN, 11));
+        addField.putClientProperty("JComponent.placeholderText", "添加标签(支持 name:value)\u2026");
+        addField.addActionListener(e -> {
+            String text = addField.getText().trim();
+            if (!text.isEmpty()) {
+                addTagToCurrent(text);
+                addField.setText("");
+                hideAddPopup();
             }
         });
-        addComboBox.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
+        addField.addFocusListener(new FocusAdapter() {
             @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    String text = addComboBox.getEditor().getItem().toString().trim();
-                    if (!text.isEmpty()) {
-                        addTagToCurrent(text);
-                        addComboBox.getEditor().setItem("");
-                        addComboBox.hidePopup();
-                    }
-                }
+            public void focusGained(FocusEvent e) {
+                showAddPopup();
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                Timer t = new Timer(200, ev -> hideAddPopup());
+                t.setRepeats(false);
+                t.start();
             }
         });
+        addField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { refreshAddPopup(); }
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { refreshAddPopup(); }
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { refreshAddPopup(); }
+        });
+
+        addPopup = new JPopupMenu();
+        addPopup.setFocusable(false);
 
         addPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         addPanel.setOpaque(false);
-        addPanel.add(addComboBox);
+        addPanel.add(addField);
 
         JBScrollPane scrollPane = new JBScrollPane(tagsPanel);
         scrollPane.setBorder(null);
@@ -120,7 +132,6 @@ public class TagQuickSelectorPanel extends JPanel {
 
     public void loadTags() {
         tagsPanel.removeAll();
-        refreshAddComboBox();
 
         if (currentItem == null) {
             noTagsLabel.setText("请先选择接口");
@@ -159,11 +170,22 @@ public class TagQuickSelectorPanel extends JPanel {
         repaint();
     }
 
-    private void refreshAddComboBox() {
-        Object prev = addComboBox.getSelectedItem();
-        addComboBox.removeAllItems();
+    private void showAddPopup() {
+        if (!addPanel.isVisible() || currentItem == null) return;
+        refreshAddPopup();
+        if (addPopup.getComponentCount() > 0) {
+            addPopup.show(addField, 0, addField.getHeight());
+        }
+    }
 
+    private void hideAddPopup() {
+        addPopup.setVisible(false);
+    }
+
+    private void refreshAddPopup() {
         if (currentItem == null) return;
+
+        addPopup.removeAll();
 
         StorageAdapter adapter = StorageAdapter.getInstance();
         String projectPath = project.getBasePath();
@@ -180,24 +202,42 @@ public class TagQuickSelectorPanel extends JPanel {
                 .map(TagEntity::getTagName)
                 .collect(Collectors.toList());
 
-        List<String> allTagNames = adapter.loadTags(projectPath).stream()
+        String filter = addField.getText().trim().toLowerCase();
+
+        List<String> suggestions = adapter.loadTags(projectPath).stream()
                 .map(TagEntity::getTagName)
                 .distinct()
                 .filter(name -> !currentTagNames.contains(name))
+                .filter(name -> filter.isEmpty() || name.toLowerCase().contains(filter))
                 .sorted()
                 .collect(Collectors.toList());
 
-        for (String name : allTagNames) {
-            addComboBox.addItem(name);
-        }
-
-        if (prev != null) {
-            addComboBox.setSelectedItem(prev);
+        for (String name : suggestions) {
+            JMenuItem item = new JMenuItem(name);
+            item.addActionListener(e -> {
+                addTagToCurrent(name);
+                addField.setText("");
+                hideAddPopup();
+            });
+            addPopup.add(item);
         }
     }
 
-    private void addTagToCurrent(String tagName) {
-        if (currentItem == null || tagName.isEmpty()) return;
+    private void addTagToCurrent(String input) {
+        if (currentItem == null || input.isEmpty()) return;
+
+        // 支持 "tagName:value" 快捷语法
+        String tagName;
+        String tagValue = null;
+        int colonIndex = input.indexOf(':');
+        if (colonIndex > 0 && colonIndex < input.length() - 1) {
+            tagName = input.substring(0, colonIndex).trim();
+            tagValue = input.substring(colonIndex + 1).trim();
+        } else {
+            tagName = input.trim();
+        }
+
+        if (tagName.isEmpty()) return;
 
         StorageAdapter adapter = StorageAdapter.getInstance();
         String projectPath = project.getBasePath();
@@ -222,6 +262,7 @@ public class TagQuickSelectorPanel extends JPanel {
                 .httpMethod(currentItem.getMethod() != null ? currentItem.getMethod().name() : null)
                 .methodName(currentItem.getPsiMethod() != null ? currentItem.getPsiMethod().getName() : "")
                 .tagName(tagName)
+                .tagValue(tagValue)
                 .createdTime(System.currentTimeMillis())
                 .updatedTime(System.currentTimeMillis())
                 .build();
@@ -237,6 +278,12 @@ public class TagQuickSelectorPanel extends JPanel {
     }
 
     private void removeTagFromCurrent(TagEntity tag) {
+        int result = Messages.showYesNoDialog(project,
+                "确定要移除标签 \"" + tag.getTagName() + "\" 吗？",
+                "移除标签",
+                Messages.getQuestionIcon());
+        if (result != Messages.YES) return;
+
         StorageAdapter adapter = StorageAdapter.getInstance();
         String projectPath = project.getBasePath();
 
@@ -259,6 +306,12 @@ public class TagQuickSelectorPanel extends JPanel {
         }
     }
 
+    private static String truncate(String text, int maxLen) {
+        if (text == null) return "";
+        if (text.length() <= maxLen) return text;
+        return text.substring(0, maxLen - 1) + "\u2026";
+    }
+
     private class TagChip extends JPanel {
         private static final int ARC = 10;
         private final TagEntity tag;
@@ -275,23 +328,28 @@ public class TagQuickSelectorPanel extends JPanel {
             setOpaque(false);
             setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-            JLabel nameLabel = new JLabel(tag.getTagName());
+            String display = truncate(tag.getTagName(), MAX_TAG_DISPLAY_LEN);
+            if (tag.getTagValue() != null && !tag.getTagValue().isEmpty()) {
+                display += ":" + truncate(tag.getTagValue(), 8);
+            }
+            JLabel nameLabel = new JLabel(display);
             nameLabel.setFont(nameLabel.getFont().deriveFont(Font.PLAIN, 11));
             nameLabel.setForeground(fgColor);
-            nameLabel.setBorder(new EmptyBorder(0, 2, 0, 0));
+            nameLabel.setBorder(new EmptyBorder(0, 4, 0, 0));
             add(nameLabel, BorderLayout.CENTER);
 
-            JLabel closeBtn = new JLabel(" ×");
-            closeBtn.setFont(closeBtn.getFont().deriveFont(Font.PLAIN, 12));
+            JButton closeBtn = new JButton("\u00D7");
+            closeBtn.setFont(closeBtn.getFont().deriveFont(Font.PLAIN, 11));
             closeBtn.setForeground(fgColor);
             closeBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             closeBtn.setToolTipText("移除标签");
+            closeBtn.getAccessibleContext().setAccessibleName("移除标签 " + tag.getTagName());
+            closeBtn.setBorderPainted(false);
+            closeBtn.setContentAreaFilled(false);
+            closeBtn.setFocusPainted(false);
+            closeBtn.setMargin(new Insets(0, 2, 0, 2));
+            closeBtn.addActionListener(e -> removeTagFromCurrent(tag));
             closeBtn.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    removeTagFromCurrent(tag);
-                }
-
                 @Override
                 public void mouseEntered(MouseEvent e) {
                     closeBtn.setForeground(JBColor.RED);
@@ -305,6 +363,9 @@ public class TagQuickSelectorPanel extends JPanel {
             add(closeBtn, BorderLayout.EAST);
 
             String tooltip = tag.getTagName();
+            if (tag.getTagName().length() > MAX_TAG_DISPLAY_LEN) {
+                tooltip = tag.getTagName();
+            }
             if (tag.getTagValue() != null && !tag.getTagValue().isEmpty()) {
                 tooltip += " = " + tag.getTagValue();
             }
@@ -330,7 +391,7 @@ public class TagQuickSelectorPanel extends JPanel {
             Graphics2D g2 = (Graphics2D) g.create();
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-            Color fill = hovered ? bgColor.brighter() : bgColor;
+            Color fill = hovered ? bgColor.brighter().brighter() : bgColor;
             g2.setColor(fill);
             g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, ARC, ARC);
 
@@ -341,12 +402,53 @@ public class TagQuickSelectorPanel extends JPanel {
         @Override
         public Dimension getPreferredSize() {
             Dimension ps = super.getPreferredSize();
-            return new Dimension(ps.width + 10, Math.max(ps.height, 22));
+            return new Dimension(ps.width + 10, Math.max(ps.height, 24));
         }
     }
 
     private static Color getTagColor(String tagName) {
         int index = Math.abs(tagName.hashCode()) % TAG_PALETTE.length;
         return TAG_PALETTE[index];
+    }
+
+    private static class WrapLayout extends FlowLayout {
+        WrapLayout(int align, int hgap, int vgap) {
+            super(align, hgap, vgap);
+        }
+
+        @Override
+        public Dimension preferredLayoutSize(Container target) {
+            return layoutSize(target, true);
+        }
+
+        @Override
+        public Dimension minimumLayoutSize(Container target) {
+            return layoutSize(target, false);
+        }
+
+        private Dimension layoutSize(Container target, boolean preferred) {
+            synchronized (target.getTreeLock()) {
+                Insets insets = target.getInsets();
+                int maxWidth = target.getWidth() - insets.left - insets.right;
+                if (maxWidth <= 0) {
+                    maxWidth = Integer.MAX_VALUE;
+                }
+
+                int x = 0, y = insets.top, rowHeight = 0;
+                for (Component comp : target.getComponents()) {
+                    if (!comp.isVisible()) continue;
+                    Dimension d = preferred ? comp.getPreferredSize() : comp.getMinimumSize();
+                    if (x + d.width > maxWidth && x > 0) {
+                        x = insets.left;
+                        y += rowHeight + getVgap();
+                        rowHeight = 0;
+                    }
+                    x += d.width + getHgap();
+                    rowHeight = Math.max(rowHeight, d.height);
+                }
+                y += rowHeight + insets.bottom;
+                return new Dimension(maxWidth, y);
+            }
+        }
     }
 }

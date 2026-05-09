@@ -170,6 +170,7 @@ public class XmlStorageBackend implements StorageBackend {
         tagElement.setAttribute("methodName", nullSafe(entity.getMethodName()));
         tagElement.setAttribute("tagName", nullSafe(entity.getTagName()));
         tagElement.setAttribute("tagValue", nullSafe(entity.getTagValue()));
+        tagElement.setAttribute("sortOrder", String.valueOf(entity.getSortOrder() != null ? entity.getSortOrder() : 0));
         tagElement.setAttribute("createdTime", String.valueOf(entity.getCreatedTime() != null ? entity.getCreatedTime() : 0));
         tagElement.setAttribute("updatedTime", String.valueOf(entity.getUpdatedTime() != null ? entity.getUpdatedTime() : 0));
         tagsElement.addContent(tagElement);
@@ -262,6 +263,25 @@ public class XmlStorageBackend implements StorageBackend {
             results.add(mapTagElement(tagElement));
         }
         return results;
+    }
+
+    @Override
+    public void updateTagSortOrder(String projectPath, String tagName, int sortOrder) throws SQLException {
+        Document doc = loadDocument(projectPath);
+        Element root = doc.getRootElement();
+        Element tagsElement = root.getChild("tags");
+        if (tagsElement == null) {
+            return;
+        }
+
+        for (Element tagElement : tagsElement.getChildren("tag")) {
+            if (equalsSafe(tagElement.getAttributeValue("projectPath"), projectPath)
+                    && equalsSafe(tagElement.getAttributeValue("tagName"), tagName)) {
+                tagElement.setAttribute("sortOrder", String.valueOf(sortOrder));
+            }
+        }
+
+        saveDocument(doc, projectPath);
     }
 
     @Override
@@ -387,6 +407,7 @@ public class XmlStorageBackend implements StorageBackend {
                 .methodName(tagElement.getAttributeValue("methodName"))
                 .tagName(tagElement.getAttributeValue("tagName"))
                 .tagValue(tagElement.getAttributeValue("tagValue"))
+                .sortOrder(parseIntSafe(tagElement.getAttributeValue("sortOrder")))
                 .createdTime(parseLongSafe(tagElement.getAttributeValue("createdTime")))
                 .updatedTime(parseLongSafe(tagElement.getAttributeValue("updatedTime")))
                 .build();

@@ -24,8 +24,8 @@ public class TagDao {
      */
     public void insert(TagEntity entity) throws SQLException {
         String sql = "INSERT OR REPLACE INTO tag "
-                + "(project_path, module_name, category, url, http_method, method_name, tag_name, tag_value, created_time, updated_time) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                + "(project_path, module_name, category, url, http_method, method_name, tag_name, tag_value, sort_order, created_time, updated_time) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, entity.getProjectPath());
             ps.setString(2, entity.getModuleName());
@@ -35,8 +35,9 @@ public class TagDao {
             ps.setString(6, entity.getMethodName());
             ps.setString(7, entity.getTagName());
             ps.setString(8, entity.getTagValue());
-            ps.setLong(9, entity.getCreatedTime());
-            ps.setLong(10, entity.getUpdatedTime());
+            ps.setObject(9, entity.getSortOrder());
+            ps.setLong(10, entity.getCreatedTime());
+            ps.setLong(11, entity.getUpdatedTime());
             ps.executeUpdate();
         }
     }
@@ -135,6 +136,19 @@ public class TagDao {
     }
 
     /**
+     * 更新指定标签名的排序顺序（影响该项目下所有同名标签）
+     */
+    public void updateSortOrder(String projectPath, String tagName, int sortOrder) throws SQLException {
+        String sql = "UPDATE tag SET sort_order = ? WHERE project_path = ? AND tag_name = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, sortOrder);
+            ps.setString(2, projectPath);
+            ps.setString(3, tagName);
+            ps.executeUpdate();
+        }
+    }
+
+    /**
      * 按模块和分类查询去重的标签（仅返回 tagName 和 tagValue）
      */
     public List<TagEntity> findByCategory(String projectPath, String moduleName, String category) throws SQLException {
@@ -187,6 +201,7 @@ public class TagDao {
                 .methodName(rs.getString("method_name"))
                 .tagName(rs.getString("tag_name"))
                 .tagValue(rs.getString("tag_value"))
+                .sortOrder(rs.getObject("sort_order") != null ? rs.getInt("sort_order") : 0)
                 .createdTime(rs.getLong("created_time"))
                 .updatedTime(rs.getLong("updated_time"))
                 .build();

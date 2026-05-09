@@ -15,7 +15,7 @@ import java.sql.Statement;
 public class SchemaManager {
 
     /** 当前数据库 Schema 版本号 */
-    private static final int CURRENT_VERSION = 1;
+    private static final int CURRENT_VERSION = 2;
 
     /**
      * 初始化数据库 Schema
@@ -74,6 +74,7 @@ public class SchemaManager {
         try (Statement stmt = conn.createStatement()) {
             switch (version) {
                 case 1 -> applyV1(stmt);
+                case 2 -> applyV2(stmt);
                 default -> throw new SQLException("Unknown migration version: " + version);
             }
             stmt.execute("INSERT INTO schema_version (version) VALUES (" + version + ")");
@@ -139,5 +140,13 @@ public class SchemaManager {
         stmt.execute("CREATE INDEX IF NOT EXISTS idx_scan_category ON scan_result(project_path, category)");
         stmt.execute("CREATE INDEX IF NOT EXISTS idx_tag_project ON tag(project_path)");
         stmt.execute("CREATE INDEX IF NOT EXISTS idx_tag_name ON tag(tag_name)");
+    }
+
+    /**
+     * V2 迁移：tag 表增加 sort_order 字段
+     */
+    private void applyV2(Statement stmt) throws SQLException {
+        stmt.execute("ALTER TABLE tag ADD COLUMN sort_order INTEGER DEFAULT 0");
+        log.info("V2 migration: added sort_order column to tag table");
     }
 }
