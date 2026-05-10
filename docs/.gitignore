@@ -1,0 +1,4 @@
+# 忽略 node_modules 和其他构建产物
+node_modules/
+_site/
+*.log
