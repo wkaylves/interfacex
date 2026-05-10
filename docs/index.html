@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InterfaceX - IntelliJ IDEA 插件</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/svg+xml" href="../src/main/resources/icons/interfacex_icon.svg">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <img src="../src/main/resources/icons/interfacex_icon_32.png" alt="InterfaceX Logo" class="logo">
+                <span class="brand-name">InterfaceX</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#features">功能特性</a></li>
+                <li><a href="#installation">安装指南</a></li>
+                <li><a href="#usage">使用说明</a></li>
+                <li><a href="#changelog">更新日志</a></li>
+                <li><a href="https://github.com/kaylves/interfacex" target="_blank">GitHub</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero 区域 -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>让代码导航变得前所未有的简单</h1>
+                <p class="hero-subtitle">一款专为 IntelliJ IDEA 打造的强大组件接口查看器，让大型项目的复杂性变得一目了然。</p>
+                <div class="hero-buttons">
+                    <a href="https://plugins.jetbrains.com/plugin/YOUR_PLUGIN_ID" class="btn btn-primary" target="_blank">
+                        从 JetBrains 市场安装
+                    </a>
+                    <a href="https://github.com/kaylves/interfacex/releases" class="btn btn-secondary" target="_blank">
+                        下载最新版本
+                    </a>
+                </div>
+                <div class="badges">
+                    <img src="https://img.shields.io/badge/Platform-IntelliJ_IDEA-orange?style=for-the-badge" alt="Platform"/>
+                    <img src="https://img.shields.io/badge/Language-Java-brightgreen?style=for-the-badge&logo=java" alt="Language"/>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 核心特性 -->
+    <section id="features" class="features">
+        <div class="container">
+            <h2 class="section-title">✨ 核心特性</h2>
+            <p class="section-subtitle">InterfaceX 是您在大型项目中的得力助手，自动扫描并清晰展示各类组件入口点</p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🌐</div>
+                    <h3>HTTP 接口</h3>
+                    <p>快速定位 Spring-MVC 控制器，支持 @GetMapping、@PostMapping 等注解</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h3>OpenFeign 调用</h3>
+                    <p>清晰展示远程服务间的调用关系，轻松掌握微服务依赖</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📮</div>
+                    <h3>RabbitMQ</h3>
+                    <p>可视化消息的发送与消费逻辑，自动识别 RabbitTemplate 和监听器</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3>RocketMQ</h3>
+                    <p>支持阿里云生态的消息队列管理，完整追踪消息流向</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">⏰</div>
+                    <h3>XXL-JOB 任务</h3>
+                    <p>直接在 IDE 内执行和调试定时任务，告别繁琐的容器环境配置</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🏷️</div>
+                    <h3>标签管理系统</h3>
+                    <p>专业的接口分类和管理能力，支持搜索、过滤、批量操作</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔗</div>
+                    <h3>智能行标记导航</h3>
+                    <p>在代码编辑器侧边栏提供智能导航图标，实现组件间快速跳转</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">💾</div>
+                    <h3>SQLite 持久化</h3>
+                    <p>高性能数据库存储，支持动态切换和自动迁移，大幅提升加载速度</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 解决痛点 -->
+    <section class="pain-points">
+        <div class="container">
+            <h2 class="section-title">🎯 解决的核心痛点</h2>
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>场景</th>
+                            <th>传统方式的困扰</th>
+                            <th>InterfaceX 如何解决</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>大型项目</strong></td>
+                            <td>代码量庞大，全局搜索效率低下</td>
+                            <td>自动分类扫描，一键展示所有接口入口</td>
+                        </tr>
+                        <tr>
+                            <td><strong>微服务调用</strong></td>
+                            <td>难以追溯调用链路</td>
+                            <td>清晰列出所有 OpenFeign 调用方</td>
+                        </tr>
+                        <tr>
+                            <td><strong>消息队列调试</strong></td>
+                            <td>需要翻阅大量代码</td>
+                            <td>自动识别生产者和消费者，可视化呈现</td>
+                        </tr>
+                        <tr>
+                            <td><strong>XXL-JOB 调试</strong></td>
+                            <td>本地断点无法生效</td>
+                            <td>IDE 内直接触发任务，本地调试畅通无阻</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- 安装指南 -->
+    <section id="installation" class="installation">
+        <div class="container">
+            <h2 class="section-title">📦 安装指南</h2>
+            <div class="install-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>从 JetBrains 插件市场安装（推荐）</h3>
+                        <ol>
+                            <li>打开 IntelliJ IDEA</li>
+                            <li>进入 <code>Settings/Preferences</code> → <code>Plugins</code></li>
+                            <li>搜索 "InterfaceX"</li>
+                            <li>点击 <code>Install</code> 按钮</li>
+                            <li>重启 IDE</li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>手动安装</h3>
+                        <ol>
+                            <li>从 <a href="https://github.com/kaylves/interfacex/releases" target="_blank">GitHub Releases</a> 下载最新版本的 .zip 文件</li>
+                            <li>打开 IntelliJ IDEA</li>
+                            <li>进入 <code>Settings/Preferences</code> → <code>Plugins</code></li>
+                            <li>点击齿轮图标，选择 <code>Install Plugin from Disk...</code></li>
+                            <li>选择下载的 .zip 文件</li>
+                            <li>重启 IDE</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 使用说明 -->
+    <section id="usage" class="usage">
+        <div class="container">
+            <h2 class="section-title">📖 使用说明</h2>
+            <div class="usage-content">
+                <div class="usage-section">
+                    <h3>打开 InterfaceX 工具窗口</h3>
+                    <p>安装后，您可以在以下位置找到 InterfaceX：</p>
+                    <ul>
+                        <li>右侧工具栏中的 "InterfaceX" 标签</li>
+                        <li>菜单栏：<code>View</code> → <code>Tool Windows</code> → <code>InterfaceX</code></li>
+                    </ul>
+                </div>
+                
+                <div class="usage-section">
+                    <h3>刷新接口列表</h3>
+                    <p>点击工具窗口顶部的刷新按钮，插件将自动扫描当前项目中的所有接口。</p>
+                </div>
+                
+                <div class="usage-section">
+                    <h3>使用标签管理</h3>
+                    <p>右键点击任意接口，可以：</p>
+                    <ul>
+                        <li>添加/移除标签</li>
+                        <li>按标签过滤视图</li>
+                        <li>打开专业标签管理器</li>
+                    </ul>
+                </div>
+                
+                <div class="usage-section">
+                    <h3>执行 XXL-JOB 任务</h3>
+                    <p>右键点击 XXL-JOB 任务节点，选择"执行任务"，设置端口号后即可在本地调试。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 更新日志 -->
+    <section id="changelog" class="changelog">
+        <div class="container">
+            <h2 class="section-title">📝 更新日志</h2>
+            <div class="changelog-content">
+                <!-- 这里会动态加载 CHANGELOG.md 的内容 -->
+                <div id="changelog-container"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>InterfaceX</h4>
+                    <p>让代码导航变得简单</p>
+                </div>
+                <div class="footer-section">
+                    <h4>链接</h4>
+                    <ul>
+                        <li><a href="https://github.com/kaylves/interfacex" target="_blank">GitHub</a></li>
+                        <li><a href="https://github.com/kaylves/interfacex/issues" target="_blank">问题反馈</a></li>
+                        <li><a href="https://plugins.jetbrains.com/plugin/YOUR_PLUGIN_ID" target="_blank">插件市场</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>许可证</h4>
+                    <p>MIT License</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 InterfaceX. Made with ❤️ for developers.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -6,7 +6,6 @@ import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.ui.Splitter;
-import com.intellij.ui.JBColor;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.treeStructure.SimpleTree;
 import com.kaylves.interfacex.ui.components.InterfaceDetailPanel;
@@ -14,7 +13,6 @@ import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.border.MatteBorder;
 
 /**
  * @author kaylves
@@ -27,11 +25,11 @@ public class InterfaceXNavigatorPanel extends SimpleToolWindowPanel {
     SimpleTree simpleTree;
 
     Splitter rootSplitter;
-    
+
     Splitter detailSplitter;
 
     private InterfaceXForm interfaceXForm;
-    
+
     private InterfaceDetailPanel interfaceDetailPanel;
 
     public InterfaceXNavigatorPanel(Project project,SimpleTree simpleTree) {

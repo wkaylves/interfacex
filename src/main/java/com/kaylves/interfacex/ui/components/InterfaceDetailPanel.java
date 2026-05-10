@@ -107,7 +107,6 @@ public class InterfaceDetailPanel extends JPanel implements TreeSelectionListene
 
         JPanel tagPanel = new JPanel(new BorderLayout(5, 5));
         tagPanel.setBorder(new EmptyBorder(10, 0, 10, 0));
-        tagPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
         
         tagSelectorPanel = new TagQuickSelectorPanel(project, null, this::onTagChanged);
         tagPanel.add(tagSelectorPanel, BorderLayout.CENTER);
@@ -163,7 +162,7 @@ public class InterfaceDetailPanel extends JPanel implements TreeSelectionListene
         classNameLabel.setText(item.getCachedClassName() != null ? item.getCachedClassName() : "-");
         methodNameLabel.setText(item.getCachedMethodName() != null ? item.getCachedMethodName() : "-");
         
-        tagSelectorPanel.loadTags();
+        tagSelectorPanel.setCurrentItem(item);
         
         revalidate();
         repaint();
@@ -175,7 +174,7 @@ public class InterfaceDetailPanel extends JPanel implements TreeSelectionListene
         methodLabel.setForeground(UIManager.getColor("Label.foreground"));
         classNameLabel.setText("-");
         methodNameLabel.setText("-");
-        tagSelectorPanel.loadTags();
+        tagSelectorPanel.setCurrentItem(null);
     }
 
     private Color getMethodColor(String method) {

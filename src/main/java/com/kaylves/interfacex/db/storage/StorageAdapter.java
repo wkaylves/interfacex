@@ -194,6 +194,14 @@ public class StorageAdapter implements PersistentStateComponent<StorageAdapter.S
         }
     }
 
+    public void updateTagSortOrder(String projectPath, String tagName, int sortOrder) {
+        try {
+            getBackend().updateTagSortOrder(projectPath, tagName, sortOrder);
+        } catch (SQLException e) {
+            log.error("Failed to update tag sort order", e);
+        }
+    }
+
     public void saveConfig(ConfigEntity entity) {
         try {
             getBackend().saveConfig(entity);

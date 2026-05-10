@@ -33,6 +33,8 @@ public class TagEntity {
     private String tagName;
     /** 标签值（可选） */
     private String tagValue;
+    /** 排序顺序（越小越靠前） */
+    private Integer sortOrder;
     /** 创建时间戳 */
     private Long createdTime;
     /** 更新时间戳 */

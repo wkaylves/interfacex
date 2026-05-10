@@ -124,10 +124,23 @@ public final class InterfaceXNavigator implements PersistentStateComponent<Inter
         }
     }
 
+    public void toggleTagFilter(String tagName) {
+        if (simpleTreeStructure != null) {
+            simpleTreeStructure.toggleTagFilter(tagName);
+        }
+    }
+
     public void clearTagFilter() {
         if (simpleTreeStructure != null) {
             simpleTreeStructure.clearTagFilter();
         }
+    }
+
+    public java.util.Set<String> getActiveTagFilters() {
+        if (simpleTreeStructure != null) {
+            return simpleTreeStructure.getActiveTagFilters();
+        }
+        return java.util.Collections.emptySet();
     }
 
     public void switchStorageType(StorageType newType) {

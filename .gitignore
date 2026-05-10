@@ -21,6 +21,11 @@ out/
 
 # idea ignore
 .idea/
+
+.claude/
+.claude/*
+
+
 *.ipr
 *.iml
 *.iws

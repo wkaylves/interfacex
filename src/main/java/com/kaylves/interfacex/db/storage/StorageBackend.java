@@ -78,6 +78,11 @@ public interface StorageBackend {
     List<TagEntity> loadTagsByTagName(String projectPath, String tagName) throws SQLException;
 
     /**
+     * 更新标签排序顺序
+     */
+    void updateTagSortOrder(String projectPath, String tagName, int sortOrder) throws SQLException;
+
+    /**
      * 保存配置项
      */
     void saveConfig(ConfigEntity entity) throws SQLException;
