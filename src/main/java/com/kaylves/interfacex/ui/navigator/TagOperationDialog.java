@@ -29,9 +29,14 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Map;
+import java.util.Set;
 
 @Slf4j
 public class TagOperationDialog extends DialogWrapper {
@@ -53,7 +58,6 @@ public class TagOperationDialog extends DialogWrapper {
     private final List<InterfaceItem> items;
 
     private JBTextField searchField;
-    private JBLabel searchLabel;
     private JBTextField addField;
     private JList<TagItem> tagList;
     private DefaultListModel<TagItem> listModel;
@@ -62,16 +66,10 @@ public class TagOperationDialog extends DialogWrapper {
 
     private List<TagItem> allTagItems = Collections.emptyList();
 
-    /**
-     * 构造函数 - 支持单个接口（兼容旧调用）
-     */
     public TagOperationDialog(Project project, com.intellij.ui.treeStructure.SimpleTree simpleTree, InterfaceItem currentItem) {
         this(project, simpleTree, currentItem != null ? List.of(currentItem) : Collections.emptyList());
     }
 
-    /**
-     * 构造函数 - 支持多个接口（批量标签）
-     */
     public TagOperationDialog(Project project, com.intellij.ui.treeStructure.SimpleTree simpleTree, List<InterfaceItem> items) {
         super(project, false);
         this.project = project;
@@ -86,7 +84,7 @@ public class TagOperationDialog extends DialogWrapper {
     @Override
     protected JComponent createCenterPanel() {
         JPanel mainPanel = new JPanel(new BorderLayout(8, 8));
-        mainPanel.setPreferredSize(JBUI.size(520, 420));
+        mainPanel.setPreferredSize(JBUI.size(560, 440));
 
         mainPanel.add(createInfoPanel(), BorderLayout.NORTH);
         mainPanel.add(createListPanel(), BorderLayout.CENTER);
@@ -98,11 +96,6 @@ public class TagOperationDialog extends DialogWrapper {
     @Override
     protected Action[] createActions() {
         return new Action[]{getCancelAction()};
-    }
-
-    @Override
-    protected void createDefaultActions() {
-        super.createDefaultActions();
     }
 
     @NotNull
@@ -118,9 +111,11 @@ public class TagOperationDialog extends DialogWrapper {
         if (items.isEmpty()) {
             interfaceInfo = "未选择接口";
         } else if (items.size() == 1) {
-            interfaceInfo = items.get(0).getName();
+            InterfaceItem item = items.get(0);
+            String name = item.getName();
+            interfaceInfo = name.length() > 40 ? name.substring(0, 37) + "..." : name;
         } else {
-            interfaceInfo = items.size() + " 个接口";
+            interfaceInfo = items.size() + " 个接口已选中";
         }
         infoLabel = new JLabel(ToolkitIcons.TAG);
         infoLabel.setText(" " + interfaceInfo);
@@ -128,7 +123,7 @@ public class TagOperationDialog extends DialogWrapper {
         panel.add(infoLabel, BorderLayout.WEST);
 
         JPanel searchPanel = new JPanel(new BorderLayout(4, 0));
-        searchLabel = new JBLabel("搜索:");
+        JBLabel searchLabel = new JBLabel("搜索:");
         searchLabel.setLabelFor(searchField);
         searchField = new JBTextField(12);
         searchField.putClientProperty("JComponent.placeholderText", "过滤标签\u2026");
@@ -155,8 +150,8 @@ public class TagOperationDialog extends DialogWrapper {
         tagList = new JBList<>(listModel);
         tagList.setCellRenderer(new TagItemRenderer());
         tagList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        tagList.setFixedCellHeight(36);
-        tagList.setVisibleRowCount(10);
+        tagList.setFixedCellHeight(32);
+        tagList.setVisibleRowCount(12);
 
         tagList.addListSelectionListener(e -> {
             TagItem selected = tagList.getSelectedValue();
@@ -176,8 +171,20 @@ public class TagOperationDialog extends DialogWrapper {
                     return;
                 }
 
+                if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 1) {
+                    Rectangle cellBounds = tagList.getCellBounds(index, index);
+                    if (cellBounds != null) {
+                        int clickX = e.getX();
+                        int actionZoneX = cellBounds.x + cellBounds.width - 80;
+                        if (clickX >= actionZoneX) {
+                            toggleTag(item);
+                            return;
+                        }
+                    }
+                }
+
                 if (e.getClickCount() == 2) {
-                    filterByTag(item);
+                    toggleTag(item);
                 }
             }
         });
@@ -185,7 +192,12 @@ public class TagOperationDialog extends DialogWrapper {
         tagList.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_DELETE) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    TagItem selected = tagList.getSelectedValue();
+                    if (selected != null && !selected.separator) {
+                        toggleTag(selected);
+                    }
+                } else if (e.getKeyCode() == KeyEvent.VK_DELETE) {
                     TagItem selected = tagList.getSelectedValue();
                     if (selected != null && !selected.separator) {
                         deleteTag(selected);
@@ -210,13 +222,12 @@ public class TagOperationDialog extends DialogWrapper {
         panel.setBorder(new EmptyBorder(6, 0, 0, 0));
 
         addField = new JBTextField();
-        addField.putClientProperty("JComponent.placeholderText", "输入新标签名(支持 name:value 格式)，回车添加\u2026");
+        addField.putClientProperty("JComponent.placeholderText", "输入新标签名(支持 name:value)，回车添加\u2026");
         addField.addActionListener(e -> addNewTag());
 
         JButton addButton = new JButton("添加");
         addButton.addActionListener(e -> addNewTag());
 
-        // 当没有选中接口时，禁用添加功能
         if (items.isEmpty()) {
             addField.setEnabled(false);
             addField.putClientProperty("JComponent.placeholderText", "请先在树中选中接口后再添加标签");
@@ -229,9 +240,6 @@ public class TagOperationDialog extends DialogWrapper {
         return panel;
     }
 
-    /**
-     * 解析标签输入，支持 "tagName" 或 "tagName:tagValue" 格式
-     */
     private String[] parseTagInput(String input) {
         int colonIndex = input.indexOf(':');
         if (colonIndex > 0 && colonIndex < input.length() - 1) {
@@ -240,12 +248,23 @@ public class TagOperationDialog extends DialogWrapper {
         return new String[]{input.trim(), null};
     }
 
+    private void toggleTag(TagItem item) {
+        if (items.isEmpty()) {
+            statusLabel.setText("请先选择接口");
+            return;
+        }
+
+        if (item.applied) {
+            removeTagSilent(item);
+        } else {
+            applyTag(item);
+        }
+    }
+
     private void loadTags() {
         StorageAdapter adapter = StorageAdapter.getInstance();
         String projectPath = project.getBasePath();
 
-        // 计算每个标签在选中接口上的应用状态
-        // appliedCount: 标签应用到了多少个选中接口
         Map<String, Integer> tagAppliedCount = new HashMap<>();
         for (InterfaceItem item : items) {
             List<TagEntity> currentTags = adapter.loadTagsByInterface(
@@ -261,7 +280,6 @@ public class TagOperationDialog extends DialogWrapper {
             }
         }
 
-        // 收集去重标签及其 sortOrder（取最小值）
         Map<String, Integer> tagSortOrderMap = new LinkedHashMap<>();
         Map<String, Integer> tagCountMap = new LinkedHashMap<>();
         for (TagEntity tag : adapter.loadTags(projectPath)) {
@@ -271,7 +289,6 @@ public class TagOperationDialog extends DialogWrapper {
             tagSortOrderMap.merge(name, order, Integer::min);
         }
 
-        // 如果所有标签的 sortOrder 都是 0，按字母顺序初始化
         boolean allZero = tagSortOrderMap.values().stream().allMatch(v -> v == 0);
         if (allZero && !tagSortOrderMap.isEmpty()) {
             List<String> sortedNames = new ArrayList<>(tagSortOrderMap.keySet());
@@ -296,11 +313,11 @@ public class TagOperationDialog extends DialogWrapper {
             boolean applied = appliedCount == items.size() && !items.isEmpty();
             boolean partialApplied = appliedCount > 0 && appliedCount < items.size();
             int sortOrder = tagSortOrderMap.getOrDefault(tagName, 0);
-            itemList.add(new TagItem(tagName, count, applied, partialApplied, false, sortOrder));
+            itemList.add(new TagItem(tagName, count, applied, partialApplied, false, sortOrder, appliedCount));
         }
 
         allTagItems = itemList;
-        applyFilter("");
+        applyFilter(searchField != null ? searchField.getText().trim().toLowerCase() : "");
     }
 
     private void filterTags() {
@@ -328,28 +345,28 @@ public class TagOperationDialog extends DialogWrapper {
         }
 
         if (!applied.isEmpty()) {
-            listModel.addElement(new TagItem("\u2500\u2500 \u5DF2\u6DFB\u52A0 \u2500\u2500", -1, true, false, true));
+            listModel.addElement(new TagItem("\u2500\u2500 \u5DF2\u6DFB\u52A0 \u2500\u2500", -1, true, false, true, 0, 0));
             for (TagItem item : applied) {
                 listModel.addElement(item);
             }
         }
 
         if (!partial.isEmpty()) {
-            listModel.addElement(new TagItem("\u2500\u2500 \u90E8\u5206\u6DFB\u52A0 \u2500\u2500", -1, false, true, true));
+            listModel.addElement(new TagItem("\u2500\u2500 \u90E8\u5206\u6DFB\u52A0 \u2500\u2500", -1, false, true, true, 0, 0));
             for (TagItem item : partial) {
                 listModel.addElement(item);
             }
         }
 
         if (!notApplied.isEmpty()) {
-            listModel.addElement(new TagItem("\u2500\u2500 \u53EF\u6DFB\u52A0 \u2500\u2500", -1, false, false, true));
+            listModel.addElement(new TagItem("\u2500\u2500 \u53EF\u6DFB\u52A0 \u2500\u2500", -1, false, false, true, 0, 0));
             for (TagItem item : notApplied) {
                 listModel.addElement(item);
             }
         }
 
         if (listModel.isEmpty()) {
-            listModel.addElement(new TagItem("\u6682\u65E0\u6807\u7B7E", -1, false, false, true));
+            listModel.addElement(new TagItem("\u6682\u65E0\u6807\u7B7E", -1, false, false, true, 0, 0));
         }
 
         updateStatus();
@@ -363,7 +380,7 @@ public class TagOperationDialog extends DialogWrapper {
         String tagName = parsed[0];
         String tagValue = parsed[1];
 
-        log.info("addNewTag: tagName={}, tagValue={}, items.size={}", tagName, tagValue, items.size());
+        if (tagName.isEmpty()) return;
 
         StorageAdapter adapter = StorageAdapter.getInstance();
         String projectPath = project.getBasePath();
@@ -380,10 +397,7 @@ public class TagOperationDialog extends DialogWrapper {
             );
 
             boolean alreadyExists = existing.stream().anyMatch(t -> t.getTagName().equals(tagName));
-            if (alreadyExists) {
-                log.info("addNewTag: tag {} already exists for item {}", tagName, item.getName());
-                continue;
-            }
+            if (alreadyExists) continue;
 
             TagEntity tagEntity = TagEntity.builder()
                     .projectPath(projectPath)
@@ -398,7 +412,6 @@ public class TagOperationDialog extends DialogWrapper {
                     .updatedTime(System.currentTimeMillis())
                     .build();
 
-            log.info("addNewTag: saving tag {} for item {}", tagName, item.getName());
             adapter.saveTag(tagEntity);
             addedCount++;
         }
@@ -412,14 +425,14 @@ public class TagOperationDialog extends DialogWrapper {
         } else if (items.isEmpty()) {
             statusLabel.setText("请先在树中选中接口，再添加标签");
         } else {
-            statusLabel.setText("标签 \"" + tagName + "\" 已存在于当前接口");
+            statusLabel.setText("标签 \"" + tagName + "\" 已存在于所有选中接口");
         }
         loadTags();
     }
 
     private void applyTag(TagItem item) {
         if (items.isEmpty()) {
-            statusLabel.setText("请先选择一个接口");
+            statusLabel.setText("请先选择接口");
             return;
         }
 
@@ -462,14 +475,8 @@ public class TagOperationDialog extends DialogWrapper {
         loadTags();
     }
 
-    private void removeTag(TagItem item) {
+    private void removeTagSilent(TagItem item) {
         if (items.isEmpty()) return;
-
-        int result = Messages.showYesNoDialog(project,
-                "确定要移除标签 \u201C" + item.tagName + "\u201D 吗？",
-                "移除标签",
-                Messages.getQuestionIcon());
-        if (result != Messages.YES) return;
 
         StorageAdapter adapter = StorageAdapter.getInstance();
         String projectPath = project.getBasePath();
@@ -535,19 +542,10 @@ public class TagOperationDialog extends DialogWrapper {
         loadTags();
     }
 
-    private void filterByTag(TagItem item) {
-        InterfaceXNavigator navigator = InterfaceXNavigator.getInstance(project);
-        if (navigator != null) {
-            navigator.toggleTagFilter(item.tagName);
-            close(OK_EXIT_CODE);
-        }
-    }
-
     private void moveTagUp() {
         TagItem selected = tagList.getSelectedValue();
         if (selected == null || selected.separator) return;
 
-        // 找到当前选中项在列表中的位置（跳过 separator）
         int selectedIndex = -1;
         TagItem prevTag = null;
         for (int i = 0; i < listModel.size(); i++) {
@@ -568,14 +566,12 @@ public class TagOperationDialog extends DialogWrapper {
         StorageAdapter adapter = StorageAdapter.getInstance();
         String projectPath = project.getBasePath();
 
-        // 交换 sortOrder
         adapter.updateTagSortOrder(projectPath, selected.tagName, prevTag.sortOrder);
         adapter.updateTagSortOrder(projectPath, prevTag.tagName, selected.sortOrder);
 
         InterfaceXNavigator.getInstance(project).scheduleStructureUpdate();
         loadTags();
 
-        // 恢复选中状态
         for (int i = 0; i < listModel.size(); i++) {
             if (listModel.getElementAt(i).tagName.equals(selected.tagName)) {
                 tagList.setSelectedIndex(i);
@@ -590,7 +586,6 @@ public class TagOperationDialog extends DialogWrapper {
         TagItem selected = tagList.getSelectedValue();
         if (selected == null || selected.separator) return;
 
-        // 找到当前选中项在列表中的下一个非 separator 项
         boolean foundSelected = false;
         TagItem nextTag = null;
         for (int i = 0; i < listModel.size(); i++) {
@@ -613,14 +608,12 @@ public class TagOperationDialog extends DialogWrapper {
         StorageAdapter adapter = StorageAdapter.getInstance();
         String projectPath = project.getBasePath();
 
-        // 交换 sortOrder
         adapter.updateTagSortOrder(projectPath, selected.tagName, nextTag.sortOrder);
         adapter.updateTagSortOrder(projectPath, nextTag.tagName, selected.sortOrder);
 
         InterfaceXNavigator.getInstance(project).scheduleStructureUpdate();
         loadTags();
 
-        // 恢复选中状态
         for (int i = 0; i < listModel.size(); i++) {
             if (listModel.getElementAt(i).tagName.equals(selected.tagName)) {
                 tagList.setSelectedIndex(i);
@@ -637,9 +630,9 @@ public class TagOperationDialog extends DialogWrapper {
         long totalCount = allTagItems.size();
         String info = "共 " + totalCount + " 个标签";
         if (items.size() > 1) {
-            info += "，已全部添加 " + appliedCount + " 个，部分添加 " + partialCount + " 个";
+            info += " \u2022 已全部添加 " + appliedCount + " 个 \u2022 部分添加 " + partialCount + " 个";
         } else if (!items.isEmpty()) {
-            info += "，当前接口已添加 " + appliedCount + " 个";
+            info += " \u2022 当前接口已添加 " + appliedCount + " 个";
         }
         statusLabel.setText(info);
     }
@@ -661,26 +654,16 @@ public class TagOperationDialog extends DialogWrapper {
         final boolean partialApplied;
         final boolean separator;
         final int sortOrder;
+        final int appliedToCount;
 
-        TagItem(String tagName, int usageCount, boolean applied) {
-            this(tagName, usageCount, applied, false, false, 0);
-        }
-
-        TagItem(String tagName, int usageCount, boolean applied, boolean partialApplied) {
-            this(tagName, usageCount, applied, partialApplied, false, 0);
-        }
-
-        TagItem(String tagName, int usageCount, boolean applied, boolean partialApplied, boolean separator) {
-            this(tagName, usageCount, applied, partialApplied, separator, 0);
-        }
-
-        TagItem(String tagName, int usageCount, boolean applied, boolean partialApplied, boolean separator, int sortOrder) {
+        TagItem(String tagName, int usageCount, boolean applied, boolean partialApplied, boolean separator, int sortOrder, int appliedToCount) {
             this.tagName = tagName;
             this.usageCount = usageCount;
             this.applied = applied;
             this.partialApplied = partialApplied;
             this.separator = separator;
             this.sortOrder = sortOrder;
+            this.appliedToCount = appliedToCount;
         }
     }
 
@@ -710,7 +693,6 @@ public class TagOperationDialog extends DialogWrapper {
 
             setBorder(JBUI.Borders.empty(4, 8));
 
-            // 标签名 - 使用标签对应颜色
             Color tagColor = getTagColor(value.tagName);
             append("\u25CF ", new com.intellij.ui.SimpleTextAttributes(
                     com.intellij.ui.SimpleTextAttributes.STYLE_PLAIN, tagColor));
@@ -721,29 +703,33 @@ public class TagOperationDialog extends DialogWrapper {
                 setToolTipText(value.tagName);
             }
 
-            // 使用次数 - 灰色
             if (value.usageCount >= 0) {
                 append(" (" + value.usageCount + ")", new com.intellij.ui.SimpleTextAttributes(
                         com.intellij.ui.SimpleTextAttributes.STYLE_PLAIN, GRAY));
             }
 
-            // 状态标记 - 统一配色
             if (value.applied) {
                 append(" \u2713", new com.intellij.ui.SimpleTextAttributes(
                         com.intellij.ui.SimpleTextAttributes.STYLE_BOLD, GREEN));
-                append(" [移除]", new com.intellij.ui.SimpleTextAttributes(
+                if (items.size() > 1) {
+                    append(" " + value.appliedToCount + "/" + items.size(), new com.intellij.ui.SimpleTextAttributes(
+                            com.intellij.ui.SimpleTextAttributes.STYLE_SMALLER, GRAY));
+                }
+                append("  \u2715 移除", new com.intellij.ui.SimpleTextAttributes(
                         com.intellij.ui.SimpleTextAttributes.STYLE_PLAIN, RED));
             } else if (value.partialApplied) {
                 append(" \u25D0", new com.intellij.ui.SimpleTextAttributes(
                         com.intellij.ui.SimpleTextAttributes.STYLE_BOLD, ORANGE));
-                append(" [补全]", new com.intellij.ui.SimpleTextAttributes(
+                append(" " + value.appliedToCount + "/" + items.size(), new com.intellij.ui.SimpleTextAttributes(
+                        com.intellij.ui.SimpleTextAttributes.STYLE_SMALLER, GRAY));
+                append("  \u2713 补全", new com.intellij.ui.SimpleTextAttributes(
                         com.intellij.ui.SimpleTextAttributes.STYLE_PLAIN, ORANGE));
             } else {
-                append(" [添加]", new com.intellij.ui.SimpleTextAttributes(
+                append("  + 添加", new com.intellij.ui.SimpleTextAttributes(
                         com.intellij.ui.SimpleTextAttributes.STYLE_PLAIN, GREEN));
             }
 
-            setToolTipText("双击过滤 | Delete 删除标签");
+            setToolTipText("双击/Enter 切换 | Delete 删除标签");
         }
     }
 
@@ -756,22 +742,18 @@ public class TagOperationDialog extends DialogWrapper {
         actionPanel.setLayout(new BoxLayout(actionPanel, BoxLayout.X_AXIS));
         actionPanel.add(Box.createHorizontalGlue());
 
-        JButton applyOrRemoveBtn = new JButton();
-        applyOrRemoveBtn.setText("应用/移除");
-        applyOrRemoveBtn.setToolTipText("应用或移除选中标签");
-        applyOrRemoveBtn.addActionListener(e -> {
+        JButton toggleBtn = new JButton();
+        toggleBtn.setText("切换");
+        toggleBtn.setToolTipText("添加/移除选中标签（双击或回车同样有效）");
+        toggleBtn.addActionListener(e -> {
             TagItem selected = tagList.getSelectedValue();
             if (selected == null || selected.separator) {
                 statusLabel.setText("请先选择一个标签");
                 return;
             }
-            if (selected.applied) {
-                removeTag(selected);
-            } else {
-                applyTag(selected);
-            }
+            toggleTag(selected);
         });
-        actionPanel.add(applyOrRemoveBtn);
+        actionPanel.add(toggleBtn);
         actionPanel.add(Box.createHorizontalStrut(6));
 
         JButton deleteBtn = new JButton("删除标签");

@@ -1,7 +1,6 @@
 package com.kaylves.interfacex.ui.components;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBScrollPane;
@@ -278,12 +277,6 @@ public class TagQuickSelectorPanel extends JPanel {
     }
 
     private void removeTagFromCurrent(TagEntity tag) {
-        int result = Messages.showYesNoDialog(project,
-                "确定要移除标签 \"" + tag.getTagName() + "\" 吗？",
-                "移除标签",
-                Messages.getQuestionIcon());
-        if (result != Messages.YES) return;
-
         StorageAdapter adapter = StorageAdapter.getInstance();
         String projectPath = project.getBasePath();
 
