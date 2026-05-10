@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InterfaceX - IntelliJ IDEA Plugin</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/svg+xml" href="icons/interfacex_icon.svg">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <img src="icons/interfacex_icon_32.png" alt="InterfaceX Logo" class="logo">
+                <span class="brand-name">InterfaceX</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#installation">Installation</a></li>
+                <li><a href="#usage">Usage</a></li>
+                <li><a href="#changelog">Changelog</a></li>
+                <li><a href="https://github.com/kaylves/interfacex" target="_blank">GitHub</a></li>
+                <li><a href="index.html" class="lang-link">中文</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Make Code Navigation Unprecedentedly Simple</h1>
+                <p class="hero-subtitle">A powerful component interface viewer for IntelliJ IDEA, making the complexity of large projects clear at a glance.</p>
+                <div class="hero-buttons">
+                    <a href="https://plugins.jetbrains.com/plugin/YOUR_PLUGIN_ID" class="btn btn-primary" target="_blank">
+                        Install from JetBrains Marketplace
+                    </a>
+                    <a href="https://github.com/kaylves/interfacex/releases" class="btn btn-secondary" target="_blank">
+                        Download Latest Version
+                    </a>
+                </div>
+                <div class="badges">
+                    <img src="https://img.shields.io/badge/Platform-IntelliJ_IDEA-orange?style=for-the-badge" alt="Platform"/>
+                    <img src="https://img.shields.io/badge/Language-Java-brightgreen?style=for-the-badge&logo=java" alt="Language"/>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Features -->
+    <section id="features" class="features">
+        <div class="container">
+            <h2 class="section-title">✨ Core Features</h2>
+            <p class="section-subtitle">InterfaceX is your helpful assistant in large projects, automatically scanning and clearly displaying various component entry points</p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🌐</div>
+                    <h3>HTTP Endpoints</h3>
+                    <p>Quickly locate Spring-MVC controllers, supporting @GetMapping, @PostMapping and other annotations</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h3>OpenFeign Calls</h3>
+                    <p>Clearly display call relationships between remote services, easily master microservice dependencies</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📮</div>
+                    <h3>RabbitMQ</h3>
+                    <p>Visualize message sending and consumption logic, automatically identify RabbitTemplate and listeners</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3>RocketMQ</h3>
+                    <p>Support Alibaba Cloud ecosystem message queue management, complete message flow tracking</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">⏰</div>
+                    <h3>XXL-JOB Tasks</h3>
+                    <p>Execute and debug scheduled tasks directly in IDE, say goodbye to cumbersome container environment configuration</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🏷️</div>
+                    <h3>Tag Management System</h3>
+                    <p>Professional interface classification and management capabilities, supporting search, filter, batch operations</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔗</div>
+                    <h3>Smart Line Marker Navigation</h3>
+                    <p>Provide smart navigation icons in code editor sidebar for quick jumps between components</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">💾</div>
+                    <h3>SQLite Persistence</h3>
+                    <p>High-performance database storage, supporting dynamic switching and automatic migration, greatly improving loading speed</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pain Points Solved -->
+    <section class="pain-points">
+        <div class="container">
+            <h2 class="section-title">🎯 Core Pain Points Solved</h2>
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Scenario</th>
+                            <th>Traditional Approach Problems</th>
+                            <th>How InterfaceX Solves It</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Large Projects</strong></td>
+                            <td>Huge codebase, inefficient global search</td>
+                            <td>Automatic categorized scanning, one-click display of all interface entries</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Microservice Calls</strong></td>
+                            <td>Difficult to trace call chains</td>
+                            <td>Clearly list all OpenFeign callers</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Message Queue Debugging</strong></td>
+                            <td>Need to browse大量 code</td>
+                            <td>Automatically identify producers and consumers, visual presentation</td>
+                        </tr>
+                        <tr>
+                            <td><strong>XXL-JOB Debugging</strong></td>
+                            <td>Local breakpoints don't work</td>
+                            <td>Directly trigger tasks in IDE, smooth local debugging</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Installation Guide -->
+    <section id="installation" class="installation">
+        <div class="container">
+            <h2 class="section-title">📦 Installation Guide</h2>
+            <div class="install-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Install from JetBrains Marketplace (Recommended)</h3>
+                        <ol>
+                            <li>Open IntelliJ IDEA</li>
+                            <li>Go to <code>Settings/Preferences</code> → <code>Plugins</code></li>
+                            <li>Search for "InterfaceX"</li>
+                            <li>Click <code>Install</code> button</li>
+                            <li>Restart IDE</li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Manual Installation</h3>
+                        <ol>
+                            <li>Download the latest .zip file from <a href="https://github.com/kaylves/interfacex/releases" target="_blank">GitHub Releases</a></li>
+                            <li>Open IntelliJ IDEA</li>
+                            <li>Go to <code>Settings/Preferences</code> → <code>Plugins</code></li>
+                            <li>Click gear icon, select <code>Install Plugin from Disk...</code></li>
+                            <li>Select the downloaded .zip file</li>
+                            <li>Restart IDE</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Usage Instructions -->
+    <section id="usage" class="usage">
+        <div class="container">
+            <h2 class="section-title">📖 Usage Instructions</h2>
+            <div class="usage-content">
+                <div class="usage-section">
+                    <h3>Open InterfaceX Tool Window</h3>
+                    <p>After installation, you can find InterfaceX at:</p>
+                    <ul>
+                        <li>"InterfaceX" tab in the right toolbar</li>
+                        <li>Menu bar: <code>View</code> → <code>Tool Windows</code> → <code>InterfaceX</code></li>
+                    </ul>
+                </div>
+                
+                <div class="usage-section">
+                    <h3>Refresh Interface List</h3>
+                    <p>Click the refresh button at the top of the tool window, the plugin will automatically scan all interfaces in the current project.</p>
+                </div>
+                
+                <div class="usage-section">
+                    <h3>Use Tag Management</h3>
+                    <p>Right-click on any interface to:</p>
+                    <ul>
+                        <li>Add/remove tags</li>
+                        <li>Filter view by tag</li>
+                        <li>Open professional tag manager</li>
+                    </ul>
+                </div>
+                
+                <div class="usage-section">
+                    <h3>Execute XXL-JOB Tasks</h3>
+                    <p>Right-click on XXL-JOB task node, select "Execute Task", set port number to debug locally.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Changelog -->
+    <section id="changelog" class="changelog">
+        <div class="container">
+            <h2 class="section-title">📝 Changelog</h2>
+            <div class="changelog-content">
+                <div id="changelog-container"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>InterfaceX</h4>
+                    <p>Make code navigation simple</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Links</h4>
+                    <ul>
+                        <li><a href="https://github.com/kaylves/interfacex" target="_blank">GitHub</a></li>
+                        <li><a href="https://github.com/kaylves/interfacex/issues" target="_blank">Issues</a></li>
+                        <li><a href="https://plugins.jetbrains.com/plugin/YOUR_PLUGIN_ID" target="_blank">Marketplace</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>License</h4>
+                    <p>MIT License</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 InterfaceX. Made with ❤️ for developers.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

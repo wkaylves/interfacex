@@ -11,6 +11,10 @@ Solves the problem of xxl-job debugging in a container environment, where the lo
 <div align="left">
   <h3>🚀 让代码导航变得前所未有的简单</h3>
   <p>一款专为 IntelliJ IDEA 打造的强大组件接口查看器，让大型项目的复杂性变得一目了然。</p>
+  <p>
+    <a href="https://wkaylves.github.io/interfacex/">🌐 访问官方网站</a> |
+    <a href="https://plugins.jetbrains.com/plugin/YOUR_PLUGIN_ID">⬇️ 从 JetBrains 市场安装</a>
+  </p>
   <img src="https://img.shields.io/badge/Platform-IntelliJ_IDEA-orange?style=for-the-badge" alt="Platform"/>
   <img src="https://img.shields.io/badge/Language-Java-brightgreen?style=for-the-badge&logo=java" alt="Language"/>
 </div>

@@ -98,7 +98,7 @@ docs/
 ## 📝 注意事项
 
 1. **插件 ID**: 记得在 `index.html` 中将 `YOUR_PLUGIN_ID` 替换为实际的 JetBrains 插件 ID
-2. **GitHub 用户名**: 将链接中的 `kaylves` 确认是否为正确的用户名
+2. **GitHub 用户名**: 将链接中的 `wkaylves` 确认是否为正确的用户名
 3. **资源路径**: 确保所有图片资源的引用路径正确
 4. **CHANGELOG.md**: 网站会自动加载根目录的 CHANGELOG.md 文件
 
@@ -124,7 +124,7 @@ docs/
 
 ## 📞 支持
 
-如有问题，请提交 [GitHub Issue](https://github.com/kaylves/interfacex/issues)
+如有问题，请提交 [GitHub Issue](https://github.com/wkaylves/interfacex/issues)
 
 ## 📄 许可证
 

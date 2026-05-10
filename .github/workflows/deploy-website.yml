@@ -41,9 +41,14 @@ jobs:
           if [ -f docs/package.json ]; then
             cd docs && npm run build
           else
-            # 如果没有构建脚本，直接复制静态文件
+            # 如果没有构建脚本,直接复制静态文件(排除README.md)
             mkdir -p _site/icons
-            cp -r docs/* _site/ 2>/dev/null || true
+            # 复制所有文件,但排除 README.md 和 .gitignore
+            find docs -type f ! -name 'README.md' ! -name '.gitignore' ! -name 'CNAME.example' | while read file; do
+              target="_site/${file#docs/}"
+              mkdir -p "$(dirname "$target")"
+              cp "$file" "$target"
+            done
             # 复制图标文件
             cp src/main/resources/icons/interfacex_icon.svg _site/icons/ 2>/dev/null || true
             cp src/main/resources/icons/interfacex_icon_32.png _site/icons/ 2>/dev/null || true
