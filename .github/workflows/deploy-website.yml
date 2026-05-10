@@ -32,14 +32,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'npm'
-          cache-dependency-path: docs/package-lock.json
 
       - name: Install dependencies
-        run: |
-          if [ -f docs/package-lock.json ]; then
-            cd docs && npm ci
-          fi
+        run: echo "No dependencies to install"
 
       - name: Build website
         run: |
