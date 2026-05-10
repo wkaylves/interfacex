@@ -1,23 +1,25 @@
-# InterfaceX - 项目初始化指南
+# InterfaceX - Development Guide
 
-> 本文档提供 InterfaceX IntelliJ IDEA 插件的快速启动和开发环境配置指南。
+> This document provides a comprehensive guide for setting up the development environment and contributing to InterfaceX IntelliJ IDEA plugin.
+>
+> **For users**: Please visit our [Official Website](https://wkaylves.github.io/interfacex/) for installation and usage instructions.
 
-## 📋 目录
+## 📋 Table of Contents
 
-- [项目概述](#项目概述)
-- [前置要求](#前置要求)
-- [快速开始](#快速开始)
-- [开发环境设置](#开发环境设置)
-- [项目结构](#项目结构)
-- [核心功能模块](#核心功能模块)
-- [数据库初始化](#数据库初始化)
-- [构建与运行](#构建与运行)
-- [调试技巧](#调试技巧)
-- [常见问题](#常见问题)
+- [Project Overview](#project-overview)
+- [Prerequisites](#prerequisites)
+- [Quick Start](#quick-start)
+- [Development Environment Setup](#development-environment-setup)
+- [Project Structure](#project-structure)
+- [Core Modules](#core-modules)
+- [Database Initialization](#database-initialization)
+- [Build & Run](#build--run)
+- [Debugging Tips](#debugging-tips)
+- [FAQ](#faq)
 
 ---
 
-## 项目概述
+## Project Overview
 
 **InterfaceX** 是一款专为 IntelliJ IDEA 打造的组件接口查看工具，能够自动扫描并展示以下组件的入口点：
 
@@ -27,7 +29,7 @@
 - 🚀 **RocketMQ 生产者/消费者** - 阿里云消息队列支持
 - ⏰ **XXL-JOB 定时任务** - 本地调试支持
 
-### 解决的核心痛点
+### Core Pain Points Solved
 
 | 场景 | 传统方式 | InterfaceX 方案 |
 |------|---------|----------------|
@@ -38,15 +40,15 @@
 
 ---
 
-## 前置要求
+## Prerequisites
 
-### 必需软件
+### Required Software
 
 - **JDK**: 11 或更高版本（推荐 JDK 17）
 - **IntelliJ IDEA**: 2020.3 或更高版本（Ultimate 或 Community）
 - **Gradle**: 7.0+（项目内置 Gradle Wrapper，无需单独安装）
 
-### 推荐插件
+### Recommended Plugins
 
 在 IDEA 中安装以下插件可提升开发体验：
 
@@ -55,23 +57,23 @@
 
 ---
 
-## 快速开始
+## Quick Start
 
-### 1️⃣ 克隆项目
+### 1️⃣ Clone Repository
 
 ```bash
 git clone https://github.com/wkaylves/interfacex.git
 cd interfacex
 ```
 
-### 2️⃣ 打开项目
+### 2️⃣ Open Project
 
 在 IntelliJ IDEA 中：
 1. 选择 **File → Open**
 2. 导航到项目根目录
 3. 点击 **OK**，IDEA 会自动识别为 Gradle 项目
 
-### 3️⃣ 等待索引完成
+### 3️⃣ Wait for Indexing
 
 首次打开时，IDEA 会：
 - 下载 Gradle 依赖
@@ -80,7 +82,7 @@ cd interfacex
 
 ⏱️ 这可能需要 2-5 分钟，请耐心等待右下角进度条完成。
 
-### 4️⃣ 验证配置
+### 4️⃣ Verify Configuration
 
 检查以下内容是否正常：
 
@@ -96,9 +98,9 @@ cd interfacex
 
 ---
 
-## 开发环境设置
+## Development Environment Setup
 
-### Gradle 配置
+### Gradle Configuration
 
 项目使用 Kotlin DSL 配置 Gradle，主要配置文件：
 
@@ -120,14 +122,14 @@ intellij {
 }
 ```
 
-### Lombok 支持
+### Lombok Support
 
 项目广泛使用 Lombok 注解，确保：
 
 1. 安装 **Lombok Plugin**（IDEA 2020.3+ 已内置）
 2. 启用注解处理：**Settings → Build → Compiler → Annotation Processors** → 勾选 "Enable annotation processing"
 
-### 代码风格
+### Code Style
 
 项目遵循以下规范：
 
@@ -138,7 +140,7 @@ intellij {
 
 ---
 
-## 项目结构
+## Project Structure
 
 ```
 interfacex/
@@ -178,7 +180,7 @@ interfacex/
 └── README.md               # 项目说明
 ```
 
-### 关键文件说明
+### Key Files
 
 | 文件 | 作用 |
 |------|------|
@@ -190,9 +192,9 @@ interfacex/
 
 ---
 
-## 核心功能模块
+## Core Modules
 
-### 1. 插件生命周期
+### 1. Plugin Lifecycle
 
 ```
 IDEA 启动
@@ -216,34 +218,34 @@ ProjectInitService.getServiceProjects()
 渲染树形结构
 ```
 
-### 2. 扫描器架构
+### 2. Scanner Architecture
 
 每个组件类型都有独立的扫描器：
 
-#### HTTP 扫描器
+#### HTTP Scanner
 - **位置**: [`module/http/`](file:///Users/kaylves/github-src/interfacex/src/main/java/com/kaylves/interfacex/module/http/)
 - **规则**: 查找 `@GetMapping`、`@PostMapping` 等 Spring-MVC 注解
 - **输出**: URL 路径、HTTP 方法、Controller 类和方法
 
-#### OpenFeign 扫描器
+#### OpenFeign Scanner
 - **位置**: [`module/openfeign/`](file:///Users/kaylves/github-src/interfacex/src/main/java/com/kaylves/interfacex/module/openfeign/)
 - **规则**: 查找 `@FeignClient` 注解的接口
 - **输出**: 服务名、接口路径、调用方法
 
-#### RabbitMQ 扫描器
+#### RabbitMQ Scanner
 - **生产者**: 查找 `RabbitTemplate.convertAndSend()` 调用
 - **消费者**: 查找 `@RabbitListener` 注解方法
 
-#### RocketMQ 扫描器
+#### RocketMQ Scanner
 - **生产者**: 查找 `RocketMQTemplate.syncSend()` 调用
 - **消费者**: 查找 `@RocketMQMessageListener` 注解类
 
-#### XXL-JOB 扫描器
+#### XXL-JOB Scanner
 - **位置**: [`module/xxljob/`](file:///Users/kaylves/github-src/interfacex/src/main/java/com/kaylves/interfacex/module/xxljob/)
 - **规则**: 查找 `@JobHandler` 注解类
 - **特色**: 支持在 IDE 内直接执行任务
 
-### 3. 数据存储
+### 3. Data Storage
 
 #### SQLite 数据库
 
@@ -300,9 +302,9 @@ List<ScanResultEntity> results = dao.findByProjectPath(projectPath);
 
 ---
 
-## 数据库初始化
+## Database Initialization
 
-### 自动初始化流程
+### Automatic Initialization Flow
 
 数据库在以下时机自动初始化：
 
@@ -310,7 +312,7 @@ List<ScanResultEntity> results = dao.findByProjectPath(projectPath);
 2. **Schema 创建**: [`SchemaManager`](file:///Users/kaylves/github-src/interfacex/src/main/java/com/kaylves/interfacex/db/SchemaManager.java) 自动创建表和索引
 3. **DAO 初始化**: 创建 `ScanResultDao`、`ConfigDao`、`TagDao` 等
 
-### 手动检查数据库
+### Manual Database Inspection
 
 如果需要查看数据库内容：
 
@@ -328,7 +330,7 @@ sqlite3 ~/.interfacex/interfacex.db
 SELECT * FROM scan_result LIMIT 10;
 ```
 
-### 数据库迁移
+### Database Migration
 
 如果已有旧版本的 XML 配置，可以使用迁移工具：
 
@@ -340,9 +342,9 @@ migrator.migrate(oldXmlPath);
 
 ---
 
-## 构建与运行
+## Build & Run
 
-### 开发模式运行
+### Development Mode
 
 在 IDEA 中直接运行插件：
 
@@ -355,7 +357,7 @@ migrator.migrate(oldXmlPath);
 
 这会启动一个**新的 IDEA 实例**，其中包含您的插件。
 
-### 构建发布包
+### Build Release Package
 
 ```bash
 # 清理并构建
@@ -365,7 +367,7 @@ migrator.migrate(oldXmlPath);
 ls -lh build/distributions/InterfaceX-*.zip
 ```
 
-### 安装到本地 IDEA
+### Install to Local IDEA
 
 1. 打开 **Settings → Plugins**
 2. 点击齿轮图标 → **Install Plugin from Disk...**
@@ -374,9 +376,9 @@ ls -lh build/distributions/InterfaceX-*.zip
 
 ---
 
-## 调试技巧
+## Debugging Tips
 
-### 1. 启用详细日志
+### 1. Enable Verbose Logging
 
 在 `src/main/resources` 下创建或修改 `log.properties`：
 
@@ -385,14 +387,14 @@ ls -lh build/distributions/InterfaceX-*.zip
 com.kaylves.interfacex.level=DEBUG
 ```
 
-### 2. 查看 PSI 结构
+### 2. Inspect PSI Structure
 
 调试扫描器时，可以使用 IDEA 内置工具：
 
 - **Tools → View PSI Structure of Current File**
 - 或使用快捷键 `Ctrl+Shift+A` → 搜索 "PSI Viewer"
 
-### 3. 断点调试扫描器
+### 3. Debug Scanners with Breakpoints
 
 在以下位置设置断点：
 
@@ -407,7 +409,7 @@ public List<InterfaceProject> getServiceProjects() {
 // 例如：HttpServiceResolver.java
 ```
 
-### 4. 数据库调试
+### 4. Database Debugging
 
 ```java
 // 在代码中临时打印 SQL 查询结果
@@ -416,7 +418,7 @@ log.info("Found {} scan results for project: {}", results.size(), projectPath);
 results.forEach(r -> log.info("  - {} {}", r.getCategory(), r.getUrl()));
 ```
 
-### 5. 性能分析
+### 5. Performance Profiling
 
 如果扫描速度慢，可以：
 
@@ -430,11 +432,11 @@ log.warn("Scanning took {} ms", elapsed);
 
 ---
 
-## 常见问题
+## FAQ
 
-### Q1: 插件加载后工具窗口不显示？
+### Q1: Tool window not showing after plugin loads?
 
-**检查清单**:
+**Checklist**:
 
 1. 确认 `plugin.xml` 中正确注册了 ToolWindow：
    ```xml
@@ -453,15 +455,15 @@ log.warn("Scanning took {} ms", elapsed);
    com.kaylves.interfacex ERROR - Failed to initialize database
    ```
 
-### Q2: 扫描结果为空？
+### Q2: Scan results are empty?
 
-**可能原因**:
+**Possible Causes**:
 
 1. **索引未完成**: 等待 IDEA 右下角进度条完成
 2. **模块未识别**: 确认项目是 Maven/Gradle 多模块结构
 3. **注解未识别**: 检查是否缺少 Spring 相关依赖
 
-**解决方法**:
+**Solutions**:
 
 ```java
 // 手动触发刷新
@@ -469,15 +471,15 @@ log.warn("Scanning took {} ms", elapsed);
 // 或运行 Action: RefreshProjectAction
 ```
 
-### Q3: 数据库锁定错误？
+### Q3: Database locked error?
 
 ```
 SQLException: database is locked
 ```
 
-**原因**: 多个线程同时写入数据库
+**Cause**: Multiple threads writing to database simultaneously
 
-**解决**:
+**Solution**:
 
 ```java
 // InterfaceXDatabaseService 已使用 synchronized
@@ -485,17 +487,17 @@ SQLException: database is locked
 InterfaceXDatabaseService dbService = InterfaceXDatabaseService.getInstance();
 ```
 
-### Q4: Lombok 注解不生效？
+### Q4: Lombok annotations not working?
 
-**检查**:
+**Check**:
 
 1. 安装 Lombok 插件
 2. 启用注解处理：**Settings → Build → Compiler → Annotation Processors**
 3. 重新构建项目：**Build → Rebuild Project**
 
-### Q5: 如何添加新的扫描器？
+### Q5: How to add a new scanner?
 
-**步骤**:
+**Steps**:
 
 1. 创建新的扫描器类，继承 `BaseServiceResolver`：
    ```java
@@ -516,7 +518,7 @@ InterfaceXDatabaseService dbService = InterfaceXDatabaseService.getInstance();
 
 4. 更新 UI 表单 [`InterfaceXSettingForm`](file:///Users/kaylves/github-src/interfacex/src/main/java/com/kaylves/interfacex/ui/form/InterfaceXSettingForm.java)
 
-### Q6: 如何自定义图标？
+### Q6: How to customize icons?
 
 项目使用 SVG 图标，位于 [`src/main/resources/icons/`](file:///Users/kaylves/github-src/interfacex/src/main/resources/icons/)
 
@@ -541,9 +543,9 @@ public static final Icon INTERFACE_X = IconLoader.getIcon("/icons/interfacex_ico
 
 ---
 
-## 贡献指南
+## Contributing
 
-### 提交 PR 前检查清单
+### Pre-PR Checklist
 
 - [ ] 代码符合阿里巴巴 Java 开发规范
 - [ ] 添加了必要的单元测试
@@ -551,7 +553,7 @@ public static final Icon INTERFACE_X = IconLoader.getIcon("/icons/interfacex_ico
 - [ ] 在本地 IDEA 中测试通过
 - [ ] 运行 `./gradlew buildPlugin` 无错误
 
-### 代码审查要点
+### Code Review Points
 
 1. **PSI 操作安全性**: 确保在 Read/Write Action 中执行
 2. **线程安全**: 数据库操作使用 synchronized
@@ -560,29 +562,29 @@ public static final Icon INTERFACE_X = IconLoader.getIcon("/icons/interfacex_ico
 
 ---
 
-## 参考资料
+## References
 
-### 官方文档
+### Official Documentation
 
 - [IntelliJ Platform SDK](https://plugins.jetbrains.com/docs/intellij/welcome.html)
 - [PSI (Program Structure Interface)](https://plugins.jetbrains.com/docs/intellij/psi.html)
 - [Tool Windows](https://plugins.jetbrains.com/docs/intellij/tool-windows.html)
 - [Actions System](https://plugins.jetbrains.com/docs/intellij/action-system.html)
 
-### 相关技术
+### Related Technologies
 
 - [SQLite JDBC Driver](https://github.com/xerial/sqlite-jdbc)
 - [Lombok](https://projectlombok.org/)
 - [Gradle IntelliJ Plugin](https://github.com/JetBrains/gradle-intellij-plugin)
 
-### 社区资源
+### Community Resources
 
 - [IntelliJ Platform Explorer](https://plugins.jetbrains.com/intellij-platform-explorer)
 - [JetBrains Plugin Development Forum](https://intellij-support.jetbrains.com/hc/en-us/community/topics/200366979)
 
 ---
 
-## 联系与支持
+## Contact & Support
 
 - **GitHub**: [https://github.com/wkaylves/interfacex](https://github.com/wkaylves/interfacex)
 - **邮箱**: kaylves@outlook.com

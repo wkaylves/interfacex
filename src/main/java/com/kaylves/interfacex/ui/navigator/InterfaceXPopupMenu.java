@@ -27,12 +27,10 @@ import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
-/**
- * @author kaylves
- * @since 1.2.0
- */
 @Slf4j
 public class InterfaceXPopupMenu {
 
@@ -47,8 +45,7 @@ public class InterfaceXPopupMenu {
 
     public void installPopupMenu() {
         DefaultActionGroup popupGroup = new DefaultActionGroup("MyTreePopup", true);
-        
-        // ServiceNode 的菜单
+
         popupGroup.addAction(new AnAction("执行") {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
@@ -73,7 +70,6 @@ public class InterfaceXPopupMenu {
 
         popupGroup.addSeparator();
 
-        // 标签操作 - 统一入口（支持多选批量）
         popupGroup.addAction(new AnAction("标签...") {
             @Override
             public void update(@NotNull AnActionEvent e) {
@@ -86,9 +82,9 @@ public class InterfaceXPopupMenu {
                 openTagDialog();
             }
         });
-        
+
         popupGroup.addSeparator();
-        
+
         popupGroup.addAction(new AnAction("清除过滤") {
             @Override
             public void actionPerformed(@NotNull AnActionEvent e) {
@@ -100,69 +96,71 @@ public class InterfaceXPopupMenu {
     }
 
     private long countSelectedServiceNodes() {
-        try {
-            javax.swing.tree.TreePath[] paths = simpleTree.getSelectionPaths();
-            if (paths != null) {
-                return Arrays.stream(paths)
-                        .map(javax.swing.tree.TreePath::getLastPathComponent)
-                        .filter(n -> n instanceof InterfaceXSimpleTreeStructure.ServiceNode)
-                        .count();
-            }
-        } catch (Exception e) {
-            log.debug("countSelectedServiceNodes failed", e);
-        }
-        // 兜底
-        SimpleNode single = simpleTree.getSelectedNode();
-        return (single instanceof InterfaceXSimpleTreeStructure.ServiceNode) ? 1 : 0;
+        return collectSelectedServiceItems().size();
     }
 
-    private void openTagDialog() {
-        // 收集所有选中的 ServiceNode（支持多选批量打标签）
-        List<InterfaceItem> items = new ArrayList<>();
+    private List<InterfaceItem> collectSelectedServiceItems() {
+        Set<InterfaceItem> itemSet = new LinkedHashSet<>();
 
-        // 方式1：通过 TreePath 从 JTree selection model 直接获取
         try {
-            javax.swing.tree.TreePath[] paths = simpleTree.getSelectionPaths();
-            if (paths != null) {
-                for (javax.swing.tree.TreePath path : paths) {
-                    Object node = path.getLastPathComponent();
-                    if (node instanceof InterfaceXSimpleTreeStructure.ServiceNode serviceNode) {
-                        items.add(serviceNode.interfaceItem);
-                    }
+            SimpleNode[] selectedNodes = simpleTree.getSelectedNodes(SimpleNode.class, null);
+            if (selectedNodes != null && selectedNodes.length > 0) {
+                for (SimpleNode node : selectedNodes) {
+                    collectServiceItemsFromNode(node, itemSet);
                 }
             }
         } catch (Exception e) {
-            log.debug("getSelectionPaths failed", e);
+            log.debug("getSelectedNodes failed", e);
         }
 
-        // 方式2：通过 getSelectedNodes 兜底
-        if (items.isEmpty()) {
+        if (itemSet.isEmpty()) {
             try {
-                SimpleNode[] selectedNodes = simpleTree.getSelectedNodes(SimpleNode.class, null);
-                for (SimpleNode node : selectedNodes) {
-                    if (node instanceof InterfaceXSimpleTreeStructure.ServiceNode serviceNode) {
-                        items.add(serviceNode.interfaceItem);
+                javax.swing.tree.TreePath[] paths = simpleTree.getSelectionPaths();
+                if (paths != null) {
+                    for (javax.swing.tree.TreePath path : paths) {
+                        Object component = path.getLastPathComponent();
+                        if (component instanceof SimpleNode) {
+                            collectServiceItemsFromNode((SimpleNode) component, itemSet);
+                        }
                     }
                 }
             } catch (Exception e) {
-                log.debug("getSelectedNodes failed", e);
+                log.debug("getSelectionPaths failed", e);
             }
         }
 
-        // 方式3：最终兜底 - 单选
-        if (items.isEmpty()) {
+        if (itemSet.isEmpty()) {
             SimpleNode singleNode = simpleTree.getSelectedNode();
-            if (singleNode instanceof InterfaceXSimpleTreeStructure.ServiceNode serviceNode) {
-                items.add(serviceNode.interfaceItem);
+            if (singleNode != null) {
+                collectServiceItemsFromNode(singleNode, itemSet);
             }
         }
+
+        return new ArrayList<>(itemSet);
+    }
+
+    private void collectServiceItemsFromNode(SimpleNode node, Set<InterfaceItem> result) {
+        if (node instanceof InterfaceXSimpleTreeStructure.ServiceNode serviceNode) {
+            result.add(serviceNode.interfaceItem);
+            return;
+        }
+
+        SimpleNode[] children = node.getChildren();
+        if (children != null) {
+            for (SimpleNode child : children) {
+                collectServiceItemsFromNode(child, result);
+            }
+        }
+    }
+
+    private void openTagDialog() {
+        List<InterfaceItem> items = collectSelectedServiceItems();
 
         log.info("openTagDialog: collected {} ServiceNode(s)", items.size());
 
         TagOperationDialog dialog = new TagOperationDialog(project, simpleTree, items);
         dialog.showDialog();
     }
-
 
     private void clearFilterAction() {
         InterfaceXNavigator navigator = InterfaceXNavigator.getInstance(project);
@@ -200,17 +198,10 @@ public class InterfaceXPopupMenu {
 
     private void copyUrl() {
         SimpleNode simpleNode = simpleTree.getSelectedNode();
-
         if (simpleNode instanceof InterfaceXSimpleTreeStructure.ServiceNode serviceNode) {
-            InterfaceItem interfaceItem = serviceNode.interfaceItem;
-            String url = interfaceItem.getUrl();
-            
-            if (url != null && !url.isEmpty()) {
+            String url = serviceNode.interfaceItem.getUrl();
+            if (url != null) {
                 CopyPasteManager.getInstance().setContents(new StringSelection(url));
-                log.info("Copied URL to clipboard: {}", url);
-                JOptionPane.showMessageDialog(null, "URL已复制到剪贴板：\n" + url, "提示", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(null, "该节点没有可用的URL", "提示", JOptionPane.WARNING_MESSAGE);
             }
         }
     }
