@@ -47,10 +47,13 @@ jobs:
             cd docs && npm run build
           else
             # 如果没有构建脚本，直接复制静态文件
-            mkdir -p _site
+            mkdir -p _site/icons
             cp -r docs/* _site/ 2>/dev/null || true
-            cp README.md _site/ 2>/dev/null || true
-            cp CHANGELOG.md _site/ 2>/dev/null || true
+            # 复制图标文件
+            cp src/main/resources/icons/interfacex_icon.svg _site/icons/ 2>/dev/null || true
+            cp src/main/resources/icons/interfacex_icon_32.png _site/icons/ 2>/dev/null || true
+            # 复制 CHANGELOG.md 到 _site 目录供 JavaScript 加载
+            cp CHANGELOG.md _site/CHANGELOG.md 2>/dev/null || true
           fi
 
       - name: Upload artifact

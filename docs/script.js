@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // 加载更新日志
 async function loadChangelog() {
     try {
-        const response = await fetch('../CHANGELOG.md');
+        const response = await fetch('CHANGELOG.md');
         if (response.ok) {
             const markdown = await response.text();
             const htmlContent = convertMarkdownToHtml(markdown);
