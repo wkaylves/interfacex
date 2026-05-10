@@ -23,6 +23,8 @@ out/
 .idea/
 
 .claude/
+.claude/*
+
 
 *.ipr
 *.iml
