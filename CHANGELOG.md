@@ -3,6 +3,19 @@
 
 ## [Unreleased]
 
+## [1.3.2]
+### 中文
+* **多标签组合过滤与排序**：新增标签排序字段支持，允许按自定义顺序显示标签；支持多标签组合过滤（AND 语义）及全局标签搜索；优化标签面板交互，增加批量操作和标签值支持；重构树结构构建逻辑，实现标签交叉显示
+* **标签管理重构**：重构标签快速选择面板为更紧凑的样式，支持直接添加和删除标签；移除三个旧的标签管理对话框类，统一使用新的标签选择器实现；调整标签显示样式为彩色圆角标签；优化标签添加交互，支持下拉选择和直接输入
+* **UI 修复**：修复 ControllerLineMarkerProvider 中空修饰符列表导致的潜在 NPE 问题；扩展接口类型检查条件以包含 HTTP 和 OpenFeign
+* **文档重构**：重新组织文档结构，新增 GitHub Pages 静态页面
+
+### English
+* **Multi-tag Combination Filtering & Sorting**: Added tag sorting field support for custom display order; multi-tag combination filtering (AND semantics) and global tag search; optimized tag panel interaction with batch operations and tag value support; refactored tree structure for tag cross-display
+* **Tag Management Refactor**: Refactored tag quick selector panel to compact style with direct add/delete; removed three old tag management dialog classes, unified with new tag selector; colorful rounded tag display style; optimized tag add interaction with dropdown and direct input
+* **UI Fix**: Fixed potential NPE in ControllerLineMarkerProvider with empty modifier list; extended interface type check to include HTTP and OpenFeign
+* **Documentation Restructure**: Reorganized documentation structure, added GitHub Pages static pages
+
 ## [1.3.1]
 ### 中文
 * **SQLite 持久化存储**：新增 SQLite 数据库支持，替代 XML 配置存储，支持动态切换和自动迁移
